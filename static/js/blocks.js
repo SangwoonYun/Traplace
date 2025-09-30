@@ -1,9 +1,9 @@
-// assets/js/blocks.js
 import { state } from './state.js';
 import { rot } from './dom.js';
 import { renderOutlines, recomputePaint } from './render.js';
 import { posToCell } from './transform.js';
 import { queueSaveToURL } from './urlState.js';
+import { saveCheckpoint } from './history.js';
 
 /* 색상 적용 */
 function applyBlockStyle(b, invalid){
@@ -86,8 +86,9 @@ function finishEditLabel(blockEl, cancel){
 
   delete blockEl.dataset.editing;
 
-  // 라벨 변경 → URL 갱신
-  queueSaveToURL(); // ⬅️ 추가
+  // 라벨 변경 → URL/히스토리 갱신
+  queueSaveToURL();
+  saveCheckpoint();
 }
 
 /* 블록 CRUD */
@@ -125,11 +126,12 @@ export function createBlock(kind, size, left, top){
   state.blocks.push(b);
   applyBlockStyle(b, false);
 
-  recomputePaint();
-  validateAllObjects();
-
-  queueSaveToURL();
-
+  if (!state._restoring){
+    recomputePaint();
+    validateAllObjects();
+    queueSaveToURL();
+    saveCheckpoint();
+  }
   return el;
 }
 
@@ -140,9 +142,12 @@ export function updateBlockPosition(el, snappedLeft, snappedTop){
   if (b){
     b.left = snappedLeft;
     b.top  = snappedTop;
-    recomputePaint();
-    validateAllObjects();
-    queueSaveToURL();
+    if (!state._restoring){
+      recomputePaint();
+      validateAllObjects();
+      queueSaveToURL();
+      saveCheckpoint();
+    }
   }
 }
 
@@ -150,8 +155,10 @@ export function deleteBlock(el){
   el.remove();
   const idx = state.blocks.findIndex(b => b.el === el);
   if (idx >= 0) state.blocks.splice(idx, 1);
-  recomputePaint();
-  validateAllObjects();
-  queueSaveToURL();
+  if (!state._restoring){
+    recomputePaint();
+    validateAllObjects();
+    queueSaveToURL();
+    saveCheckpoint();
+  }
 }
-

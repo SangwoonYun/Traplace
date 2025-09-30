@@ -17,7 +17,8 @@ export const state = {
   cursorCell: { x: 600, y: 600 },
   drag: null,                 // 드래그 상태
   panning: null,              // 패닝 상태
-  AUTO_EXPAND: false          // 자동 확장 off (동작만 차단)
+  AUTO_EXPAND: false,         // 자동 확장 off (동작만 차단)
+  _restoring: false
 };
 
 // 런타임 토글용 (콘솔)
