@@ -1,7 +1,7 @@
 // assets/js/actions.js
 import { state } from './state.js';
 import { tilesLayer, outlinesLayer, outlinesPreviewLayer, previewLayer, userLayer, rot, btnReset, btnCopyURL, btnExportPNG, btnUndo, btnRedo } from './dom.js';
-import { recomputePaint, renderUserTiles } from './render.js';
+import { recomputePaint, renderUserTiles, centerToWorldCenter } from './render.js';
 import { validateAllObjects } from './blocks.js';
 import { saveToURLImmediate } from './urlState.js';
 import { exportPNG } from './exportPNG.js';
@@ -25,6 +25,11 @@ export function setupActions(){
   onHistoryChange((canUndo, canRedo)=>{
     if (btnUndo) btnUndo.disabled = !canUndo;
     if (btnRedo) btnRedo.disabled = !canRedo;
+  });
+
+  btnHome?.addEventListener('click', (e)=>{
+    e.preventDefault();
+    centerToWorldCenter();
   });
 
   // Undo/Redo

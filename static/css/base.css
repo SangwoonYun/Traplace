@@ -22,6 +22,10 @@
   --resource-border: #d00000;
 
   --zoom: 1; /* 1 = 100% */
+
+  --world-w: 1200px;        /* JS에서 실제 world px로 갱신됨 */
+  --world-h: 1200px;        /* JS에서 실제 world px로 갱신됨 */
+  --rot-k: 0.7071067811865476; /* = √2/2 */
 }
 
 * { box-sizing: border-box; }
@@ -41,8 +45,16 @@ body{
 .world{ position:relative; }
 
 .rot{
-  position:absolute; left:0; top:0; width:100%; height:100%;
-  transform-origin: 0 0;
-  transform: scale(var(--zoom)) rotate(45deg) scale(1.41421356237);
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 0; /* 원점 기준으로 수식이 맞춰져 있음 */
+  /* 순서 중요: translate → rotate → scale(-1) → zoom */
+  transform:
+    translate(
+      calc(var(--world-w) * var(--rot-k)),
+      calc((var(--world-w) + var(--world-h)) * var(--rot-k))
+    )
+  rotate(45deg)
+  scale(-1)
+  scale(var(--zoom));
 }
-

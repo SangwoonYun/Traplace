@@ -1,8 +1,7 @@
-// assets/js/exportPNG.js
+// static/js/exportPNG.js
 import { state, cell } from './state.js';
 import { PAINTER_KINDS, cellsForKindAt, areaBoundingBox } from './painter.js';
-import { posToCell, keyOf } from './transform.js';
-import { rot } from './dom.js';
+import { posToCell } from './transform.js';
 
 /** CSS 변수 얻기 */
 function cssVar(name, fallback){
@@ -10,7 +9,7 @@ function cssVar(name, fallback){
   return v || fallback;
 }
 
-/** 블루 합집합(깃발/HQ) 재계산 (export 시 최신 보장) */
+/** 블루 합집합(깃발/HQ) 재계산 */
 function computePaintedSet(){
   const set = new Set();
   for (const b of state.blocks){
@@ -19,7 +18,7 @@ function computePaintedSet(){
     const centerCx = cx + Math.floor(b.size/2);
     const centerCy = cy + Math.floor(b.size/2);
     for (const c of cellsForKindAt(b.kind, centerCx, centerCy)){
-      set.add(keyOf(c.x, c.y));
+      set.add(`${c.x},${c.y}`);
     }
   }
   return set;
@@ -32,25 +31,20 @@ function cellsCoveredByBlocks(){
     const { cx, cy } = posToCell(b.left, b.top);
     for (let y=cy; y<cy+b.size; y++){
       for (let x=cx; x<cx+b.size; x++){
-        out.add(keyOf(x,y));
+        out.add(`${x},${y}`);
       }
     }
   }
   return out;
 }
 
-/** 사용된 셀의 bounding box (minx..maxx, miny..maxy) */
+/** 사용된 셀의 bounding box */
 function usedCellsBBox(){
   const used = new Set();
 
-  // 빨간 칠
   for (const k of state.userPaint) used.add(k);
-
-  // 파란 합집합
   const painted = computePaintedSet();
   for (const k of painted) used.add(k);
-
-  // 블록 커버
   const cover = cellsCoveredByBlocks();
   for (const k of cover) used.add(k);
 
@@ -67,7 +61,7 @@ function usedCellsBBox(){
   return {minx, miny, maxx, maxy, used, painted};
 }
 
-/** 집합에 이웃이 없는 방향만 선 긋기 (외곽선만) */
+/** 외곽선(인접 없을 때만) */
 function strokeCellPerimeter(ctx, set, x, y, color, lineWidth=2, dashed=false){
   const has = (xx,yy)=> set.has(`${xx},${yy}`);
   const px = x*cell, py = y*cell;
@@ -77,35 +71,41 @@ function strokeCellPerimeter(ctx, set, x, y, color, lineWidth=2, dashed=false){
   ctx.lineWidth = lineWidth;
   if (dashed) ctx.setLineDash([6,6]);
 
-  // top
   if (!has(x, y-1)){ ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px+cell, py); ctx.stroke(); }
-  // right
   if (!has(x+1, y)){ ctx.beginPath(); ctx.moveTo(px+cell, py); ctx.lineTo(px+cell, py+cell); ctx.stroke(); }
-  // bottom
   if (!has(x, y+1)){ ctx.beginPath(); ctx.moveTo(px, py+cell); ctx.lineTo(px+cell, py+cell); ctx.stroke(); }
-  // left
   if (!has(x-1, y)){ ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, py+cell); ctx.stroke(); }
 
   ctx.restore();
 }
 
-/** 캔버스에 회전 변환 적용 (x' = x - y + H, y' = x + y) */
-function applyRotTransform(ctx, heightPx){
-  // 현재 변환에 곱하기(기존 상태 보존)
+/**
+ * 회전 + 수직 플립 변환 적용
+ * 기존: x' = x - y + H,  y' = x + y
+ * 플립 후: x' = x - y + H,  y'' = S - (x + y)
+ *  - H = heightPx, S = widthPx + heightPx (정사각형 캔버스 한 변)
+ */
+function applyRotTransform(ctx, heightPx, canvasSize){
+  // 회전 (45° 좌표계 표현 행렬)
   ctx.transform(1, 1, -1, 1, heightPx, 0);
+  // 수직 플립: y -> S - y
+  ctx.transform(1, 0, 0, -1, 0, canvasSize);
 }
 
-/** 라벨: 크롭 오프셋 보정 + 수평 텍스트로 출력 */
-function drawUprightLabel(ctx, X, Y, heightPx, offX, offY, text){
-  // 미회전 좌표 → 회전 캔버스 좌표로 투영 (크롭 보정 포함)
+/** 라벨: 크롭+플립 보정하여 수평 텍스트로 출력 */
+function drawUprightLabel(ctx, X, Y, heightPx, offX, offY, canvasSize, text){
   const xLocal = X - offX;
   const yLocal = Y - offY;
-  const xCanvas = xLocal - yLocal + heightPx;
-  const yCanvas = xLocal + yLocal;
 
-  // 텍스트는 수평으로
+  // 회전만 적용했을 때 좌표
+  const xRot = xLocal - yLocal + heightPx;
+  const yRot = xLocal + yLocal;
+  // 수직 플립 반영
+  const xCanvas = xRot;
+  const yCanvas = canvasSize - yRot;
+
   ctx.save();
-  ctx.setTransform(1,0,0,1,0,0); // 변환 제거
+  ctx.setTransform(1,0,0,1,0,0); // 수평 텍스트
   ctx.font = 'bold 14px system-ui, -apple-system, Segoe UI, Roboto, Arial';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
@@ -120,7 +120,6 @@ function styleForBlock(b, paintedSet){
     return { fill: cssVar('--resource-bg', '#ffe5e5'),
              stroke: cssVar('--resource-border', '#d00000') };
   }
-  // 유효성: 모든 셀이 파란 합집합에 포함되어야 함
   const { cx, cy } = posToCell(b.left, b.top);
   let invalid = false;
   for (let y=cy; y<cy+b.size && !invalid; y++){
@@ -142,7 +141,7 @@ export async function exportPNG(){
   if (!bbox){
     throw new Error('사용된 모눈이 없습니다. 객체를 배치하거나 칠한 후 내보내세요.');
   }
-  const { minx, miny, maxx, maxy, used, painted } = bbox;
+  const { minx, miny, maxx, maxy, painted } = bbox;
 
   const gridColor = cssVar('--grid-bold', '#d0d0d0');
   const bgColor   = cssVar('--bg', '#ffffff');
@@ -155,7 +154,7 @@ export async function exportPNG(){
   const widthPx  = widthCells  * cell;
   const heightPx = heightCells * cell;
 
-  // 회전 후 바운딩은 정사각형 (w+h)
+  // 회전 후 바운딩 정사각형 한 변
   const canvasSize = widthPx + heightPx;
   const canvas = document.createElement('canvas');
   canvas.width = canvasSize;
@@ -169,36 +168,28 @@ export async function exportPNG(){
   ctx.fillRect(0,0,canvas.width, canvas.height);
   ctx.restore();
 
-  // 회전 변환 적용 (원점 = 잘라낸 영역 좌상단)
-  applyRotTransform(ctx, heightPx);
+  // 회전 + 수직 플립 적용
+  applyRotTransform(ctx, heightPx, canvasSize);
 
-  // 모든 그리기는 "미회전 좌표" 기준, 크롭 보정
+  // 미회전 좌표로 그리되, 잘라낸 영역 보정
   const offX = minx * cell;
   const offY = miny * cell;
   ctx.save();
   ctx.translate(-offX, -offY);
 
-  // 1) 그리드(주 라인만)
+  // 1) 그리드(주 라인)
   ctx.save();
   ctx.strokeStyle = gridColor;
   ctx.lineWidth = 1;
-  // 세로선
   for (let x=minx*cell; x<=(maxx+1)*cell; x+=cell){
-    ctx.beginPath();
-    ctx.moveTo(x, miny*cell);
-    ctx.lineTo(x, (maxy+1)*cell);
-    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x, miny*cell); ctx.lineTo(x, (maxy+1)*cell); ctx.stroke();
   }
-  // 가로선
   for (let y=miny*cell; y<=(maxy+1)*cell; y+=cell){
-    ctx.beginPath();
-    ctx.moveTo(minx*cell, y);
-    ctx.lineTo((maxx+1)*cell, y);
-    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(minx*cell, y); ctx.lineTo((maxx+1)*cell, y); ctx.stroke();
   }
   ctx.restore();
 
-  // 2) 빨간 칠 (userPaint)
+  // 2) 빨간 칠
   ctx.save();
   ctx.fillStyle = redFill;
   for (const k of state.userPaint){
@@ -208,20 +199,18 @@ export async function exportPNG(){
   }
   ctx.restore();
 
-  // 3) 파란 칠(합집합) + 외곽선만
+  // 3) 파란 칠 + 외곽선
   ctx.save();
-  // 채우기
   ctx.fillStyle = blueFill;
   for (const k of painted){
     const [x,y] = k.split(',').map(Number);
     if (x<minx||x>maxx||y<miny||y>maxy) continue;
     ctx.fillRect(x*cell, y*cell, cell, cell);
   }
-  // 외곽선
   for (const k of painted){
     const [x,y] = k.split(',').map(Number);
     if (x<minx||x>maxx||y<miny||y>maxy) continue;
-    strokeCellPerimeter(ctx, painted, x, y, blueEdge, 2, /*dashed=*/false);
+    strokeCellPerimeter(ctx, painted, x, y, blueEdge, 2, false);
   }
   ctx.restore();
 
@@ -241,13 +230,12 @@ export async function exportPNG(){
   }
   ctx.restore();
 
-  // 5) 블록(배경/테두리) + 라벨
+  // 5) 블록 + 라벨(수평, 플립 보정)
   for (const b of state.blocks){
     const st = styleForBlock(b, painted);
     const { cx, cy } = posToCell(b.left, b.top);
     const x = cx*cell, y = cy*cell, w = b.size*cell, h=b.size*cell;
 
-    // 사각
     ctx.save();
     ctx.fillStyle = st.fill;
     ctx.strokeStyle = st.stroke;
@@ -256,7 +244,6 @@ export async function exportPNG(){
     ctx.strokeRect(x, y, w, h);
     ctx.restore();
 
-    // 라벨(수평) — 오프셋 보정 반영
     const labelEl = b.el?.querySelector('.label');
     let text =
       b.kind === 'flag'     ? '연맹깃발' :
@@ -264,19 +251,15 @@ export async function exportPNG(){
       b.kind === 'city'     ? '도시센터' :
       b.kind === 'resource' ? '연맹자원' :
       b.kind === 'trap'     ? '사냥함정' : `${b.size}×${b.size}`;
-
     const t2 = (labelEl?.textContent || '').trim();
     if (b.kind === 'city' && t2) text = t2;
 
     const Xc = x + w/2;
     const Yc = y + h/2;
-    drawUprightLabel(ctx, Xc, Yc, heightPx, offX, offY, text);
+    drawUprightLabel(ctx, Xc, Yc, heightPx, offX, offY, canvasSize, text);
   }
 
-  // 회전 좌표계 해제
-  ctx.restore(); // translate(-offX,-offY) 해제
+  ctx.restore(); // translate 해제
 
-  // PNG Blob
   return await new Promise((resolve)=> canvas.toBlob(resolve, 'image/png'));
 }
-
