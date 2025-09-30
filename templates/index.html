@@ -58,6 +58,21 @@
         <span class="pi-text">3×3</span>
       </div>
     </div>
+    <div class="sidebar-footer">
+      <a href="https://github.com/SangwoonYun/Traplace"
+        target="_blank" rel="noopener" class="github-link" aria-label="Traplace GitHub">
+        <picture>
+          <!-- 다크 모드에서는 흰색 로고 -->
+          <source srcset="{{ url_for('static', filename='img/github-mark-white.svg') }}"
+                  media="(prefers-color-scheme: dark)">
+          <!-- 라이트 모드 기본 -->
+          <img class="github-icon"
+              src="{{ url_for('static', filename='img/github-mark.svg') }}"
+              alt="GitHub">
+        </picture>
+      </a>
+      <span class="credit">Created by #135 [KOR] 방구석개발자</span>
+    </div>
   </aside>
 
   <header class="toolbar" id="toolbar">
