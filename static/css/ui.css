@@ -39,10 +39,40 @@
 .viewport{ padding-top:56px; }
 
 .badge{
-  position:sticky; top:8px; left:calc(100% - 220px);
-  background:#000; color:#fff; font-size:12px; padding:6px 10px; border-radius:6px;
-  opacity:.75; pointer-events:none; width:200px; text-align:right; margin:8px;
-  line-height:1.35;
+  position: fixed;
+  top: 56px;
+  right: 12px;
+  background: rgba(0,0,0,.82);
+  color: #fff;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  z-index: 10001;
+  pointer-events: auto;
+  line-height: 1.35;
+  letter-spacing: .2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.home-btn{
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+.home-btn:hover{ background: rgba(255,255,255,.12); }
+.home-btn:active{ background: rgba(255,255,255,.18); transform: translateY(1px); }
+
+@media (max-width: 640px){
+  .badge{ top: 52px; right: 8px; font-size: 11px; }
 }
 
 .trash-zone{

@@ -4,9 +4,18 @@ import { PAINTER_KINDS, cellsForKindAt, areaBoundingBox } from './painter.js';
 import { posToCell, keyOf, clamp } from './transform.js';
 
 export function setWorldSizeCells(cols, rows){
-  world.style.width  = (cols * cell) + 'px';
-  world.style.height = (rows * cell) + 'px';
-  updateBadge();
+  const pxW = cols * cell;
+  const pxH = rows * cell;
+
+  world.style.width  = pxW + 'px';
+  world.style.height = pxH + 'px';
+
+  // ▼ 추가: CSS 변수 갱신 (translate 에 사용됨)
+  const rootStyle = document.documentElement.style;
+  rootStyle.setProperty('--world-w', pxW + 'px');
+  rootStyle.setProperty('--world-h', pxH + 'px');
+
+  // ...기존 렌더/레이어 리사이즈 로직 유지...
 }
 
 export function centerToCell(cx, cy){
@@ -17,6 +26,18 @@ export function centerToCell(cx, cy){
   viewport.scrollLeft = targetLeft;
   viewport.scrollTop  = targetTop;
 }
+
+export function centerToWorldCenter(){
+  const cols = Math.round(world.clientWidth  / cell);
+  const rows = Math.round(world.clientHeight / cell);
+
+  // 중심 셀 (0-index 기준). 1200×1200이면 599,599
+  const cx = Math.floor(cols / 2);
+  const cy = Math.floor(rows / 2);
+
+  centerToCell(cx, cy);
+}
+
 
 export function renderCells(layer, cellList, opts){
   layer.innerHTML = '';
@@ -129,15 +150,16 @@ export function clearPreview(){
 }
 
 export function updateBadge(){
-  const ztxt = `${Math.round(state.zoom*100)}%`;
-  const ctxt = (state.cursorCell.x==null) ? `x:—, y:—` : `x:${state.cursorCell.x}, y:${state.cursorCell.y}`;
-  badge.textContent = `${ctxt}, ${ztxt}`;
+  if (!badgeText) return;
+  const { x, y } = state.cursorCell || { x: 599, y: 599 };
+  const zoomPct = Math.round((state.zoom || 1) * 100);
+  badgeText.textContent = `x:${x}, y:${y}, ${zoomPct}%`;
 }
 
 // 초기 세팅에 사용
 export function initialLayout(){
   setWorldSizeCells(BASE_CELLS_X, BASE_CELLS_Y);
-  centerToCell(600, 600);
+  centerToWorldCenter();
   updateBadge();
 }
 

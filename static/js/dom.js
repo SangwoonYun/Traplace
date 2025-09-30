@@ -10,6 +10,8 @@ export const outlinesPreviewLayer = document.getElementById('outlinesPreview');
 export const userLayer            = document.getElementById('tilesUser');
 export const snapEl               = document.getElementById('snap');
 export const badge                = document.getElementById('badge');
+export const badgeText = document.getElementById('badgeText');
+export const btnHome   = document.getElementById('btnHome');
 export const trash                = document.getElementById('trash');
 
 export const palette              = document.getElementById('palette');

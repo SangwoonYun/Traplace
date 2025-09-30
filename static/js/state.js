@@ -14,7 +14,7 @@ export const state = {
   blocks: [],                 // {el, kind, size, left, top}
   paintedSet: new Set(),      // 파란 합집합
   userPaint: new Set(),       // 빨간 토글
-  cursorCell: { x: 600, y: 600 },
+  cursorCell: { x: 599, y: 599 },
   drag: null,                 // 드래그 상태
   panning: null,              // 패닝 상태
   AUTO_EXPAND: false,         // 자동 확장 off (동작만 차단)

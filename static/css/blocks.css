@@ -6,10 +6,15 @@
 .block:active{ cursor:grabbing; }
 
 /* 내부 라벨은 정방향(45° 보정) */
-.block > .label{
-  transform-origin:center center;
-  transform: rotate(-45deg) scale(0.70710678);
-  pointer-events:none;
+.block .label{
+  /* 예: 기존에 rotate(-45deg) 등이 있었다면 앞에 scaleY(-1)만 추가 */
+  transform: scaleY(-1) scaleX(-1) rotate(-45deg);
+  transform-origin: center;
+  /* 나머지 기존 라벨 스타일 유지 */
+  font-weight: 700;
+  text-align: center;
+  user-select: none;
+  pointer-events: none;
 }
 
 .block[data-editing="1"]{ cursor:text; }
