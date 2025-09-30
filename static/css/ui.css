@@ -15,6 +15,29 @@
 }
 .usage b{ color:#000; }
 
+/* 상단 툴바 */
+.toolbar{
+  position:fixed; top:0; left: var(--sidebar-w); right:0; height:48px;
+  display:flex; align-items:center; gap:8px;
+  background:#fff; border-bottom:1px solid #e5e5e5; z-index:10000;
+  padding:6px 10px;
+}
+.tb-group{ display:flex; gap:6px; align-items:center; }
+.tb-sep{ width:1px; height:28px; background:#e5e5e5; margin:0 4px; }
+.tb-btn{
+  appearance:none; border:1px solid #cfcfcf; background:#f7f7f7;
+  border-radius:10px; padding:8px 12px; font-weight:800; cursor:pointer;
+  min-width:36px; line-height:1; user-select:none;
+}
+.tb-btn:hover{ filter:brightness(0.98); }
+.tb-btn:active{ transform: translateY(1px); }
+.tb-btn.primary{ background: #1557ff10; border-color:#1557ff60; color:#0b3ddc; }
+.tb-btn.danger{ background: #ff155710; border-color:#ff155760; color:#d10b3a; }
+.tb-btn:disabled{ opacity:.5; cursor:not-allowed; }
+
+/* 상단 툴바 높이만큼 뷰포트에 여백 */
+.viewport{ padding-top:56px; }
+
 .badge{
   position:sticky; top:8px; left:calc(100% - 220px);
   background:#000; color:#fff; font-size:12px; padding:6px 10px; border-radius:6px;
@@ -37,41 +60,3 @@
   background: var(--trash-bg-active);
   border-top-color: var(--trash-border-active);
 }
-
-.sidebar-actions{
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid #e5e5e5;
-  display: grid;
-  gap: 10px;
-}
-
-.sidebar-actions .row{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.btn{
-  appearance: none;
-  border: 1px solid #cfcfcf;
-  background: #f7f7f7;
-  border-radius: 10px;
-  padding: 10px 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.btn:hover{ filter: brightness(0.98); }
-.btn:active{ transform: translateY(1px); }
-
-.btn.primary{
-  background: #1557ff10;
-  border-color: #1557ff60;
-  color: #0b3ddc;
-}
-.btn.danger{
-  background: #ff155710;
-  border-color: #ff155760;
-  color: #d10b3a;
-}
-

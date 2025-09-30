@@ -1,9 +1,9 @@
-// assets/js/interactions/tileToggle.js
 import { state } from '../state.js';
 import { rot } from '../dom.js';
 import { clientToLocalRot, pointToCell, keyOf } from '../transform.js';
 import { renderUserTiles } from '../render.js';
 import { queueSaveToURL } from '../urlState.js';
+import { saveCheckpoint } from '../history.js';
 
 export function setupTileToggle(){
   rot.addEventListener('click', (e)=>{
@@ -18,6 +18,6 @@ export function setupTileToggle(){
 
     renderUserTiles();
     queueSaveToURL();
+    saveCheckpoint();
   });
 }
-

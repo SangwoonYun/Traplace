@@ -34,15 +34,20 @@
       <div class="palette-item" data-kind="block"    data-size="2">2×2</div>
       <div class="palette-item" data-kind="block"    data-size="3">3×3</div>
     </div>
-
-    <div class="sidebar-actions">
-      <button id="btnReset" class="btn danger">초기화 (모두 삭제)</button>
-      <div class="row">
-        <button id="btnCopyURL" class="btn">URL 복사</button>
-        <button id="btnExportPNG" class="btn primary">PNG 내보내기</button>
-      </div>
-    </div>
   </aside>
+
+  <header class="toolbar" id="toolbar">
+    <div class="tb-group">
+      <button id="btnUndo" class="tb-btn" title="되돌리기 (⌘Z / Ctrl+Z)" aria-label="되돌리기">↶</button>
+      <button id="btnRedo" class="tb-btn" title="다시하기 (⇧⌘Z 또는 Ctrl+Y)" aria-label="다시하기">↷</button>
+    </div>
+    <div class="tb-sep"></div>
+    <div class="tb-group">
+      <button id="btnReset" class="tb-btn danger" title="초기화 (⌥⌘R / Ctrl+Alt+R)" aria-label="초기화">🧹</button>
+      <button id="btnCopyURL" class="tb-btn" title="URL 복사 (⌥⌘C / Ctrl+Alt+C)" aria-label="URL 복사">🔗</button>
+      <button id="btnExportPNG" class="tb-btn primary" title="PNG 내보내기 (⌥⌘E / Ctrl+Alt+E)" aria-label="PNG 내보내기">🖼</button>
+    </div>
+  </header>
 
   <main class="viewport" id="viewport" aria-label="scrollable-viewport">
     <div class="world" id="world">
@@ -64,4 +69,3 @@
   <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
-
