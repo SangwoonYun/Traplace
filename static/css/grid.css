@@ -1,0 +1,34 @@
+/* 주(1칸) 눈금만 표시 */
+.grid{
+  position:absolute; inset:0; pointer-events:none;
+  background-image:
+    linear-gradient(to right, transparent calc(var(--cell) - 1px), var(--grid-bold) calc(var(--cell) - 1px)),
+    linear-gradient(to bottom, transparent calc(var(--cell) - 1px), var(--grid-bold) calc(var(--cell) - 1px));
+  background-size:
+    var(--cell) var(--cell),
+    var(--cell) var(--cell);
+  background-color: var(--bg);
+}
+
+/* 레이어들 */
+.tiles, .tiles-preview, .outlines, .outlines-preview, .tiles-user{
+  position:absolute; inset:0; pointer-events:none;
+}
+
+.tile{
+  position:absolute; border-radius:0;
+  background: var(--paint-blue);
+}
+.tiles-preview .tile{ opacity:0.45; }
+
+.tile-red{
+  position:absolute; border-radius:0;
+  background: var(--paint-red);
+}
+
+.area-outline{
+  position:absolute; border:2px dashed var(--paint-blue-border);
+  border-radius:0; background: transparent;
+}
+.outlines-preview .area-outline{ opacity:0.9; }
+

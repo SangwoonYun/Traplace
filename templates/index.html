@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>연맹 배치 시뮬레이터</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/blocks.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/ui.css') }}">
+</head>
+<body>
+  <aside class="sidebar">
+    <h2>사용 방법</h2>
+    <div class="usage">
+      • <b>드래그 앤 드롭</b>: 왼쪽 팔레트의 객체를 모눈에 배치 (그리드 스냅).<br/>
+      • <b>중클릭 드래그</b>: 화면 이동(패닝).<br/>
+      • <b>Ctrl/⌘ + 마우스 휠</b>: 확대/축소(감도 ½).<br/>
+      • <b>트랙패드 핀치</b>: 확대/축소(감도 ½).<br/>
+      • <b>셀 클릭</b>: 바닥 타일 빨간색 토글 칠하기.<br/>
+      • <b>도시센터</b> 라벨: 더블클릭→텍스트 수정(Enter 저장 / Esc 취소).<br/>
+      • 하단 <b>🗑 영역</b>: 객체를 드래그해 삭제.<br/>
+      ※ 파란색 칠은 <b>연맹깃발(7×7)</b>, <b>평원본부(17×17)</b>가 생성.
+    </div>
+
+    <div class="palette-title">객체 팔레트</div>
+    <div class="palette" id="palette">
+      <div class="palette-item" data-kind="hq"       data-size="3">평원본부</div>
+      <div class="palette-item" data-kind="flag"     data-size="1">연맹깃발</div>
+      <div class="palette-item" data-kind="trap"     data-size="3">사냥함정</div>
+      <div class="palette-item" data-kind="city"     data-size="2">도시센터</div>
+      <div class="palette-item" data-kind="resource" data-size="2">연맹자원</div>
+      <div class="palette-item" data-kind="block"    data-size="1">1×1</div>
+      <div class="palette-item" data-kind="block"    data-size="2">2×2</div>
+      <div class="palette-item" data-kind="block"    data-size="3">3×3</div>
+    </div>
+
+    <div class="sidebar-actions">
+      <button id="btnReset" class="btn danger">초기화 (모두 삭제)</button>
+      <div class="row">
+        <button id="btnCopyURL" class="btn">URL 복사</button>
+        <button id="btnExportPNG" class="btn primary">PNG 내보내기</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="viewport" id="viewport" aria-label="scrollable-viewport">
+    <div class="world" id="world">
+      <div class="rot" id="rot">
+        <div class="grid"></div>
+        <div class="tiles" id="tiles"></div>
+        <div class="tiles-user" id="tilesUser"></div>
+        <div class="tiles-preview" id="tilesPreview"></div>
+        <div class="outlines" id="outlines"></div>
+        <div class="outlines-preview" id="outlinesPreview"></div>
+        <div class="snap-outline" id="snap"></div>
+      </div>
+      <div class="badge" id="badge">x:600, y:600, 100%</div>
+    </div>
+  </main>
+
+  <div class="trash-zone" id="trash">🗑 드래그하여 삭제</div>
+
+  <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
+

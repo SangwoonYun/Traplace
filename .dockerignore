@@ -1,0 +1,20 @@
+# VCS / 편집기
+.git
+.gitignore
+*.swp
+*.swo
+.DS_Store
+
+# 파이썬
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pytest_cache/
+.venv/
+venv/
+
+# 기타
+node_modules/
+dist/
+build/
