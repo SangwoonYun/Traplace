@@ -8,13 +8,13 @@
   padding: 12px;
   width: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  font-size: 11px;
+  gap: 12px;
+  border-top: 1px solid var(--sidebar-footer-border);
   color: var(--sidebar-footer-fg);
   text-align: center;
-  border-top: 1px solid var(--sidebar-footer-border);
 }
 .sidebar-footer .credit{
   white-space: nowrap;
@@ -74,8 +74,55 @@
 }
 .usage b{ color:#000; }
 
-.github-link{ display: inline-flex; align-items: center; justify-content: center; }
-.github-icon{ width: 16px; height: 16px; display: block; }
+.footer-qrs{
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.qr-item{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qr-link{
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+
+.qr-link:hover{ transform: scale(1.05); }
+
+.qr-img{
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  background: #fff;
+}
+
+.qr-label{
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--sidebar-footer-fg);
+}
+
+.footer-info{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.github-icon{
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.credit{ white-space: nowrap; }
 
 /* 상단 툴바 */
 .toolbar{

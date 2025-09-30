@@ -1,0 +1,66 @@
+# ────────────── Python ──────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+*.egg
+.eggs/
+.python-version
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+.Python
+
+# Byte-compiled / optimized / DLL files
+*.dll
+*.so
+*.dylib
+
+# Logs
+*.log
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.cache
+.nox/
+
+# ────────────── Flask / Instance ──────────────
+instance/
+*.db
+*.sqlite3
+
+# ────────────── Editor / OS ──────────────
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ────────────── Node / Frontend (혹시 NPM 사용시) ──────────────
+node_modules/
+dist/
+build/
+*.lock
+
+# ────────────── Docker ──────────────
+*.pid
+*.seed
+docker-compose.override.yml
+
+# ────────────── Exported Images ──────────────
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+
+# ────────────── Project-specific ignores ──────────────
+# QR 코드 이미지 (Buy me a coffee / Toss)
+static/img/qr-code-bmc.png
+static/img/qr-code-toss.png
