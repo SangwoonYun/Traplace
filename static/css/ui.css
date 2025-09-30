@@ -4,12 +4,54 @@
 }
 .sidebar h2{ margin:0; font-size:16px; font-weight:800; }
 .palette-title{ margin-top:8px; font-size:13px; color:#333; font-weight:700; }
-.palette{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px; }
+.palette{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:12px;
+}
 .palette-item{
-  border:1px solid #bbb; background:#f7f7f7; user-select:none; cursor:grab;
-  display:grid; place-items:center; font-weight:700; aspect-ratio:1/1;
+  position: relative;
+  border:1px solid #bbb;
+  background:#f7f7f7;
+  user-select:none;
+  cursor:grab;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  aspect-ratio:1/1;
+  border-radius:10px;
+  padding:8px;
 }
 .palette-item:active{ cursor:grabbing; }
+.palette-item .pi-rot{
+  width: 56%;
+  aspect-ratio: 1 / 1;
+  border: 2px solid var(--ok-border, #555);
+  background: var(--ok-bg, #fafafa);
+  border-radius: 10px;
+  transform: rotate(45deg) scale(-1); /* 그리드와 동일 계열(회전+플립) */
+  /* 라벨과 간격 */
+  margin-bottom: 6px;
+}
+.palette-item .pi-text{
+  display:block;
+  font-size: 12px;
+  line-height: 1.2;
+  text-align:center;
+  pointer-events:none; /* 드래그 시작 시 텍스트 선택 방지 */
+}
+.palette-item[data-kind="resource"] .pi-rot{
+  background: var(--resource-bg, #ffe5e5);
+  border-color: var(--resource-border, #d00000);
+}
+.palette-item[data-kind="hq"] .pi-rot,
+.palette-item[data-kind="flag"] .pi-rot{
+  /* 배치 시 파란 칠이 생기지만, 프리뷰는 기본 박스 컬러로 */
+  background: var(--ok-bg, #fafafa);
+  border-color: var(--ok-border, #555);
+}
 .usage{
   margin-top:8px; font-size:12px; color:#444; line-height:1.6;
 }
