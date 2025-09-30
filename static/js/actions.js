@@ -6,6 +6,7 @@ import { validateAllObjects } from './blocks.js';
 import { saveToURLImmediate } from './urlState.js';
 import { exportPNG } from './exportPNG.js';
 import { undo, redo, onHistoryChange, saveCheckpoint } from './history.js';
+import { posToCell } from './transform.js';
 
 function isMac(){ return /Mac|iPhone|iPad/.test(navigator.platform); }
 
@@ -13,9 +14,52 @@ function setTitles(){
   const mac = isMac();
   if (btnUndo) btnUndo.title = mac ? '되돌리기 (⌘Z)' : '되돌리기 (Ctrl+Z)';
   if (btnRedo) btnRedo.title = mac ? '다시하기 (⇧⌘Z)' : '다시하기 (Ctrl+Y)';
+  if (btnCityTrapDist) btnCityTrapDist.title = mac ? '이동시간 예측 (⌥⌘D)' : '이동시간 예측 (Ctrl+Alt+D)';
   if (btnReset) btnReset.title = mac ? '초기화 (⌥⌘R)' : '초기화 (Ctrl+Alt+R)';
   if (btnCopyURL) btnCopyURL.title = mac ? 'URL 복사 (⌥⌘C)' : 'URL 복사 (Ctrl+Alt+C)';
   if (btnExportPNG) btnExportPNG.title = mac ? 'PNG 내보내기 (⌥⌘E)' : 'PNG 내보내기 (Ctrl+Alt+E)';
+}
+
+/** 블록 중심 좌표(셀 단위, 실수 허용: +0.5) */
+function blockCenterInCells(b){
+  const { cx, cy } = posToCell(b.left, b.top); // 좌상단 셀
+  return { x: cx + b.size/2, y: cy + b.size/2 };
+}
+
+/** 도시 라벨 = 최근접 사냥함정까지 거리 */
+function applyCityLabelsWithTrapDistance(){
+  const cities = state.blocks.filter(b => b.kind === 'city');
+  const traps  = state.blocks.filter(b => b.kind === 'trap');
+
+  if (cities.length === 0){
+    alert('도시가 없습니다.');
+    return;
+  }
+  if (traps.length === 0){
+    alert('사냥함정이 없습니다.');
+    return;
+  }
+
+  const trapCenters = traps.map(blockCenterInCells);
+
+  for (const city of cities){
+    const c = blockCenterInCells(city);
+    // 모든 사냥함정까지 거리 계산
+    const values = trapCenters.map(t => {
+      const dx = c.x - t.x;
+      const dy = c.y - t.y;
+      const d  = Math.hypot(dx, dy);
+      return Math.round(d * 3.19);
+    });
+    const labelEl = city.el?.querySelector('.label');
+    if (labelEl){
+      labelEl.textContent = values.join(',');
+    }
+  }
+
+  // URL/히스토리 저장
+  saveToURLImmediate();
+  saveCheckpoint();
 }
 
 export function setupActions(){
@@ -35,6 +79,11 @@ export function setupActions(){
   // Undo/Redo
   btnUndo?.addEventListener('click', ()=> undo());
   btnRedo?.addEventListener('click', ()=> redo());
+
+  // 도시 라벨 = 사냥함정 거리
+  btnCityTrapDist?.addEventListener('click', ()=>{
+    applyCityLabelsWithTrapDistance();
+  });
 
   // 초기화
   btnReset?.addEventListener('click', ()=>{
@@ -106,6 +155,9 @@ export function setupActions(){
     // Redo: Shift+Cmd+Z or Ctrl+Y
     if ((k === 'z' && e.shiftKey) || k === 'y'){
       e.preventDefault(); redo(); return;
+    }
+    if (k === 'd' && e.altKey){
+      e.preventDefault(); btnCityTrapDist?.click(); return; 
     }
     // Reset: Cmd/Ctrl+Alt+R
     if (k === 'r' && e.altKey){

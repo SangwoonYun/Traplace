@@ -99,7 +99,7 @@ export function serializeState(){
     if (b.kind === 'city') {
       const labelEl = b.el?.querySelector('.label');
       const label = (labelEl?.textContent || '').trim();
-      if (label && label !== '도시센터') token += `~${encodeURIComponent(label)}`;
+      if (label && label !== '도시') token += `~${encodeURIComponent(label)}`;
     }
     return token;
   });

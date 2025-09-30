@@ -38,7 +38,7 @@ export function validateAllObjects(){
   }
 }
 
-/* 라벨 편집 (도시센터 전용) */
+/* 라벨 편집 (도시 전용) */
 function startEditLabel(blockEl){
   const b = state.blocks.find(x => x.el === blockEl);
   if (!b || b.kind !== 'city') return;
@@ -55,12 +55,13 @@ function startEditLabel(blockEl){
   label.setAttribute('role', 'textbox');
 
   label.focus();
-  const sel = window.getSelection();
-  const range = document.createRange();
-  range.selectNodeContents(label);
-  range.collapse(false);
-  sel.removeAllRanges();
-  sel.addRange(range);
+  requestAnimationFrame(() => {
+    const sel = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(label);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  });
 
   label.onkeydown = (e)=>{
     if (e.key === 'Enter'){ e.preventDefault(); finishEditLabel(blockEl, false); }
@@ -108,7 +109,7 @@ export function createBlock(kind, size, left, top){
   label.textContent =
     kind === 'flag'     ? '연맹깃발' :
     kind === 'hq'       ? '평원본부' :
-    kind === 'city'     ? '도시센터' :
+    kind === 'city'     ? '도시' :
     kind === 'resource' ? '연맹자원' :
     kind === 'trap'     ? '사냥함정' :
     `${size}×${size}`;

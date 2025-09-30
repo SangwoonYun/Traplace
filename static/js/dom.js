@@ -19,6 +19,7 @@ export const palette              = document.getElementById('palette');
 /* 툴바 버튼 */
 export const btnUndo      = document.getElementById('btnUndo');
 export const btnRedo      = document.getElementById('btnRedo');
+export const btnCityTrapDist = document.getElementById('btnCityTrapDist');
 export const btnReset     = document.getElementById('btnReset');
 export const btnCopyURL   = document.getElementById('btnCopyURL');
 export const btnExportPNG = document.getElementById('btnExportPNG');
