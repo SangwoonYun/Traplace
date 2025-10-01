@@ -105,7 +105,7 @@ export function setupPaletteDrag(){
       ghost.textContent =
         kind==='flag'     ? '연맹깃발' :
         kind==='hq'       ? '평원본부' :
-        kind==='city'     ? '도시센터' :
+        kind==='city'     ? '도시' :
         kind==='resource' ? '연맹자원' :
         kind==='trap'     ? '사냥함정' : `${size}×${size}`;
       document.body.appendChild(ghost);

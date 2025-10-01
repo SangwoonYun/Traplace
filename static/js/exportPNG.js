@@ -297,7 +297,7 @@ export async function exportPNG(){
     let text =
       b.kind === 'flag'     ? '연맹깃발' :
       b.kind === 'hq'       ? '평원본부' :
-      b.kind === 'city'     ? '도시센터' :
+      b.kind === 'city'     ? '도시' :
       b.kind === 'resource' ? '연맹자원' :
       b.kind === 'trap'     ? '사냥함정' : `${b.size}×${b.size}`;
     const t2 = (labelEl?.textContent || '').trim();
