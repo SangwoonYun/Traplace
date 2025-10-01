@@ -3,17 +3,126 @@
   display:flex; flex-direction:column; gap:12px;
 }
 .sidebar h2{ margin:0; font-size:16px; font-weight:800; }
+.sidebar-footer{
+  margin-top: auto;
+  padding: 12px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-top: 1px solid var(--sidebar-footer-border);
+  color: var(--sidebar-footer-fg);
+  text-align: center;
+}
+.sidebar-footer .credit{
+  white-space: nowrap;
+}
+
 .palette-title{ margin-top:8px; font-size:13px; color:#333; font-weight:700; }
-.palette{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px; }
+.palette{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:12px;
+}
 .palette-item{
-  border:1px solid #bbb; background:#f7f7f7; user-select:none; cursor:grab;
-  display:grid; place-items:center; font-weight:700; aspect-ratio:1/1;
+  position: relative;
+  border:1px solid #bbb;
+  background:#f7f7f7;
+  user-select:none;
+  cursor:grab;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  aspect-ratio:1/1;
+  border-radius:10px;
+  padding:8px;
 }
 .palette-item:active{ cursor:grabbing; }
+.palette-item .pi-rot{
+  width: 56%;
+  aspect-ratio: 1 / 1;
+  border: 2px solid var(--ok-border, #555);
+  background: var(--ok-bg, #fafafa);
+  border-radius: 10px;
+  transform: rotate(45deg) scale(-1); /* 그리드와 동일 계열(회전+플립) */
+  /* 라벨과 간격 */
+  margin-bottom: 6px;
+}
+.palette-item .pi-text{
+  display:block;
+  font-size: 12px;
+  line-height: 1.2;
+  text-align:center;
+  pointer-events:none; /* 드래그 시작 시 텍스트 선택 방지 */
+}
+.palette-item[data-kind="resource"] .pi-rot{
+  background: var(--resource-bg, #ffe5e5);
+  border-color: var(--resource-border, #d00000);
+}
+.palette-item[data-kind="hq"] .pi-rot,
+.palette-item[data-kind="flag"] .pi-rot{
+  /* 배치 시 파란 칠이 생기지만, 프리뷰는 기본 박스 컬러로 */
+  background: var(--ok-bg, #fafafa);
+  border-color: var(--ok-border, #555);
+}
 .usage{
   margin-top:8px; font-size:12px; color:#444; line-height:1.6;
 }
 .usage b{ color:#000; }
+
+.footer-qrs{
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.qr-item{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qr-link{
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+
+.qr-link:hover{ transform: scale(1.05); }
+
+.qr-img{
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  background: #fff;
+}
+
+.qr-label{
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--sidebar-footer-fg);
+}
+
+.footer-info{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.github-icon{
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.credit{ white-space: nowrap; }
 
 /* 상단 툴바 */
 .toolbar{
@@ -89,4 +198,18 @@
 .trash-zone.active{
   background: var(--trash-bg-active);
   border-top-color: var(--trash-border-active);
+}
+
+:root{
+  --sidebar-footer-fg:        #555;   /* 텍스트 */
+  --sidebar-footer-icon:      #222;   /* 아이콘 */
+  --sidebar-footer-border:    rgba(0,0,0,0.08);
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --sidebar-footer-fg:      #cfcfcf;
+    --sidebar-footer-icon:    #ffffff;
+    --sidebar-footer-border:  rgba(255,255,255,0.12);
+  }
 }
