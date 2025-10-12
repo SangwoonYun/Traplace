@@ -1,7 +1,7 @@
 import { cell } from './state.js';
 import { world } from './dom.js';
 
-export const KIND_PAINT_RADIUS = { flag: 3, hq: 8 };
+export const KIND_PAINT_RADIUS = { flag: 3, hq: 7 };
 export const PAINTER_KINDS = new Set(['flag', 'hq']);
 
 export function cellsForKindAt(kind, centerCx, centerCy){
