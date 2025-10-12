@@ -11,19 +11,12 @@
 </head>
 <body>
   <aside class="sidebar">
-    <h2>사용 방법</h2>
-    <div class="usage">
-      • <b>드래그 앤 드롭</b>: 왼쪽 팔레트의 객체를 모눈에 배치 (그리드 스냅).<br/>
-      • <b>중클릭 드래그</b>: 화면 이동(패닝).<br/>
-      • <b>Ctrl/⌘ + 마우스 휠</b>: 확대/축소(감도 ½).<br/>
-      • <b>트랙패드 핀치</b>: 확대/축소(감도 ½).<br/>
-      • <b>셀 클릭</b>: 바닥 타일 빨간색 토글 칠하기.<br/>
-      • <b>도시</b> 라벨: 더블클릭→텍스트 수정(Enter 저장 / Esc 취소).<br/>
-      • 하단 <b>🗑 영역</b>: 객체를 드래그해 삭제.<br/>
-      ※ 파란색 칠은 <b>연맹깃발(7×7)</b>, <b>평원본부(17×17)</b>가 생성.
+    <h2 data-i18n="ui.usageTitle">사용 방법</h2>
+    <div class="usage" data-i18n="ui.usage">
+      <!-- 내용은 JS가 채웁니다 -->
     </div>
 
-    <div class="palette-title">객체 팔레트</div>
+    <div class="palette-title" data-i18n="ui.paletteTitle">객체 팔레트</div>
     <div class="palette" id="palette">
       <div class="palette-item" data-kind="hq" data-size="3">
         <div class="pi-rot"></div>
@@ -105,6 +98,14 @@
       <button id="btnCopyURL" class="tb-btn" title="URL 복사 (⌥⌘C / Ctrl+Alt+C)" aria-label="URL 복사">🔗</button>
       <button id="btnExportPNG" class="tb-btn primary" title="PNG 내보내기 (⌥⌘E / Ctrl+Alt+E)" aria-label="PNG 내보내기">🖼</button>
     </div>
+    <div class="tb-flex-spacer"></div>
+  <div class="tb-group">
+    <label class="lang-label" for="langSelect" data-i18n="ui.toolbar.lang">언어</label>
+    <select id="langSelect" class="lang-select" aria-label="Language">
+      <option value="en">🇺🇸 English</option>
+      <option value="ko">🇰🇷 한국어</option>
+    </select>
+  </div>
   </header>
 
   <main class="viewport" id="viewport" aria-label="scrollable-viewport">
@@ -125,7 +126,13 @@
     </div>
   </main>
 
-  <div class="trash-zone" id="trash">🗑 드래그하여 삭제</div>
+  <div id="trashZone"
+      class="trash-drop"
+      data-i18n-title="ui.trash.title"
+      title="여기로 드래그하면 삭제">
+    <span class="trash-emoji">🗑</span>
+    <span class="trash-label" data-i18n="ui.trash.label">여기로 드래그하면 삭제</span>
+  </div>
 
   <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
