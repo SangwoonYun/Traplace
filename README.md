@@ -1,10 +1,10 @@
 # 🎯 Traplace
 > A spatial simulation tool for **Kingshot** game, enabling strategic placement and visualization of city blocks.
 
-[![License](https://img.shields.io/github/license/username/Traplace.svg)](LICENSE)
+[![License](https://img.shields.io/github/license/SangwoonYun/Traplace.svg)](LICENSE)
 [![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)]()
-[![Latest Release](https://img.shields.io/github/v/release/username/Traplace?include_prereleases&sort=semver)](https://github.com/username/Traplace/releases)
-[![Contributors](https://img.shields.io/github/contributors/username/Traplace.svg)]()
+[![Latest Release](https://img.shields.io/github/v/release/SangwoonYun/Traplace?include_prereleases&sort=semver)](https://github.com/SangwoonYun/Traplace/releases)
+[![Contributors](https://img.shields.io/github/contributors/SangwoonYun/Traplace.svg)]()
 [![Docs](https://img.shields.io/badge/docs-available-brightgreen.svg)]()
 
 > 🇰🇷 **한국어 버전:** [README.ko.md](README.ko.md)
@@ -36,8 +36,6 @@ Frontend (HTML/CSS/JS)
          └── i18n Loader
 ```
 
-![Architecture Diagram](docs/architecture.png)
-
 ---
 
 ## ⚙️ Installation
@@ -49,7 +47,7 @@ Frontend (HTML/CSS/JS)
 
 ### Setup
 ```bash
-git clone https://github.com/username/Traplace.git
+git clone https://github.com/SangwoonYun/Traplace.git
 cd Traplace
 pip install -r requirements.txt
 ```
@@ -98,15 +96,6 @@ Traplace is currently hosted at:
 🔗 [https://traplace.swyun.kr](https://traplace.swyun.kr)
 
 > ⚠️ The deployment address may change in the future.
-
----
-
-## 🧪 Development Notes
-For debugging the zoom, rotation, and placement logic:
-```bash
-npm install -g live-server
-live-server .
-```
 
 ---
 
