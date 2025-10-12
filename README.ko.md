@@ -1,10 +1,10 @@
 # 🎯 Traplace
 > 킹샷(Kingshot) 게임의 자리 배치를 시뮬레이션하는 공간 기반 시각화 도구
 
-[![라이선스](https://img.shields.io/github/license/username/Traplace.svg)](LICENSE)
+[![라이선스](https://img.shields.io/github/license/SangwoonYun/Traplace.svg)](LICENSE)
 [![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)]()
-[![최신 릴리스](https://img.shields.io/github/v/release/username/Traplace?include_prereleases&sort=semver)](https://github.com/username/Traplace/releases)
-[![기여자](https://img.shields.io/github/contributors/username/Traplace.svg)]()
+[![최신 릴리스](https://img.shields.io/github/v/release/SangwoonYun/Traplace?include_prereleases&sort=semver)](https://github.com/SangwoonYun/Traplace/releases)
+[![기여자](https://img.shields.io/github/contributors/SangwoonYun/Traplace.svg)]()
 [![Docs](https://img.shields.io/badge/문서-available-brightgreen.svg)]()
 
 > 🌐 **English version:** [README.md](README.md)
@@ -39,8 +39,6 @@
          └── i18n 로더
 ```
 
-![Architecture Diagram](docs/architecture.png)
-
 ---
 
 ## ⚙️ 설치 및 실행
@@ -52,7 +50,7 @@
 
 ### 설치
 ```bash
-git clone https://github.com/username/Traplace.git
+git clone https://github.com/SangwoonYun/Traplace.git
 cd Traplace
 pip install -r requirements.txt
 ```
