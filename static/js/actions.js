@@ -10,7 +10,7 @@ import { posToCell } from './transform.js';
 
 function isMac(){ return /Mac|iPhone|iPad/.test(navigator.platform); }
 
-function setTitles(){
+export function setTitles(){
   const mac = isMac();
   if (btnUndo) btnUndo.title = mac ? '되돌리기 (⌘Z)' : '되돌리기 (Ctrl+Z)';
   if (btnRedo) btnRedo.title = mac ? '다시하기 (⇧⌘Z)' : '다시하기 (Ctrl+Y)';

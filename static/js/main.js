@@ -1,4 +1,4 @@
-import { initialLayout, renderUserTiles, recomputePaint, updateBadge, setWorldSizeCells, centerToCell } from './render.js';
+import { initialLayout, renderUserTiles, recomputePaint, updateBadge, centerToCell } from './render.js';
 import { setupPaletteDrag, makeMovable } from './interactions/drag.js';
 import { setupPan } from './interactions/pan.js';
 import { setupZoom } from './interactions/zoom.js';
@@ -8,12 +8,34 @@ import { validateAllObjects, createBlock } from './blocks.js';
 import { expand } from './interactions/expand.js';
 import { parseFromURL } from './urlState.js';
 import { cell, state } from './state.js';
-import { setupActions } from './actions.js';
+import { setupActions, setTitles } from './actions.js';
 import { initHistoryWithCurrent, saveCheckpoint } from './history.js';
+import { detectPreferredLang, loadLanguageOnline, currentLang, updateBlockLabelsForLocale } from './i18n.js';
 
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
   // 초기 레이아웃
   initialLayout();
+
+  const palette = document.getElementById('palette');
+  if (palette) palette.style.pointerEvents = 'none';
+
+  // i18n 로드
+  const lang = detectPreferredLang();
+  await loadLanguageOnline(lang);
+  updateBlockLabelsForLocale(state);
+
+  if (palette) palette.style.pointerEvents = '';
+
+  // 언어 셀렉트 바인딩
+  const sel = document.getElementById('langSelect');
+  if (sel){
+    sel.value = currentLang();
+    sel.addEventListener('change', async ()=>{
+      await loadLanguageOnline(sel.value);
+      updateBlockLabelsForLocale(state);
+      setTitles(); // 툴팁/단축키 텍스트 갱신
+    });
+  }
 
   // URL 복원 (블록 + 빨간 칠)
   const parsed = parseFromURL();

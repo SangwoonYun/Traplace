@@ -1,9 +1,10 @@
 import { state } from './state.js';
 import { rot } from './dom.js';
-import { renderOutlines, recomputePaint } from './render.js';
+import { recomputePaint } from './render.js';
 import { posToCell } from './transform.js';
 import { queueSaveToURL } from './urlState.js';
 import { saveCheckpoint } from './history.js';
+import { t } from './i18n.js';
 
 /* 색상 적용 */
 function applyBlockStyle(b, invalid){
@@ -53,8 +54,8 @@ function startEditLabel(blockEl){
   label.contentEditable = 'true';
   label.spellcheck = false;
   label.setAttribute('role', 'textbox');
-
   label.focus();
+
   requestAnimationFrame(() => {
     const sel = window.getSelection();
     const range = document.createRange();
@@ -75,17 +76,27 @@ function finishEditLabel(blockEl, cancel){
   const label = blockEl.querySelector('.label');
   if (!b || !label) return;
 
-  if (cancel && typeof b._labelOriginal === 'string'){
-    label.textContent = b._labelOriginal;
+  const defaultCity = t('palette.city'); // 현재 언어의 기본 도시 라벨
+
+  if (cancel){
+    label.textContent = b._labelOriginal ?? defaultCity;
+  }else{
+    // 비었으면 기본값
+    const txt = (label.textContent||'').trim();
+    if (!txt){
+      label.textContent = defaultCity;
+      b.customLabel = false;                 // ✅ 기본 라벨
+    }else if (txt === defaultCity){
+      b.customLabel = false;                 // ✅ 기본 라벨
+    }else{
+      b.customLabel = true;                  // ✅ 사용자 정의
+    }
   }
+
+  delete b._labelOriginal;
   label.classList.remove('editing');
   label.contentEditable = 'false';
-  label.removeAttribute('role');
-  label.onkeydown = null;
-  label.onblur = null;
-  delete b._labelOriginal;
-
-  delete blockEl.dataset.editing;
+  blockEl.removeAttribute('data-editing');
 
   // 라벨 변경 → URL/히스토리 갱신
   queueSaveToURL();
@@ -107,11 +118,11 @@ export function createBlock(kind, size, left, top){
   const label = document.createElement('div');
   label.className = 'label';
   label.textContent =
-    kind === 'flag'     ? '연맹깃발' :
-    kind === 'hq'       ? '평원본부' :
-    kind === 'city'     ? '도시' :
-    kind === 'resource' ? '연맹자원' :
-    kind === 'trap'     ? '사냥함정' :
+    kind === 'hq'       ? t('palette.hq') :
+    kind === 'flag'     ? t('palette.flag') :
+    kind === 'trap'     ? t('palette.trap') :
+    kind === 'city'     ? t('palette.city') :
+    kind === 'resource' ? t('palette.resource') :
     `${size}×${size}`;
   el.appendChild(label);
 
@@ -123,7 +134,7 @@ export function createBlock(kind, size, left, top){
   }
 
   rot.appendChild(el);
-  const b = { el, kind, size, left, top };
+  const b = { el, kind, size, left, top, customLabel: false };
   state.blocks.push(b);
   applyBlockStyle(b, false);
 

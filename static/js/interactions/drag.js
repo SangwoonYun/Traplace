@@ -4,6 +4,7 @@ import { clientToLocalRot, snapLocal } from '../transform.js';
 import { PAINTER_KINDS } from '../painter.js';
 import { showPreview, clearPreview } from '../render.js';
 import { createBlock, updateBlockPosition, deleteBlock } from '../blocks.js';
+import { t } from '../i18n.js';
 
 function updateGhost(clientX, clientY, px){
   if (!state.drag?.ghost) return;
@@ -103,11 +104,11 @@ export function setupPaletteDrag(){
       ghost.style.width = px+'px';
       ghost.style.height= px+'px';
       ghost.textContent =
-        kind==='flag'     ? '연맹깃발' :
-        kind==='hq'       ? '평원본부' :
-        kind==='city'     ? '도시' :
-        kind==='resource' ? '연맹자원' :
-        kind==='trap'     ? '사냥함정' : `${size}×${size}`;
+        kind === 'hq'       ? t('palette.hq') :
+        kind === 'flag'     ? t('palette.flag') :
+        kind === 'trap'     ? t('palette.trap') :
+        kind === 'city'     ? t('palette.city') :
+        kind === 'resource' ? t('palette.resource') :
       document.body.appendChild(ghost);
 
       state.drag = { mode:'new', size, kind, ghost, pointerId: e.pointerId };
