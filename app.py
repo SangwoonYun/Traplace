@@ -1,4 +1,6 @@
+import os
 from pathlib import Path
+
 from flask import Flask, render_template, jsonify
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -16,4 +18,7 @@ def healthz():
 
 
 if __name__ == "__main__":
-    app.run("0.0.0.0", 5000, debug=True)
+    host = os.getenv("host", "0.0.0.0")
+    port = int(os.getenv("port", 5000))
+    debug = os.getenv("debug", "true").lower() == "true"
+    app.run(host=host, port=port, debug=debug)
