@@ -10,16 +10,16 @@ export const outlinesPreviewLayer = document.getElementById('outlinesPreview');
 export const userLayer            = document.getElementById('tilesUser');
 export const snapEl               = document.getElementById('snap');
 export const badge                = document.getElementById('badge');
-export const badgeText = document.getElementById('badgeText');
-export const btnHome   = document.getElementById('btnHome');
-export const trash                = document.getElementById('trash');
+export const badgeText            = document.getElementById('badgeText');
+export const btnHome              = document.getElementById('btnHome');
+export const trash                = document.getElementById('trashZone');
 
 export const palette              = document.getElementById('palette');
 
 /* 툴바 버튼 */
-export const btnUndo      = document.getElementById('btnUndo');
-export const btnRedo      = document.getElementById('btnRedo');
+export const btnUndo         = document.getElementById('btnUndo');
+export const btnRedo         = document.getElementById('btnRedo');
 export const btnCityTrapDist = document.getElementById('btnCityTrapDist');
-export const btnReset     = document.getElementById('btnReset');
-export const btnCopyURL   = document.getElementById('btnCopyURL');
-export const btnExportPNG = document.getElementById('btnExportPNG');
+export const btnReset        = document.getElementById('btnReset');
+export const btnCopyURL      = document.getElementById('btnCopyURL');
+export const btnExportPNG    = document.getElementById('btnExportPNG');
