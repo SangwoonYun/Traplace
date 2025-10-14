@@ -2,7 +2,7 @@
 > A spatial simulation tool for **Kingshot** game, enabling strategic placement and visualization of city blocks.
 
 [![License](https://img.shields.io/github/license/SangwoonYun/Traplace.svg)](LICENSE)
-[![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)]()
+[![Python Version](https://img.shields.io/badge/python-3.13+-blue.svg)]()
 [![Latest Release](https://img.shields.io/github/v/release/SangwoonYun/Traplace?include_prereleases&sort=semver)](https://github.com/SangwoonYun/Traplace/releases)
 [![Contributors](https://img.shields.io/github/contributors/SangwoonYun/Traplace.svg)]()
 [![Docs](https://img.shields.io/badge/docs-available-brightgreen.svg)]()
@@ -41,7 +41,7 @@ Frontend (HTML/CSS/JS)
 ## ⚙️ Installation
 
 ### Prerequisites
-- Python 3.11+
+- Python 3.13+
 - Node.js (optional for local web testing)
 - Git
 
