@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  traplace:
+    image: registry.nglinnovation.net/traplace:latest
+    container_name: traplace
+    restart: unless-stopped
+    pull_policy: always
+    environment:
+      PORT: 8081
+      WORKERS: 1
+      # Flask app이 Redis에 접속할 수 있도록 URL 주입
+      REDIS_URL: redis://redis:6379/0
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -fsS
+        - http://127.0.0.1:8081/healthz
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - traplace-net
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: traplace-redis
+    restart: unless-stopped
+    command: redis-server --save "" --appendonly no
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    networks:
+      - traplace-net
+
+volumes:
+  redis-data:
+
+networks:
+  traplace-net:
+    driver: bridge

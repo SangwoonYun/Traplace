@@ -1,3 +1,10 @@
-Flask>=3.0.0,<4
-gunicorn>=21.2.0,<22
-
+blinker==1.9.0
+click==8.3.0
+Flask==3.1.2
+gunicorn==21.2.0
+itsdangerous==2.2.0
+Jinja2==3.1.6
+MarkupSafe==3.0.3
+packaging==25.0
+redis==6.4.0
+Werkzeug==3.1.3

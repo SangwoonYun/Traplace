@@ -8,9 +8,9 @@
       "undo": "되돌리기",
       "redo": "다시하기",
       "reset": "초기화",
-      "copy": "URL 복사",
+      "copy": "단축 URL 복사",
       "export": "PNG 내보내기",
-      "dist2label": "도시 라벨을 \"사냥함정과의 거리\"로 설정",
+      "dist2label": "행군 시간 계산",
       "lang": "언어",
       "home": "중앙으로 이동"
     },
@@ -39,5 +39,11 @@
     "noTraps": "사냥함정이 없습니다.",
     "resetConfirm": "정말 초기화할까요? (모든 객체 및 빨간 칠이 삭제됩니다)",
     "exportFail": "PNG 내보내기에 실패했습니다."
+  },
+  "msg": {
+    "copiedShort": "단축 복사됨!",
+    "copiedFull": "전체 복사됨",
+    "shortenError": "단축 URL 생성에 실패했습니다.",
+    "copyError": "복사에 실패했습니다."
   }
 }

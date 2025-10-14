@@ -7,17 +7,26 @@ import { saveToURLImmediate } from './urlState.js';
 import { exportPNG } from './exportPNG.js';
 import { undo, redo, onHistoryChange, saveCheckpoint } from './history.js';
 import { posToCell } from './transform.js';
+import { t } from './i18n.js';
 
 function isMac(){ return /Mac|iPhone|iPad/.test(navigator.platform); }
 
 export function setTitles(){
   const mac = isMac();
-  if (btnUndo) btnUndo.title = mac ? '되돌리기 (⌘Z)' : '되돌리기 (Ctrl+Z)';
-  if (btnRedo) btnRedo.title = mac ? '다시하기 (⇧⌘Z)' : '다시하기 (Ctrl+Y)';
-  if (btnCityTrapDist) btnCityTrapDist.title = mac ? '이동시간 예측 (⌥⌘D)' : '이동시간 예측 (Ctrl+Alt+D)';
-  if (btnReset) btnReset.title = mac ? '초기화 (⌥⌘R)' : '초기화 (Ctrl+Alt+R)';
-  if (btnCopyURL) btnCopyURL.title = mac ? 'URL 복사 (⌥⌘C)' : 'URL 복사 (Ctrl+Alt+C)';
-  if (btnExportPNG) btnExportPNG.title = mac ? 'PNG 내보내기 (⌥⌘E)' : 'PNG 내보내기 (Ctrl+Alt+E)';
+  const sc = {
+    undo : mac ? '⌘Z'        : 'Ctrl+Z',
+    redo : mac ? '⇧⌘Z'       : 'Ctrl+Y',
+    reset: mac ? '⌥⌘R'       : 'Ctrl+Alt+R',
+    copy : mac ? '⌥⌘C'       : 'Ctrl+Alt+C',
+    export:mac ? '⌥⌘E'       : 'Ctrl+Alt+E',
+    dist : mac ? '⌥⌘D'       : 'Ctrl+Alt+D',
+  };
+  if (btnUndo)        btnUndo.title        = `${t('ui.toolbar.undo')} (${sc.undo})`;
+  if (btnRedo)        btnRedo.title        = `${t('ui.toolbar.redo')} (${sc.redo})`;
+  if (btnReset)       btnReset.title       = `${t('ui.toolbar.reset')} (${sc.reset})`;
+  if (btnCopyURL)     btnCopyURL.title     = `${t('ui.toolbar.copy')} (${sc.copy})`;
+  if (btnExportPNG)   btnExportPNG.title   = `${t('ui.toolbar.export')} (${sc.export})`;
+  if (btnCityTrapDist)btnCityTrapDist.title= `${t('ui.toolbar.dist2label')} (${sc.dist})`;
 }
 
 /** 블록 중심 좌표(셀 단위, 실수 허용: +0.5) */
@@ -26,17 +35,31 @@ function blockCenterInCells(b){
   return { x: cx + b.size/2, y: cy + b.size/2 };
 }
 
-/** 도시 라벨 = 최근접 사냥함정까지 거리 */
+function setParenValues(labelEl, valuesStr, fallbackBaseText){
+  const cur = (labelEl.textContent || '').trim();
+  // 라벨 본문과 기존 괄호 값을 분리 (맨 끝 괄호 한 덩어리만 인식)
+  const m = cur.match(/^(.*?)(?:\s*\((.*?)\))?\s*$/);
+  let base = (m && m[1]) ? m[1].trim() : '';
+  // base가 비어 있다면 기본 라벨(예: '도시')로 대체
+  if (!base) base = (fallbackBaseText || '').trim();
+
+  labelEl.textContent = base ? `${base} (${valuesStr})` : `(${valuesStr})`;
+}
+
+/** 도시 라벨의 괄호(...) 부분에
+ *   모든 사냥함정까지 거리×3.19 → 반올림 정수, ","로 연결하여 채움.
+ *   기존 라벨 본문은 유지, 괄호 안 값이 이미 있으면 갱신만.
+ */
 function applyCityLabelsWithTrapDistance(){
   const cities = state.blocks.filter(b => b.kind === 'city');
   const traps  = state.blocks.filter(b => b.kind === 'trap');
 
   if (cities.length === 0){
-    alert('도시가 없습니다.');
+    alert(t('alert.noCities'));
     return;
   }
   if (traps.length === 0){
-    alert('사냥함정이 없습니다.');
+    alert(t('alert.noCities'));
     return;
   }
 
@@ -44,22 +67,49 @@ function applyCityLabelsWithTrapDistance(){
 
   for (const city of cities){
     const c = blockCenterInCells(city);
-    // 모든 사냥함정까지 거리 계산
     const values = trapCenters.map(t => {
       const dx = c.x - t.x;
       const dy = c.y - t.y;
       const d  = Math.hypot(dx, dy);
       return Math.round(d * 3.19);
     });
+    const valuesStr = values.join(',');
+
     const labelEl = city.el?.querySelector('.label');
-    if (labelEl){
-      labelEl.textContent = values.join(',');
-    }
+    if (!labelEl) continue;
+
+    const fallbackBase = t('palette.city');
+    setParenValues(labelEl, valuesStr, fallbackBase);
   }
 
   // URL/히스토리 저장
   saveToURLImmediate();
   saveCheckpoint();
+}
+
+async function shortenCurrentUrl() {
+  saveToURLImmediate();
+
+  const u = new URL(location.href);
+  const rel = u.pathname + u.search + u.hash;
+
+  const res = await fetch('/api/shorten', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url: rel })
+  });
+
+  const data = await res.json().catch(() => null);
+  if (!res.ok || !data) throw new Error('shorten-failed');
+
+  const candidate = data.short_url;
+  if (!candidate) throw new Error('shorten-missing');
+
+  const out = candidate.startsWith('http')
+    ? candidate
+    : new URL(candidate, location.origin).toString();
+
+  return out;
 }
 
 export function setupActions(){
@@ -87,7 +137,7 @@ export function setupActions(){
 
   // 초기화
   btnReset?.addEventListener('click', ()=>{
-    if (!confirm('정말 초기화할까요? (모든 객체 및 빨간 칠이 삭제됩니다)')) return;
+    if (!confirm(t('alert.resetConfirm'))) return;
     rot.querySelectorAll('.block').forEach(el => el.remove());
     state.blocks = [];
     state.paintedSet.clear();
@@ -104,25 +154,34 @@ export function setupActions(){
     saveCheckpoint();  // 히스토리 스냅샷
   });
 
-  // URL 복사
+  // URL 복사 (TTL 7일) — 실패 시 전체 URL 폴백
   btnCopyURL?.addEventListener('click', async ()=>{
+    const restoreIcon = () => setTimeout(()=> (btnCopyURL.textContent = '🔗'), 1200);
     try{
-      saveToURLImmediate();
-      await navigator.clipboard.writeText(location.href);
-      btnCopyURL.textContent = '복사됨!';
-      setTimeout(()=> btnCopyURL.textContent = '🔗', 1000);
-    }catch(err){
-      const ta = document.createElement('textarea');
-      ta.value = location.href;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      btnCopyURL.textContent = '복사됨!';
-      setTimeout(()=> btnCopyURL.textContent = '🔗', 1000);
+      const shortUrl = await shortenCurrentUrl();
+      await navigator.clipboard.writeText(shortUrl);
+      btnCopyURL.textContent = t('msg.copiedShort');
+      restoreIcon();
+    }catch(e){
+      // 폴백: 전체 URL 복사
+      try{
+        saveToURLImmediate();
+        await navigator.clipboard.writeText(location.href);
+        btnCopyURL.textContent = t('msg.copiedFull');
+        restoreIcon();
+      }catch{
+        const ta = document.createElement('textarea');
+        ta.value = location.href;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        btnCopyURL.textContent = t('msg.copiedFull');
+        restoreIcon();
+      }
     }
   });
-
+ 
   // PNG 내보내기
   btnExportPNG?.addEventListener('click', async ()=>{
     try{
@@ -137,7 +196,7 @@ export function setupActions(){
       setTimeout(()=>URL.revokeObjectURL(a.href), 3000);
     }catch(e){
       console.error(e);
-      alert('PNG 내보내기에 실패했습니다.');
+      alert(t('alert.exportFail'));
     }
   });
 
