@@ -8,9 +8,9 @@
       "undo": "Undo",
       "redo": "Redo",
       "reset": "Reset",
-      "copy": "Copy URL",
+      "copy": "Copy short URL",
       "export": "Export PNG",
-      "dist2label": "Set Town label to distance from Traps",
+      "dist2label": "Measure move time",
       "lang": "Language",
       "home": "Go to center"
     },
@@ -39,5 +39,11 @@
     "noTraps": "No traps.",
     "resetConfirm": "Reset everything? (All objects and red tiles will be removed)",
     "exportFail": "Failed to export PNG."
+  },
+  "msg": {
+    "copiedShort": "Short URL copied!",
+    "copiedFull": "Full URL copied",
+    "shortenError": "Failed to create short URL.",
+    "copyError": "Failed to copy."
   }
 }
