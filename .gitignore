@@ -53,14 +53,5 @@ build/
 *.seed
 docker-compose.override.yml
 
-# ────────────── Exported Images ──────────────
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.svg
-
 # ────────────── Project-specific ignores ──────────────
-# QR 코드 이미지 (Buy me a coffee / Toss)
-static/img/qr-code-bmc.png
-static/img/qr-code-toss.png
+
