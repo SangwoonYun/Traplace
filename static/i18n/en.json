@@ -2,7 +2,7 @@
   "app": { "title": "Alliance Placement Simulator" },
   "ui": {
     "usageTitle": "How to use",
-    "usage": "• <b>Drag & drop</b>: place items from the left palette (grid snap).<br>• <b>Middle mouse drag</b>: pan the view.<br>• <b>Ctrl/⌘ + Wheel</b>: zoom in/out.<br>• <b>Trackpad pinch</b>: .<br>• <b>Click a cell</b>: toggle red paint.<br>• <b>City</b> label: double-click → edit (Enter save / Esc cancel).<br>• Bottom <b>🗑 area</b>: drag an item here to delete.<br>※ Blue paint is created by <b>Flag (7×7)</b> and <b>HQ (15×15)</b>.",
+    "usage": "• <b>Drag & drop</b>: place items from the left palette (grid snap).<br>• <b>Middle mouse drag</b>: pan the view.<br>• <b>Ctrl/⌘ + Wheel</b>: zoom in/out.<br>• <b>Trackpad pinch</b>: .<br>• <b>Click a cell</b>: toggle red paint.<br>• <b>Town</b> label: double-click → edit (Enter save / Esc cancel).<br>• Bottom <b>🗑 area</b>: drag an item here to delete.<br>※ Blue paint is created by <b>Banner (7×7)</b> and <b>HQ (15×15)</b>.",
     "paletteTitle": "Palette",
     "toolbar": {
       "undo": "Undo",
@@ -10,7 +10,7 @@
       "reset": "Reset",
       "copy": "Copy URL",
       "export": "Export PNG",
-      "dist2label": "Set City label to distance from Traps",
+      "dist2label": "Set Town label to distance from Traps",
       "lang": "Language",
       "home": "Go to center"
     },
@@ -26,9 +26,9 @@
   },
   "palette": {
     "hq": "HQ",
-    "flag": "Flag",
+    "flag": "Banner",
     "trap": "Hunting Trap",
-    "city": "City",
+    "city": "Town",
     "resource": "Alliance Resource",
     "block1": "1×1",
     "block2": "2×2",
