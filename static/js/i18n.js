@@ -26,7 +26,7 @@ const BUILTIN_EN = {
       "• <b>Click a cell</b>: toggle red paint on floor.<br>" +
       "• <b>City</b> label: double-click → edit (Enter save / Esc cancel).<br>" +
       "• Bottom <b>🗑 area</b>: drag an item here to delete.<br>" +
-      "※ Blue paint is created by <b>Alliance Flag (7×7)</b> and <b>HQ (17×17)</b>.",
+      "※ Blue paint is created by <b>Alliance Flag (7×7)</b> and <b>HQ (15×15)</b>.",
     paletteTitle: "Palette",
     toolbar: {
       undo: "Undo",
@@ -359,7 +359,7 @@ export function updateBlockLabelsForLocale(state) {
       }
 
       // Replace if it looks like a previous default (ko/en)
-      const prevDefaults = ['도시', 'City'];
+      const prevDefaults = ['도시', 'Town'];
       if (prevDefaults.includes(cur)) {
         labelEl.textContent = next;
       }
