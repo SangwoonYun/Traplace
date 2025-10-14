@@ -23,6 +23,8 @@ It allows users to test, visualize, and optimize **territory layouts, alliance s
 - 🌍 **Language auto-selection (i18n)** based on browser locale (EN/KR)
 - 💾 **Dynamic i18n file loading** with fallback to English
 
+![traplace_en.png](https://github.com/user-attachments/assets/ae8dc648-e31b-44a9-89b4-36fe7f5a0a47) 
+
 ---
 
 ## 🏗️ Architecture Overview
@@ -34,6 +36,11 @@ Frontend (HTML/CSS/JS)
          ├── Block Manager
          ├── Zoom/Pan Controller
          └── i18n Loader
+Backend (Python)
+   └── Jinja Template Renderer
+         ├── Index
+         ├── URL Shortener API
+         └── Health Check
 ```
 
 ---
@@ -42,7 +49,6 @@ Frontend (HTML/CSS/JS)
 
 ### Prerequisites
 - Python 3.13+
-- Node.js (optional for local web testing)
 - Git
 
 ### Setup
@@ -54,7 +60,7 @@ pip install -r requirements.txt
 
 ### Run the Local Server
 ```bash
-python -m http.server 5500
+python manage.py
 ```
 
 Then open:  
@@ -77,14 +83,31 @@ You can add more language files under `/i18n/` and Traplace will load them dynam
 ## 📦 Project Structure
 ```
 Traplace/
- ├─ assets/
- │   ├─ css/
- │   ├─ js/
- │   └─ images/
- ├─ i18n/
- │   ├─ en.json
- │   └─ ko.json
- ├─ index.html
+ ├─ app/
+ │   ├─ app/
+ │   │   ├─ route/
+ │   │   │   ├─ core.py
+ │   │   │   └─ shortener.py
+ │   │   ├─ utils/
+ │   │   │   └─ shortener.py
+ │   │   ├─ __init__.py
+ │   │   ├─ config.py
+ │   │   └─ extensions.html
+ │   ├─ static/
+ │   │   ├─ js/
+ │   │   │   └─ interactions/
+ │   │   ├─ css/
+ │   │   └─ images/
+ │   ├─ templates/
+ │   │   └─ index.html
+ │   ├─ i18n/
+ │   │   ├─ en.json
+ │   │   └─ ko.json
+ ├─ manage.py
+ ├─ wsgi.py
+ ├─ Dockerfile
+ ├─ compose.yaml
+ ├─ requirements.txt
  ├─ README.md
  └─ README.ko.md
 ```

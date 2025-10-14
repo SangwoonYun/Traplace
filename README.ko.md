@@ -2,7 +2,7 @@
 > 킹샷(Kingshot) 게임의 자리 배치를 시뮬레이션하는 공간 기반 시각화 도구
 
 [![라이선스](https://img.shields.io/github/license/SangwoonYun/Traplace.svg)](LICENSE)
-[![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)]()
+[![Python Version](https://img.shields.io/badge/python-3.13+-blue.svg)]()
 [![최신 릴리스](https://img.shields.io/github/v/release/SangwoonYun/Traplace?include_prereleases&sort=semver)](https://github.com/SangwoonYun/Traplace/releases)
 [![기여자](https://img.shields.io/github/contributors/SangwoonYun/Traplace.svg)]()
 [![Docs](https://img.shields.io/badge/문서-available-brightgreen.svg)]()
@@ -14,7 +14,7 @@
 ## 🧭 개요
 **Traplace**는 *킹샷(Kingshot)* 게임의 자리 배치를 시뮬레이션하고 시각적으로 구성할 수 있는 웹 기반 툴입니다.  
 마름모(다이아몬드) 형태의 격자 좌표를 기반으로,  
-**도시센터, 본부, 연합 깃발, 평원 등**의 배치를 실시간으로 구성하고 비교할 수 있습니다.
+**도시, 본부, 연맹 깃발, 함정 등**의 배치를 실시간으로 구성하고 비교할 수 있습니다.
 
 ---
 
@@ -25,6 +25,8 @@
 - 🏙️ **도시센터, 평원본부, 연합 깃발 시뮬레이션**
 - 🌍 **브라우저 언어 기반 자동 i18n 지원**
 - 💾 **온라인 i18n 파일 동적 로드 및 영어 기본값**
+
+![traplace_ko.png](https://github.com/user-attachments/assets/9ff43c40-b800-4bcd-a093-761e0b532be1) 
 
 ---
 
@@ -37,6 +39,11 @@
          ├── 블록 관리자
          ├── 줌/팬 컨트롤러
          └── i18n 로더
+백엔드 (Python)
+   └── Jinja 템플릿 렌더러
+         ├── 인덱스
+         ├── 단축 URL API
+         └── 헬스 체크
 ```
 
 ---
@@ -44,8 +51,7 @@
 ## ⚙️ 설치 및 실행
 
 ### 사전 요구사항
-- Python 3.11+
-- Node.js (선택사항, 웹서버 실행용)
+- Python 3.13+
 - Git
 
 ### 설치
@@ -57,7 +63,7 @@ pip install -r requirements.txt
 
 ### 로컬 실행
 ```bash
-python -m http.server 5500
+python manage.py
 ```
 
 브라우저에서  
@@ -88,14 +94,31 @@ Traplace는 다국어 UI를 지원합니다.
 ## 📦 프로젝트 구조
 ```
 Traplace/
- ├─ assets/
- │   ├─ css/
- │   ├─ js/
- │   └─ images/
- ├─ i18n/
- │   ├─ en.json
- │   └─ ko.json
- ├─ index.html
+ ├─ app/
+ │   ├─ app/
+ │   │   ├─ route/
+ │   │   │   ├─ core.py
+ │   │   │   └─ shortener.py
+ │   │   ├─ utils/
+ │   │   │   └─ shortener.py
+ │   │   ├─ __init__.py
+ │   │   ├─ config.py
+ │   │   └─ extensions.html
+ │   ├─ static/
+ │   │   ├─ js/
+ │   │   │   └─ interactions/
+ │   │   ├─ css/
+ │   │   └─ images/
+ │   ├─ templates/
+ │   │   └─ index.html
+ │   ├─ i18n/
+ │   │   ├─ en.json
+ │   │   └─ ko.json
+ ├─ manage.py
+ ├─ wsgi.py
+ ├─ Dockerfile
+ ├─ compose.yaml
+ ├─ requirements.txt
  ├─ README.md
  └─ README.ko.md
 ```
