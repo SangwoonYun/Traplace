@@ -5,6 +5,7 @@ import { PAINTER_KINDS } from '../painter.js';
 import { showPreview, clearPreview } from '../render.js';
 import { createBlock, updateBlockPosition, deleteBlock } from '../blocks.js';
 import { t } from '../i18n.js';
+import { onDeleteBlock } from '../counters.js';
 
 function updateGhost(clientX, clientY, px){
   if (!state.drag?.ghost) return;
@@ -13,6 +14,7 @@ function updateGhost(clientX, clientY, px){
 }
 
 function inTrash(clientX, clientY){
+  if (!trash) return false;
   const r = trash.getBoundingClientRect();
   return clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom;
 }
@@ -21,7 +23,7 @@ function onPointerMove(e){
   if (!state.drag || e.pointerId !== state.drag.pointerId) return;
 
   const overTrash = inTrash(e.clientX, e.clientY);
-  trash.classList.toggle('active', overTrash);
+  trash?.classList.toggle('active', overTrash);
 
   const { x, y } = clientToLocalRot(e.clientX, e.clientY);
   const size = state.drag.size;
@@ -56,7 +58,6 @@ function onPointerUp(e){
       const top  = y - (size*cell)/2;
       const snapped = snapLocal(left, top, size);
       const el = createBlock(state.drag.kind, size, snapped.left, snapped.top);
-      // 새로 만든 블록도 이동 가능하게 하려면 makeMovable는 여기 drag 모듈 안에서 처리
       makeMovable(el);
     }
     cleanupDrag();
@@ -65,6 +66,8 @@ function onPointerUp(e){
 
   if (state.drag.mode === 'move' && state.drag.node) {
     if (droppingInTrash){
+      const b = state.blocks.find(x => x.el === state.drag.node);
+      if (b) onDeleteBlock(b);
       deleteBlock(state.drag.node);
     } else {
       const { x, y } = clientToLocalRot(e.clientX, e.clientY);
@@ -82,7 +85,7 @@ function onPointerUp(e){
 function cleanupDrag(){
   snapEl.style.display='none';
   clearPreview();
-  trash.classList.remove('active');
+  trash?.classList.remove('active');
   if (state.drag?.ghost?.parentNode) state.drag.ghost.parentNode.removeChild(state.drag.ghost);
   window.removeEventListener('pointermove', onPointerMove);
   state.drag = null;

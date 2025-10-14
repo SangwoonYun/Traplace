@@ -5,6 +5,7 @@ import { posToCell } from './transform.js';
 import { queueSaveToURL } from './urlState.js';
 import { saveCheckpoint } from './history.js';
 import { t } from './i18n.js';
+import { onCreateBlock, onDeleteBlock } from './counters.js';
 
 /* 색상 적용 */
 function applyBlockStyle(b, invalid){
@@ -144,6 +145,7 @@ export function createBlock(kind, size, left, top){
     queueSaveToURL();
     saveCheckpoint();
   }
+  onCreateBlock(b);
   return el;
 }
 

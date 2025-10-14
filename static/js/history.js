@@ -6,13 +6,14 @@ import { createBlock } from './blocks.js';
 import { renderUserTiles, recomputePaint } from './render.js';
 import { validateAllObjects } from './blocks.js';
 import { makeMovable } from './interactions/drag.js';
+import { updateAllCounts } from './counters.js';
 
 const LIMIT = 100;
 
 const historyState = {
-  stack: [], // [qsString, ...]
+  stack: [],
   index: -1,
-  onChange: null, // (canUndo, canRedo) => void
+  onChange: null,
 };
 
 function notify(){
@@ -29,11 +30,9 @@ export function initHistoryWithCurrent(){
 export function saveCheckpoint(){
   const qs = serializeState();
   const cur = historyState.stack[historyState.index];
-  if (qs === cur) return; // 변화 없음
-  // 미래 이력 제거 후 push
+  if (qs === cur) return;
   historyState.stack = historyState.stack.slice(0, historyState.index + 1);
   historyState.stack.push(qs);
-  // 용량 제한
   if (historyState.stack.length > LIMIT){
     const drop = historyState.stack.length - LIMIT;
     historyState.stack.splice(0, drop);
@@ -75,7 +74,7 @@ function applySerialized(qs){
   for (const it of parsed.blocks){
     const left = it.cx * cell;
     const top  = it.cy * cell;
-    const el = createBlock(it.kind, it.size, left, top); // restoring=true라 내부 렌더 skip
+    const el = createBlock(it.kind, it.size, left, top);
     if (it.kind === 'city' && it.label){
       const lbl = el.querySelector('.label');
       if (lbl) lbl.textContent = it.label;
@@ -85,8 +84,7 @@ function applySerialized(qs){
   state._restoring = false;
   recomputePaint();
   validateAllObjects();
-
-  // URL 동기화
+  updateAllCounts(); 
   updateURLWithSerialized(qs);
 }
 
