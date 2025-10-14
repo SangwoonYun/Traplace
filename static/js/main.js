@@ -11,10 +11,12 @@ import { cell, state } from './state.js';
 import { setupActions, setTitles } from './actions.js';
 import { initHistoryWithCurrent, saveCheckpoint } from './history.js';
 import { detectPreferredLang, loadLanguageOnline, currentLang, updateBlockLabelsForLocale } from './i18n.js';
+import { initCounters, updateAllCounts } from './counters.js';
 
 window.addEventListener('load', async () => {
   // 초기 레이아웃
   initialLayout();
+  initCounters();
 
   const palette = document.getElementById('palette');
   if (palette) palette.style.pointerEvents = 'none';
@@ -57,6 +59,7 @@ window.addEventListener('load', async () => {
     state.userPaint = new Set(parsed.red);
     renderUserTiles();
   }
+  updateAllCounts();
 
   // 인터랙션
   setupPaletteDrag();
