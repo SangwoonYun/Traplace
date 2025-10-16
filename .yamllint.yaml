@@ -14,3 +14,8 @@ rules:
     indent-sequences: consistent
   document-start:
     present: false
+
+ignore: |
+  .venv/**
+  venv/**
+  node_modules/**
