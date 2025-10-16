@@ -1,19 +1,30 @@
-:root{
-  --cell: 48px;          /* 1 셀의 픽셀 크기 */
+/* File: app/static/css/base.css */
+
+/* ---------------------------------------------
+ * Design Tokens (CSS Variables)
+ * ------------------------------------------- */
+:root {
+  /* Layout */
+  --cell: 48px;                 /* Pixel size of one cell */
   --sidebar-w: 240px;
+
+  /* Colors */
   --bg: #fff;
   --grid-bold: #d0d0d0;
 
-  --paint-blue: rgba(66,133,244,0.25);
-  --paint-blue-border: rgba(66,133,244,0.9);
-  --paint-red: rgba(220,20,60,0.35);
+  /* Paint (selection / outlines) */
+  --paint-blue: rgba(66, 133, 244, 0.25);
+  --paint-blue-border: rgba(66, 133, 244, 0.9);
+  --paint-red: rgba(220, 20, 60, 0.35);
 
-  --trash-bg: rgba(220,20,60,0.07);
-  --trash-bg-active: rgba(220,20,60,0.2);
-  --trash-border: rgba(220,20,60,0.5);
-  --trash-border-active: rgba(220,20,60,0.9);
+  /* Trash zone */
+  --trash-bg: rgba(220, 20, 60, 0.07);
+  --trash-bg-active: rgba(220, 20, 60, 0.2);
+  --trash-border: rgba(220, 20, 60, 0.5);
+  --trash-border-active: rgba(220, 20, 60, 0.9);
   --trash-fg: #b00020;
 
+  /* Block kinds */
   --ok-bg: #fafafa;
   --ok-border: #555;
   --warn-bg: #ffe9e9;
@@ -21,40 +32,108 @@
   --resource-bg: #ffe5e5;
   --resource-border: #d00000;
 
-  --zoom: 1; /* 1 = 100% */
-
-  --world-w: 1200px;        /* JS에서 실제 world px로 갱신됨 */
-  --world-h: 1200px;        /* JS에서 실제 world px로 갱신됨 */
-  --rot-k: 0.7071067811865476; /* = √2/2 */
+  /* World / Zoom */
+  --zoom: 1;                         /* 1 = 100% */
+  --world-w: 1200px;                 /* Updated dynamically by JS */
+  --world-h: 1200px;                 /* Updated dynamically by JS */
+  --rot-k: 0.7071067811865476;       /* √2 / 2 */
 }
 
-* { box-sizing: border-box; }
-body{
-  margin:0; height:100vh;
-  display:grid; grid-template-columns: var(--sidebar-w) 1fr;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: var(--bg);
+/* Optional: dark mode background */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b0b0c;
+  }
 }
 
-.viewport{
-  position:relative; overflow:auto; background: var(--bg);
-  touch-action: none;
+/* ---------------------------------------------
+ * Cascade Layers
+ * ------------------------------------------- */
+@layer base, components, utilities;
+
+/* ---------------------------------------------
+ * Base
+ * ------------------------------------------- */
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: var(--sidebar-w) 1fr;
+    font-family:
+      system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR",
+      Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: #111;
+  }
+
+  /* Enhanced focus visibility */
+  :focus-visible {
+    outline: 2px solid #2684ff;
+    outline-offset: 2px;
+  }
+
+  /* Reduce animation when user prefers reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    html:focus-within {
+      scroll-behavior: auto;
+    }
+    * {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
-.viewport.panning{ cursor: grabbing; }
 
-.world{ position:relative; }
+/* ---------------------------------------------
+ * Components
+ * ------------------------------------------- */
+@layer components {
+  .viewport {
+    position: relative;
+    overflow: auto;
+    background: var(--bg);
+    touch-action: none;
+  }
 
-.rot{
-  position: absolute;
-  inset: 0;
-  transform-origin: 0 0; /* 원점 기준으로 수식이 맞춰져 있음 */
-  /* 순서 중요: translate → rotate → scale(-1) → zoom */
-  transform:
-    translate(
-      calc(var(--world-w) * var(--rot-k)),
-      calc((var(--world-w) + var(--world-h)) * var(--rot-k))
-    )
-  rotate(45deg)
-  scale(-1)
-  scale(var(--zoom));
+  .viewport.panning {
+    cursor: grabbing;
+  }
+
+  .world {
+    position: relative;
+  }
+
+  .rot {
+    position: absolute;
+    inset: 0;
+    transform-origin: 0 0; /* All calculations are based on origin */
+
+    /* Order matters: translate → rotate → scale(-1) → zoom */
+    transform:
+      translate(
+        calc(var(--world-w) * var(--rot-k)),
+        calc((var(--world-w) + var(--world-h)) * var(--rot-k))
+      )
+      rotate(45deg)
+      scale(-1)
+      scale(var(--zoom));
+  }
+}
+
+/* ---------------------------------------------
+ * Utilities
+ * ------------------------------------------- */
+@layer utilities {
+  /* Add utility classes here if needed */
 }

@@ -1,25 +1,45 @@
-.block{
-  position:absolute; border:1px solid var(--ok-border); background:var(--ok-bg);
-  display:grid; place-items:center; font-weight:700; color:#333;
-  user-select:none; cursor:grab; border-radius:0;
-}
-.block:active{ cursor:grabbing; }
+/* File: app/static/css/blocks.css */
 
-/* 내부 라벨은 정방향(45° 보정) */
-.block .label{
-  /* 예: 기존에 rotate(-45deg) 등이 있었다면 앞에 scaleY(-1)만 추가 */
+/* ---------------------------------------------
+ * Block Elements
+ * ------------------------------------------- */
+.block {
+  position: absolute;
+  border: 1px solid var(--ok-border);
+  background: var(--ok-bg);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: #333;
+  user-select: none;
+  cursor: grab;
+  border-radius: 0;
+}
+
+.block:active {
+  cursor: grabbing;
+}
+
+/* ---------------------------------------------
+ * Internal Label (orientation corrected by 45°)
+ * ------------------------------------------- */
+.block .label {
+  /* Corrected orientation: scaleY(-1) scaleX(-1) rotate(-45deg) */
   transform: scaleY(-1) scaleX(-1) rotate(-45deg);
   transform-origin: center;
-  /* 나머지 기존 라벨 스타일 유지 */
   font-weight: 700;
   text-align: center;
   user-select: none;
   pointer-events: none;
 }
 
-.block[data-editing="1"]{ cursor:text; }
-.block .label.editing{
-  pointer-events:auto;
+/* Editing Mode */
+.block[data-editing='1'] {
+  cursor: text;
+}
+
+.block .label.editing {
+  pointer-events: auto;
   outline: 2px solid #4a90e2;
   background: #fff;
   padding: 4px 6px;
@@ -27,13 +47,27 @@
   min-width: 3ch;
 }
 
-.snap-outline{
-  position:absolute; border:2px dashed #4a90e2; border-radius:0; pointer-events:none;
-  display:none;
+/* ---------------------------------------------
+ * Snap Outline (visible during snapping)
+ * ------------------------------------------- */
+.snap-outline {
+  position: absolute;
+  border: 2px dashed #4a90e2;
+  border-radius: 0;
+  pointer-events: none;
+  display: none;
 }
 
-.ghost{
-  position:fixed; pointer-events:none; opacity:0.6; border:1px dashed #666;
-  display:grid; place-items:center; background:#ffffffcc; border-radius:0;
+/* ---------------------------------------------
+ * Ghost Element (drag preview)
+ * ------------------------------------------- */
+.ghost {
+  position: fixed;
+  pointer-events: none;
+  opacity: 0.6;
+  border: 1px dashed #666;
+  display: grid;
+  place-items: center;
+  background: #ffffffcc;
+  border-radius: 0;
 }
-
