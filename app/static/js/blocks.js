@@ -183,12 +183,17 @@ export function createBlock(kind, size, left, top) {
   const label = document.createElement('div');
   label.className = 'label';
   label.textContent =
-    kind === 'hq' ? t('palette.hq') :
-    kind === 'flag' ? t('palette.flag') :
-    kind === 'trap' ? t('palette.trap') :
-    kind === 'city' ? t('palette.city') :
-    kind === 'resource' ? t('palette.resource') :
-    `${size}×${size}`;
+    kind === 'hq'
+      ? t('palette.hq')
+      : kind === 'flag'
+        ? t('palette.flag')
+        : kind === 'trap'
+          ? t('palette.trap')
+          : kind === 'city'
+            ? t('palette.city')
+            : kind === 'resource'
+              ? t('palette.resource')
+              : `${size}×${size}`;
   el.appendChild(label);
 
   if (kind === 'city') {

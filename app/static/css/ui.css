@@ -4,8 +4,8 @@
  * Sidebar Footer Theme Variables (tokens)
  * ------------------------------------------- */
 :root {
-  --sidebar-footer-fg: #555;        /* text color */
-  --sidebar-footer-icon: #222;      /* icon color */
+  --sidebar-footer-fg: #555; /* text color */
+  --sidebar-footer-icon: #222; /* icon color */
   --sidebar-footer-border: rgba(0, 0, 0, 0.08);
 }
 
@@ -343,7 +343,9 @@
   letter-spacing: 0.3px;
   pointer-events: none;
   z-index: 9999;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
   user-select: none;
 }
 

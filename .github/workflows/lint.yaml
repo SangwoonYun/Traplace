@@ -1,7 +1,7 @@
 # File: .github/workflows/lint.yaml
 name: CI — Lint & Conventions
 
-"on":
+'on':
   pull_request:
 
 jobs:

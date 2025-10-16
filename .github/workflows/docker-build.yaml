@@ -1,6 +1,6 @@
 name: Release Image
 
-"on":
+'on':
   push:
     tags:
       - '*'

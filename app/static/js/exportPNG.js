@@ -91,7 +91,10 @@ function usedCellsBBox() {
 
   if (!used.size) return null;
 
-  let minx = Infinity, miny = Infinity, maxx = -Infinity, maxy = -Infinity;
+  let minx = Infinity,
+    miny = Infinity,
+    maxx = -Infinity,
+    maxy = -Infinity;
   for (const key of used) {
     const [x, y] = key.split(',').map(Number);
     if (x < minx) minx = x;
@@ -127,10 +130,30 @@ function strokeCellPerimeter(ctx, set, x, y, color, lineWidth = 2, dashed = fals
   ctx.lineWidth = lineWidth;
   if (dashed) ctx.setLineDash([6, 6]);
 
-  if (!has(x, y - 1)) { ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px + cell, py); ctx.stroke(); }
-  if (!has(x + 1, y)) { ctx.beginPath(); ctx.moveTo(px + cell, py); ctx.lineTo(px + cell, py + cell); ctx.stroke(); }
-  if (!has(x, y + 1)) { ctx.beginPath(); ctx.moveTo(px, py + cell); ctx.lineTo(px + cell, py + cell); ctx.stroke(); }
-  if (!has(x - 1, y)) { ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, py + cell); ctx.stroke(); }
+  if (!has(x, y - 1)) {
+    ctx.beginPath();
+    ctx.moveTo(px, py);
+    ctx.lineTo(px + cell, py);
+    ctx.stroke();
+  }
+  if (!has(x + 1, y)) {
+    ctx.beginPath();
+    ctx.moveTo(px + cell, py);
+    ctx.lineTo(px + cell, py + cell);
+    ctx.stroke();
+  }
+  if (!has(x, y + 1)) {
+    ctx.beginPath();
+    ctx.moveTo(px, py + cell);
+    ctx.lineTo(px + cell, py + cell);
+    ctx.stroke();
+  }
+  if (!has(x - 1, y)) {
+    ctx.beginPath();
+    ctx.moveTo(px, py);
+    ctx.lineTo(px, py + cell);
+    ctx.stroke();
+  }
 
   ctx.restore();
 }
@@ -152,7 +175,10 @@ function styleForBlock(b, paintedSet) {
   let invalid = false;
   for (let y = cy; y < cy + b.size && !invalid; y++) {
     for (let x = cx; x < cx + b.size; x++) {
-      if (!paintedSet.has(`${x},${y}`)) { invalid = true; break; }
+      if (!paintedSet.has(`${x},${y}`)) {
+        invalid = true;
+        break;
+      }
     }
   }
   if (invalid) {
@@ -213,7 +239,7 @@ function projectRaw(W, H, X, Y) {
  * @returns {{boxW:number,boxH:number,shiftX:number,shiftY:number,W:number,H:number}}
  */
 function computeCanvasBoxAndShift(offX, offY, widthPx, heightPx) {
-  const W = world.clientWidth;  // px
+  const W = world.clientWidth; // px
   const H = world.clientHeight; // px
 
   // 4 corners (unrotated)
@@ -228,7 +254,10 @@ function computeCanvasBoxAndShift(offX, offY, widthPx, heightPx) {
   const proj = P.map(([x, y]) => projectRaw(W, H, x, y));
 
   // Bounding box
-  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  let minX = Infinity,
+    minY = Infinity,
+    maxX = -Infinity,
+    maxY = -Infinity;
   for (const p of proj) {
     if (p.x < minX) minX = p.x;
     if (p.y < minY) minY = p.y;
@@ -289,8 +318,12 @@ export async function exportPNG() {
   const heightPx = heightCells * cell;
 
   // Canvas bbox & shift
-  const { boxW, boxH, shiftX, shiftY, W, H } =
-    computeCanvasBoxAndShift(offX, offY, widthPx, heightPx);
+  const { boxW, boxH, shiftX, shiftY, W, H } = computeCanvasBoxAndShift(
+    offX,
+    offY,
+    widthPx,
+    heightPx,
+  );
 
   // HiDPI
   const dpr = window.devicePixelRatio || 1;
@@ -315,10 +348,16 @@ export async function exportPNG() {
   ctx.strokeStyle = gridColor;
   ctx.lineWidth = 1;
   for (let x = offX; x <= offX + widthPx + 0.1; x += cell) {
-    ctx.beginPath(); ctx.moveTo(x, offY); ctx.lineTo(x, offY + heightPx); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, offY);
+    ctx.lineTo(x, offY + heightPx);
+    ctx.stroke();
   }
   for (let y = offY; y <= offY + heightPx + 0.1; y += cell) {
-    ctx.beginPath(); ctx.moveTo(offX, y); ctx.lineTo(offX + widthPx, y); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(offX, y);
+    ctx.lineTo(offX + widthPx, y);
+    ctx.stroke();
   }
   ctx.restore();
 
@@ -358,12 +397,17 @@ export async function exportPNG() {
     const centerCx = cx + Math.floor(b.size / 2);
     const centerCy = cy + Math.floor(b.size / 2);
     const { minx: ax, miny: ay, maxx: bx, maxy: by } = areaBoundingBox(b.kind, centerCx, centerCy);
-    const x = ax * cell, y = ay * cell, w = (bx - ax + 1) * cell, h = (by - ay + 1) * cell;
+    const x = ax * cell,
+      y = ay * cell,
+      w = (bx - ax + 1) * cell,
+      h = (by - ay + 1) * cell;
 
     // Skip if completely outside crop
     const inX = !(x + w < offX || x > offX + widthPx);
     const inY = !(y + h < offY || y > offY + heightPx);
-    if (inX && inY) { ctx.strokeRect(x, y, w, h); }
+    if (inX && inY) {
+      ctx.strokeRect(x, y, w, h);
+    }
   }
   ctx.restore();
 
@@ -371,7 +415,10 @@ export async function exportPNG() {
   for (const b of state.blocks) {
     const st = styleForBlock(b, painted);
     const { cx, cy } = posToCell(b.left, b.top);
-    const x = cx * cell, y = cy * cell, w = b.size * cell, h = b.size * cell;
+    const x = cx * cell,
+      y = cy * cell,
+      w = b.size * cell,
+      h = b.size * cell;
 
     // Skip if outside crop
     if (x > offX + widthPx || x + w < offX || y > offY + heightPx || y + h < offY) continue;
@@ -388,11 +435,17 @@ export async function exportPNG() {
     // Label text
     const labelEl = b.el?.querySelector('.label');
     let text =
-      b.kind === 'flag'     ? 'Alliance Flag' :
-      b.kind === 'hq'       ? 'Plains HQ' :
-      b.kind === 'city'     ? 'City' :
-      b.kind === 'resource' ? 'Alliance Resource' :
-      b.kind === 'trap'     ? 'Hunting Trap' : `${b.size}×${b.size}`;
+      b.kind === 'flag'
+        ? 'Alliance Flag'
+        : b.kind === 'hq'
+          ? 'Plains HQ'
+          : b.kind === 'city'
+            ? 'City'
+            : b.kind === 'resource'
+              ? 'Alliance Resource'
+              : b.kind === 'trap'
+                ? 'Hunting Trap'
+                : `${b.size}×${b.size}`;
     const t2 = (labelEl?.textContent || '').trim();
     if (b.kind === 'city' && t2) text = t2;
 

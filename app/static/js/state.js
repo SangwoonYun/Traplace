@@ -17,10 +17,7 @@ export const EXPAND_MARGIN = 300; // px
  * Cell size (px) from CSS variable with fallback
  * ------------------------------------------- */
 export const cell = (() => {
-  const v = parseInt(
-    getComputedStyle(document.documentElement).getPropertyValue('--cell'),
-    10,
-  );
+  const v = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cell'), 10);
   return Number.isFinite(v) && v > 0 ? v : 48;
 })();
 

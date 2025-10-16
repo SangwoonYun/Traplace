@@ -7,7 +7,13 @@
  * - Kick off initial render + history snapshot
  */
 
-import { initialLayout, renderUserTiles, recomputePaint, updateBadge, centerToCell } from './render.js';
+import {
+  initialLayout,
+  renderUserTiles,
+  recomputePaint,
+  updateBadge,
+  centerToCell,
+} from './render.js';
 import { setupPaletteDrag, makeMovable } from './interactions/drag.js';
 import { setupPan } from './interactions/pan.js';
 import { setupZoom } from './interactions/zoom.js';
@@ -19,7 +25,12 @@ import { parseFromURL } from './urlState.js';
 import { cell, state } from './state.js';
 import { setupActions, setTitles } from './actions.js';
 import { initHistoryWithCurrent, saveCheckpoint } from './history.js';
-import { detectPreferredLang, loadLanguageOnline, currentLang, updateBlockLabelsForLocale } from './i18n.js';
+import {
+  detectPreferredLang,
+  loadLanguageOnline,
+  currentLang,
+  updateBlockLabelsForLocale,
+} from './i18n.js';
 import { initCounters, updateAllCounts } from './counters.js';
 
 window.addEventListener('load', async () => {

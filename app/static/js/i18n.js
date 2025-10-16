@@ -15,9 +15,9 @@
 const FALLBACK_LANG = 'en';
 
 /** @type {Record<string, any> | null} */
-let DICT = null;                 // Active dictionary
+let DICT = null; // Active dictionary
 /** @type {string} */
-let CUR_LANG = FALLBACK_LANG;    // Active language code
+let CUR_LANG = FALLBACK_LANG; // Active language code
 
 // Built-in EN dictionary as the last-resort safety net
 const BUILTIN_EN = {
@@ -222,10 +222,7 @@ function sanitizeHtml(input) {
   if (typeof input !== 'string') return '';
 
   // 1) escape all
-  const escaped = input
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+  const escaped = input.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
   // 2) restore allowlisted tags
   const unescapeAllowed = escaped

@@ -5,7 +5,7 @@
  * ------------------------------------------- */
 :root {
   /* Layout */
-  --cell: 48px;                 /* Pixel size of one cell */
+  --cell: 48px; /* Pixel size of one cell */
   --sidebar-w: 240px;
 
   /* Colors */
@@ -33,10 +33,10 @@
   --resource-border: #d00000;
 
   /* World / Zoom */
-  --zoom: 1;                         /* 1 = 100% */
-  --world-w: 1200px;                 /* Updated dynamically by JS */
-  --world-h: 1200px;                 /* Updated dynamically by JS */
-  --rot-k: 0.7071067811865476;       /* √2 / 2 */
+  --zoom: 1; /* 1 = 100% */
+  --world-w: 1200px; /* Updated dynamically by JS */
+  --world-h: 1200px; /* Updated dynamically by JS */
+  --rot-k: 0.7071067811865476; /* √2 / 2 */
 }
 
 /* Optional: dark mode background */
@@ -59,7 +59,8 @@
     box-sizing: border-box;
   }
 
-  html, body {
+  html,
+  body {
     height: 100%;
   }
 
@@ -69,8 +70,14 @@
     display: grid;
     grid-template-columns: var(--sidebar-w) 1fr;
     font-family:
-      system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR",
-      Helvetica, Arial, sans-serif;
+      system-ui,
+      -apple-system,
+      Segoe UI,
+      Roboto,
+      'Noto Sans KR',
+      Helvetica,
+      Arial,
+      sans-serif;
     background: var(--bg);
     color: #111;
   }
@@ -120,14 +127,11 @@
     transform-origin: 0 0; /* All calculations are based on origin */
 
     /* Order matters: translate → rotate → scale(-1) → zoom */
-    transform:
-      translate(
+    transform: translate(
         calc(var(--world-w) * var(--rot-k)),
         calc((var(--world-w) + var(--world-h)) * var(--rot-k))
       )
-      rotate(45deg)
-      scale(-1)
-      scale(var(--zoom));
+      rotate(45deg) scale(-1) scale(var(--zoom));
   }
 }
 

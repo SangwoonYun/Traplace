@@ -1,4 +1,5 @@
 # 🎯 Traplace
+
 > 킹샷(Kingshot) 게임의 자리 배치를 시뮬레이션하는 공간 기반 시각화 도구
 
 [![라이선스](https://img.shields.io/github/license/SangwoonYun/Traplace.svg)](LICENSE)
@@ -12,13 +13,15 @@
 ---
 
 ## 🧭 개요
-**Traplace**는 *킹샷(Kingshot)* 게임의 자리 배치를 시뮬레이션하고 시각적으로 구성할 수 있는 웹 기반 툴입니다.  
+
+**Traplace**는 _킹샷(Kingshot)_ 게임의 자리 배치를 시뮬레이션하고 시각적으로 구성할 수 있는 웹 기반 툴입니다.  
 마름모(다이아몬드) 형태의 격자 좌표를 기반으로,  
 **도시, 본부, 연맹 깃발, 함정 등**의 배치를 실시간으로 구성하고 비교할 수 있습니다.
 
 ---
 
 ## ✨ 주요 기능
+
 - 🧱 **-135° 회전된 마름모형 좌표 시스템**
 - 🧭 **확대/축소 및 이동 (Zoom & Pan)**
 - 🧩 **1×1, 2×2, 3×3 블록 배치 기능**
@@ -26,7 +29,7 @@
 - 🌍 **브라우저 언어 기반 자동 i18n 지원**
 - 💾 **온라인 i18n 파일 동적 로드 및 영어 기본값**
 
-![traplace_ko.png](https://github.com/user-attachments/assets/9ff43c40-b800-4bcd-a093-761e0b532be1) 
+![traplace_ko.png](https://github.com/user-attachments/assets/9ff43c40-b800-4bcd-a093-761e0b532be1)
 
 ---
 
@@ -51,10 +54,12 @@
 ## ⚙️ 설치 및 실행
 
 ### 사전 요구사항
+
 - Python 3.13+
 - Git
 
 ### 설치
+
 ```bash
 git clone https://github.com/SangwoonYun/Traplace.git
 cd Traplace
@@ -62,6 +67,7 @@ pip install -r requirements.txt
 ```
 
 ### 로컬 실행
+
 ```bash
 python manage.py
 ```
@@ -72,6 +78,7 @@ python manage.py
 ---
 
 ## 🌐 배포 주소
+
 Traplace는 다음 주소에서 서비스되고 있습니다:  
 🔗 [https://traplace.swyun.kr](https://traplace.swyun.kr)
 
@@ -80,18 +87,20 @@ Traplace는 다음 주소에서 서비스되고 있습니다:
 ---
 
 ## 🌐 다국어(i18n)
+
 Traplace는 다국어 UI를 지원합니다.
 
-| 언어 | 파일 | 상태 |
-|------|------|------|
-| 영어 | `i18n/en.json` | ✅ |
-| 한국어 | `i18n/ko.json` | ✅ |
+| 언어   | 파일           | 상태 |
+| ------ | -------------- | ---- |
+| 영어   | `i18n/en.json` | ✅   |
+| 한국어 | `i18n/ko.json` | ✅   |
 
 새로운 언어 파일을 `/i18n/` 폴더에 추가하면 런타임 시 자동으로 감지됩니다.
 
 ---
 
 ## 📦 프로젝트 구조
+
 ```
 Traplace/
  ├─ app/
@@ -126,12 +135,14 @@ Traplace/
 ---
 
 ## 🧾 라이선스
+
 이 프로젝트는 **MIT License**를 따릅니다.  
 자세한 내용은 [LICENSE](LICENSE)를 참고하세요.
 
 ---
 
 ## 👤 작성자
+
 **#135 [KOR] 방구석개발자**  
 📧 dev.swyun@gmail.com  
 🐙 [@SangwoonYun](https://github.com/SangwoonYun)

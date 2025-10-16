@@ -158,12 +158,17 @@ export function setupPaletteDrag() {
       ghost.style.width = `${px}px`;
       ghost.style.height = `${px}px`;
       ghost.textContent =
-        kind === 'hq'       ? t('palette.hq') :
-        kind === 'flag'     ? t('palette.flag') :
-        kind === 'trap'     ? t('palette.trap') :
-        kind === 'city'     ? t('palette.city') :
-        kind === 'resource' ? t('palette.resource') :
-        `${size}×${size}`;
+        kind === 'hq'
+          ? t('palette.hq')
+          : kind === 'flag'
+            ? t('palette.flag')
+            : kind === 'trap'
+              ? t('palette.trap')
+              : kind === 'city'
+                ? t('palette.city')
+                : kind === 'resource'
+                  ? t('palette.resource')
+                  : `${size}×${size}`;
       document.body.appendChild(ghost);
 
       state.drag = { mode: 'new', size, kind, ghost, pointerId: e.pointerId };
