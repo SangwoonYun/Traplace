@@ -28,7 +28,6 @@ export function setupPan(expand) {
 
   function startPan(e) {
     // Commit to panning: capture pointer and switch cursor.
-    e.preventDefault();
     viewport.setPointerCapture?.(e.pointerId);
     state.panning.moved = true;
     viewport.classList.add('panning');

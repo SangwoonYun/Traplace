@@ -300,12 +300,18 @@ export function setupPaletteDrag() {
       const sx = e.clientX;
       const sy = e.clientY;
       let timer = null;
+      let active = true;
 
       // We capture only after confirming long-press or for mouse immediate pickup.
       const startDrag = () => {
+        if (!active) return;
         hapticTap(15);
         e.preventDefault();
         item.setPointerCapture?.(e.pointerId);
+        if (!isTouch) {
+          try { item.setPointerCapture?.(e.pointerId); } catch {}
+          e.preventDefault();
+        }
 
         const size = parseInt(item.dataset.size, 10);
         const kind = item.dataset.kind;
@@ -362,11 +368,21 @@ export function setupPaletteDrag() {
         item.addEventListener(
           'pointerup',
           () => {
+            active = false;
             clearTimeout(timer);
             item.removeEventListener('pointermove', onMoveCheck);
             if (!canceledByMove) {
               // short tap: do nothing (no pickup)
             }
+          },
+          { once: true },
+        );
+        item.addEventListener(
+          'pointercancel',
+          () => {
+            active = false;
+            clearTimeout(timer);
+            item.removeEventListener('pointermove', onMoveCheck);
           },
           { once: true },
         );
@@ -393,14 +409,18 @@ export function makeMovable(el) {
     const sx = e.clientX;
     const sy = e.clientY;
     let timer = null;
+    let active = true;
 
     const startMove = () => {
+      if (!active) return;
       // If panning already started, don't steal the gesture
       if (state.panning && state.panning.moved) return;
 
       hapticTap(15);
-      e.preventDefault();
-      el.setPointerCapture?.(e.pointerId);
+      if (!isTouch) {
+        try { el.setPointerCapture?.(e.pointerId); } catch {}
+        e.preventDefault();
+      }
 
       const size = parseInt(el.dataset.size, 10);
       const kind = el.dataset.kind;
@@ -445,9 +465,19 @@ export function makeMovable(el) {
       el.addEventListener(
         'pointerup',
         () => {
+          active = false;
           clearTimeout(timer);
           el.removeEventListener('pointermove', onMoveCheck);
           // short tap → no pickup
+        },
+        { once: true },
+      );
+      el.addEventListener(
+        'pointercancel',
+        () => {
+          active = false;
+          clearTimeout(timer);
+          el.removeEventListener('pointermove', onMoveCheck);
         },
         { once: true },
       );
