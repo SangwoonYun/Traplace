@@ -18,10 +18,10 @@ import { t } from '../i18n.js';
 /* ──────────────────────────────────────────────────────────────────────────────
  * Constants
  * ──────────────────────────────────────────────────────────────────────────── */
-const LONG_PRESS_MS = 250;   // touch long-press threshold
-const MOVE_TOL = 8;          // touch slop (px) before we treat as scroll/pan
-const EDGE_MARGIN = 72;      // px from each edge to begin auto-scroll
-const MAX_SPEED = 500;       // px/sec at the very edge
+const LONG_PRESS_MS = 250; // touch long-press threshold
+const MOVE_TOL = 8; // touch slop (px) before we treat as scroll/pan
+const EDGE_MARGIN = 72; // px from each edge to begin auto-scroll
+const MAX_SPEED = 500; // px/sec at the very edge
 
 /* ──────────────────────────────────────────────────────────────────────────────
  * Utilities
@@ -97,8 +97,7 @@ function computeEffectiveRect() {
     const vpH = vp.bottom - vp.top;
     const sbW = sb.right - sb.left;
     const sbH = sb.bottom - sb.top;
-    const looksLikeLeftSidebar =
-      sb.left <= vp.left + 8 && sbW < vpW * 0.6 && sbH > vpH * 0.5;
+    const looksLikeLeftSidebar = sb.left <= vp.left + 8 && sbW < vpW * 0.6 && sbH > vpH * 0.5;
     if (looksLikeLeftSidebar) left = Math.max(left, sb.right);
   }
 
@@ -325,14 +324,14 @@ export function setupPaletteDrag() {
           kind === 'hq'
             ? t('palette.hq')
             : kind === 'flag'
-            ? t('palette.flag')
-            : kind === 'trap'
-            ? t('palette.trap')
-            : kind === 'city'
-            ? t('palette.city')
-            : kind === 'resource'
-            ? t('palette.resource')
-            : `${size}×${size}`;
+              ? t('palette.flag')
+              : kind === 'trap'
+                ? t('palette.trap')
+                : kind === 'city'
+                  ? t('palette.city')
+                  : kind === 'resource'
+                    ? t('palette.resource')
+                    : `${size}×${size}`;
         ghost.appendChild(gl);
         document.body.appendChild(ghost);
 
@@ -369,7 +368,7 @@ export function setupPaletteDrag() {
               // short tap: do nothing (no pickup)
             }
           },
-          { once: true }
+          { once: true },
         );
       } else {
         // Mouse → immediate pickup
@@ -450,7 +449,7 @@ export function makeMovable(el) {
           el.removeEventListener('pointermove', onMoveCheck);
           // short tap → no pickup
         },
-        { once: true }
+        { once: true },
       );
     } else {
       // Mouse → immediate pickup

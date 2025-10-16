@@ -12,13 +12,13 @@ const SLOP_PX = 6; // movement threshold before we consider it a scroll
 export function enableDragScroll(el) {
   if (!el) return;
 
-  let active = false;       // true once slop exceeded
-  let tracking = false;     // true between pointerdown..up (before/after slop)
-  let pid = null;           // pointerId we are tracking
-  let startX = 0;           // pointerdown x
-  let startScrollLeft = 0;  // scrollLeft at pointerdown
+  let active = false; // true once slop exceeded
+  let tracking = false; // true between pointerdown..up (before/after slop)
+  let pid = null; // pointerId we are tracking
+  let startX = 0; // pointerdown x
+  let startScrollLeft = 0; // scrollLeft at pointerdown
 
-  const getX = (e) => (e.clientX ?? e.touches?.[0]?.clientX ?? 0);
+  const getX = (e) => e.clientX ?? e.touches?.[0]?.clientX ?? 0;
 
   function beginScroll(e) {
     // Convert “candidate” into active drag-scroll
@@ -47,7 +47,7 @@ export function enableDragScroll(el) {
   }
 
   function onPointerMove(e) {
-    if (!tracking || (pid !== (e.pointerId ?? 'mouse'))) return;
+    if (!tracking || pid !== (e.pointerId ?? 'mouse')) return;
 
     const dx = getX(e) - startX;
 

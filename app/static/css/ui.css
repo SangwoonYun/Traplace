@@ -376,34 +376,40 @@
 /* ---------------------------------------------
  * Responsive: tablet-portrait & phones (< 992px) 
  * ------------------------------------------- */
-@media (max-width: 991.98px){
+@media (max-width: 991.98px) {
   /* Prevent horizontal overflow artefacts (white gap on the right) */
-  html, body{
+  html,
+  body {
     overflow-x: hidden;
     width: 100%;
   }
 
-  :root{
+  :root {
     --sidebar-w: 0px;
     --toolbar-h: 48px;
     /* increase palette bar height to avoid overlap */
     --palettebar-h: 112px;
   }
-  body{ display: block; }
+  body {
+    display: block;
+  }
 
   /* Toolbar fixed at top */
-  .toolbar{
+  .toolbar {
     position: fixed;
-    top: 0; left: 0; right: 0;
+    top: 0;
+    left: 0;
+    right: 0;
     height: var(--toolbar-h);
     z-index: 10000;
   }
 
   /* Sidebar becomes the fixed "palette bar" right under toolbar */
-  .sidebar{
+  .sidebar {
     position: fixed;
     top: var(--toolbar-h);
-    left: 0; right: 0;
+    left: 0;
+    right: 0;
     height: var(--palettebar-h);
     overflow: hidden;
     border-right: 0;
@@ -416,10 +422,10 @@
   /* ---------------------------------------------
    * Hide all non-palette sections
    * ------------------------------------------- */
-  .sidebar h2[data-i18n="ui.usageTitle"],
+  .sidebar h2[data-i18n='ui.usageTitle'],
   .sidebar .usage,
-  .sidebar [data-i18n-id="usageTitle"],
-  .sidebar [data-i18n-id="usageBody"],
+  .sidebar [data-i18n-id='usageTitle'],
+  .sidebar [data-i18n-id='usageBody'],
   .palette-title,
   .sidebar .sidebar-footer,
   .sidebar .footer,
@@ -429,13 +435,19 @@
     display: none !important;
   }
 
-  .sidebar, .palette, .palette-item,
-  .viewport, .world, .rot, .block, .ghost {
+  .sidebar,
+  .palette,
+  .palette-item,
+  .viewport,
+  .world,
+  .rot,
+  .block,
+  .ghost {
     -webkit-touch-callout: none;
   }
 
   /* Horizontal scrollable palette */
-  .palette{
+  .palette {
     display: flex;
     align-items: stretch;
     gap: 10px;
@@ -448,41 +460,48 @@
     max-width: 100%;
     background: var(--bg);
   }
-  .palette-item{
+  .palette-item {
     flex: 0 0 96px; /* fixed width, prevents overlap */
     max-width: 96px;
   }
-  .palette.is-dragging{ cursor: grabbing; }
-  .palette::after{
+  .palette.is-dragging {
+    cursor: grabbing;
+  }
+  .palette::after {
     content: '';
     position: absolute;
-    right: 0; top: 0; bottom: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
     width: 16px;
     pointer-events: none;
-    background: linear-gradient(to right, transparent, rgba(0,0,0,0.06));
+    background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.06));
   }
 
-  .palette-item{
+  .palette-item {
     aspect-ratio: 1 / 1;
     min-height: 72px;
     border-radius: 12px;
     padding: 10px;
   }
-  .palette-item .pi-text{ font-size: 12px; }
+  .palette-item .pi-text {
+    font-size: 12px;
+  }
 
   /* Viewport starts below toolbar + palette bar */
-  .viewport{
+  .viewport {
     padding-top: calc(var(--toolbar-h) + var(--palettebar-h));
   }
 
   /* Badge position */
-  .badge{
+  .badge {
     top: calc(var(--toolbar-h) + 8px);
     right: 8px;
   }
 
   /* Trash zone spans full width */
-  .trash-zone{
-    left: 0; right: 0;
+  .trash-zone {
+    left: 0;
+    right: 0;
   }
 }
