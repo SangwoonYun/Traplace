@@ -301,16 +301,24 @@ export function setupPaletteDrag() {
       const sy = e.clientY;
       let timer = null;
       let active = true;
+      const pid = e.pointerId;
 
       // We capture only after confirming long-press or for mouse immediate pickup.
       const startDrag = () => {
         if (!active) return;
         hapticTap(15);
         e.preventDefault();
-        item.setPointerCapture?.(e.pointerId);
-        if (!isTouch) {
-          try { item.setPointerCapture?.(e.pointerId); } catch {}
-          e.preventDefault();
+        if (item.setPointerCapture) {
+          try {
+            item.setPointerCapture(pid);
+          } catch {
+            /* ignore */
+          }
+        }
+        try {
+          window.getSelection()?.removeAllRanges();
+        } catch {
+          /* ignore */
         }
 
         const size = parseInt(item.dataset.size, 10);
@@ -386,6 +394,15 @@ export function setupPaletteDrag() {
           },
           { once: true },
         );
+        item.addEventListener(
+          'pointercancel',
+          () => {
+            active = false;
+            clearTimeout(timer);
+            item.removeEventListener('pointermove', onMoveCheck);
+          },
+          { once: true },
+        );
       } else {
         // Mouse → immediate pickup
         startDrag();
@@ -417,10 +434,14 @@ export function makeMovable(el) {
       if (state.panning && state.panning.moved) return;
 
       hapticTap(15);
-      if (!isTouch) {
-        try { el.setPointerCapture?.(e.pointerId); } catch {}
-        e.preventDefault();
+      if (el.setPointerCapture) {
+        try {
+          el.setPointerCapture(e.pointerId);
+        } catch {
+          /* ignore */
+        }
       }
+      e.preventDefault();
 
       const size = parseInt(el.dataset.size, 10);
       const kind = el.dataset.kind;
