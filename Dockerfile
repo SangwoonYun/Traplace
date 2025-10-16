@@ -1,36 +1,53 @@
+# File: Dockerfile
 # syntax=docker/dockerfile:1.7
-FROM python:3.13-slim
+#
+# Production image for the Flask app served by Gunicorn.
+# Goals:
+# - Small, reproducible, non-root image
+# - Aggressive layer caching for deps
+# - Healthcheck hits /healthz
+# - Clear, English-only comments
 
+FROM python:3.13-slim AS runtime
+
+# ── Environment ────────────────────────────────────────────────────────────────
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    # 기본 포트/워커는 환경변수로 오버라이드 가능
+    # Can be overridden at runtime
     PORT=8000 \
-    WORKERS=2
+    WORKERS=2 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
 
 WORKDIR /app
 
-# 시스템 패키지 (헬스체크용 curl만 설치)
-RUN apt-get update && apt-get install -y --no-install-recommends curl \
-    && rm -rf /var/lib/apt/lists/*
+# ── OS packages (curl only for healthcheck) ────────────────────────────────────
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends curl \
+ && rm -rf /var/lib/apt/lists/*
 
-# 의존성만 먼저 복사해 레이어 캐시 효율 개선
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# ── Create non-root user early so we can COPY with proper ownership ────────────
+# uid/gid kept default; adjust via build args if your infra requires it.
+RUN useradd -ms /bin/bash appuser
 
-# 애플리케이션 소스
-# (app/, wsgi.py, templates/, static/ 등 포함)
-COPY . .
+# ── Python dependencies ────────────────────────────────────────────────────────
+# Copy only requirements first to leverage build cache.
+COPY --chown=appuser:appuser requirements.txt .
+# Use BuildKit cache for pip; falls back gracefully if BuildKit is disabled.
+RUN --mount=type=cache,target=/root/.cache/pip \
+    python -m pip install --no-cache-dir -r requirements.txt
 
-# 비루트 사용자
-RUN useradd -ms /bin/bash appuser && chown -R appuser:appuser /app
+# ── Application source ─────────────────────────────────────────────────────────
+# Includes app/, wsgi.py, templates/, static/, etc.
+COPY --chown=appuser:appuser . .
+
+# ── Switch to non-root user ────────────────────────────────────────────────────
 USER appuser
 
+# ── Network & healthcheck ──────────────────────────────────────────────────────
 EXPOSE 8000
-
-# 헬스체크 (Flask의 /healthz 사용)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-  CMD curl -fsS http://127.0.0.1:${PORT}/healthz || exit 1
+  CMD curl -fsS "http://127.0.0.1:${PORT}/healthz" || exit 1
 
-# Gunicorn 실행
-# 앱 팩토리 구조에 맞춰 모듈 경로를 wsgi:app 로 변경
+# ── Entrypoint (Gunicorn) ─────────────────────────────────────────────────────
+# App factory pattern: import from wsgi:app
 CMD ["sh", "-c", "gunicorn -w ${WORKERS} -b 0.0.0.0:${PORT} wsgi:app"]
