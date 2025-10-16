@@ -17,21 +17,21 @@ from .routes.shortener import bp as shortener_bp
 __all__ = ['create_app']
 
 
-def create_app(config_name: str | None = None) -> Flask:
+def create_app(env: str | None = None) -> Flask:
     """Create and configure the Flask application.
 
     Args:
-        config_name: Explicit configuration name (e.g., 'development', 'production').
+        env: Explicit configuration name (e.g., 'development', 'production').
             If None, falls back to the ENV environment variable (default: 'development').
 
     Returns:
         A configured Flask application instance.
     """
-    if config_name is None:
-        config_name = os.getenv('ENV', 'development')
+    if env is None:
+        env = os.getenv('ENV', 'development')
 
     app = Flask(__name__, template_folder='templates')
-    app.config.from_object(get_config(config_name))
+    app.config.from_object(get_config(env))
 
     # Initialize extensions (DB, cache, login, etc.)
     init_extensions(app)
