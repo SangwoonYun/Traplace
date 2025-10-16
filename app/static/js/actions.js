@@ -24,6 +24,7 @@ import {
 } from './dom.js';
 import { recomputePaint, renderUserTiles, centerToWorldCenter } from './render.js';
 import { validateAllObjects } from './blocks.js';
+import { updateAllCounts } from './counters.js';
 import { saveToURLImmediate } from './urlState.js';
 import { exportPNG } from './exportPNG.js';
 import { undo, redo, onHistoryChange, saveCheckpoint } from './history.js';
@@ -195,6 +196,7 @@ export function setupActions() {
     recomputePaint();
     renderUserTiles();
     validateAllObjects();
+    updateAllCounts();
 
     saveToURLImmediate();
     saveCheckpoint(); // history snapshot
