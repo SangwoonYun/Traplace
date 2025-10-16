@@ -1,71 +1,76 @@
-// static/js/i18n.js
-// Online i18n loader with origin-based base URLs, language detection, safe HTML rendering, and DOM applicator.
-// Notes:
-// - Use data-i18n for plain text (textContent).
-// - Use data-i18n-html for HTML-enabled strings (innerHTML with allowlist-based sanitizer).
-// - Existing data-i18n-id mappings are preserved; usageBody is treated as HTML.
+// File: app/static/js/i18n.js
+/**
+ * Online i18n loader with origin-based base URLs, language detection,
+ * safe HTML rendering, and DOM applicator.
+ *
+ * Usage:
+ * - Use data-i18n for plain text (textContent).
+ * - Use data-i18n-html for HTML-enabled strings (innerHTML with sanitizer).
+ * - Existing data-i18n-id mappings are preserved; usageBody is treated as HTML.
+ */
 
-// ───────────────────────────────────────────────────────────────────────────────
-// Config / Globals
-// ───────────────────────────────────────────────────────────────────────────────
+/* ---------------------------------------------
+ * Config / Globals
+ * ------------------------------------------- */
 const FALLBACK_LANG = 'en';
 
-let DICT = null;       // Active dictionary
-let CUR_LANG = FALLBACK_LANG; // Active language code
+/** @type {Record<string, any> | null} */
+let DICT = null;                 // Active dictionary
+/** @type {string} */
+let CUR_LANG = FALLBACK_LANG;    // Active language code
 
 // Built-in EN dictionary as the last-resort safety net
 const BUILTIN_EN = {
-  app: { title: "Alliance Placement Simulator" },
+  app: { title: 'Alliance Placement Simulator' },
   ui: {
-    usageTitle: "How to use",
+    usageTitle: 'How to use',
     usage:
-      "• <b>Drag & drop</b>: place items from the left palette (grid snap).<br>" +
-      "• <b>Middle-button drag</b>: pan the view.<br>" +
-      "• <b>Ctrl/⌘ + Mouse wheel</b>: zoom in/out (½ sensitivity).<br>" +
-      "• <b>Trackpad pinch</b>: zoom in/out (½ sensitivity).<br>" +
-      "• <b>Click a cell</b>: toggle red paint on floor.<br>" +
-      "• <b>City</b> label: double-click → edit (Enter save / Esc cancel).<br>" +
-      "• Bottom <b>🗑 area</b>: drag an item here to delete.<br>" +
-      "※ Blue paint is created by <b>Alliance Flag (7×7)</b> and <b>HQ (15×15)</b>.",
-    paletteTitle: "Palette",
+      '• <b>Drag & drop</b>: place items from the left palette (grid snap).<br>' +
+      '• <b>Middle-button drag</b>: pan the view.<br>' +
+      '• <b>Ctrl/⌘ + Mouse wheel</b>: zoom in/out (½ sensitivity).<br>' +
+      '• <b>Trackpad pinch</b>: zoom in/out (½ sensitivity).<br>' +
+      '• <b>Click a cell</b>: toggle red paint on floor.<br>' +
+      '• <b>City</b> label: double-click → edit (Enter save / Esc cancel).<br>' +
+      '• Bottom <b>🗑 area</b>: drag an item here to delete.<br>' +
+      '※ Blue paint is created by <b>Alliance Flag (7×7)</b> and <b>HQ (15×15)</b>.',
+    paletteTitle: 'Palette',
     toolbar: {
-      undo: "Undo",
-      redo: "Redo",
-      reset: "Reset",
-      copy: "Copy URL",
-      export: "Export PNG",
-      dist2label: "Set City label to distance from Traps",
-      lang: "Language",
-      home: "Go to center",
+      undo: 'Undo',
+      redo: 'Redo',
+      reset: 'Reset',
+      copy: 'Copy URL',
+      export: 'Export PNG',
+      dist2label: 'Set City label to distance from Traps',
+      lang: 'Language',
+      home: 'Go to center',
     },
     footer: {
-      credit: "Created by #135 [KOR] BangGuseok Dev",
-      bmc: "Buy me a coffee",
-      toss: "Toss",
+      credit: 'Created by #135 [KOR] BangGuseok Dev',
+      bmc: 'Buy me a coffee',
+      toss: 'Toss',
     },
   },
   palette: {
-    hq: "HQ",
-    flag: "Alliance Flag",
-    trap: "Hunting Trap",
-    city: "City",
-    resource: "Alliance Resource",
-    block1: "1×1",
-    block2: "2×2",
-    block3: "3×3",
+    hq: 'HQ',
+    flag: 'Alliance Flag',
+    trap: 'Hunting Trap',
+    city: 'City',
+    resource: 'Alliance Resource',
+    block1: '1×1',
+    block2: '2×2',
+    block3: '3×3',
   },
   alert: {
-    noCities: "No cities.",
-    noTraps: "No traps.",
-    resetConfirm:
-      "Reset everything? (All objects and red tiles will be removed)",
-    exportFail: "Failed to export PNG.",
+    noCities: 'No cities.',
+    noTraps: 'No traps.',
+    resetConfirm: 'Reset everything? (All objects and red tiles will be removed)',
+    exportFail: 'Failed to export PNG.',
   },
 };
 
-// ───────────────────────────────────────────────────────────────────────────────
-// Base URL resolution
-// ───────────────────────────────────────────────────────────────────────────────
+/* ---------------------------------------------
+ * Base URL resolution
+ * ------------------------------------------- */
 /**
  * Compute i18n base directories in priority order.
  * Priority:
@@ -73,6 +78,7 @@ const BUILTIN_EN = {
  * 2) Fallback to origin-based defaults:
  *    - {origin}/static/i18n
  *    - {origin}/i18n
+ * @returns {string[]}
  */
 function getBases() {
   const g = typeof window !== 'undefined' ? window : {};
@@ -83,22 +89,27 @@ function getBases() {
   return [`${origin}/static/i18n`, `${origin}/i18n`];
 }
 
-// ───────────────────────────────────────────────────────────────────────────────
-// Language detection & fetching
-// ───────────────────────────────────────────────────────────────────────────────
+/* ---------------------------------------------
+ * Language detection & fetching
+ * ------------------------------------------- */
 /**
  * Detect preferred language:
  * 1) URL ?lang=xx
  * 2) localStorage 'lang'
  * 3) navigator.language: ko → 'ko', otherwise 'en'
+ * @returns {string}
  */
 export function detectPreferredLang() {
   const url = new URL(location.href);
   const qp = (url.searchParams.get('lang') || '').toLowerCase();
   if (qp) return qp;
 
-  const saved = localStorage.getItem('lang');
-  if (saved) return saved;
+  try {
+    const saved = localStorage.getItem('lang');
+    if (saved) return saved;
+  } catch {
+    // ignore storage access errors
+  }
 
   const nav = (navigator.language || 'en').toLowerCase();
   if (nav.startsWith('ko')) return 'ko';
@@ -108,6 +119,8 @@ export function detectPreferredLang() {
 /**
  * Try to fetch JSON dict for a given language from each base URL.
  * Returns parsed JSON or null if all attempts fail.
+ * @param {string} lang
+ * @returns {Promise<Record<string, any> | null>}
  */
 async function fetchJsonFromBases(lang) {
   const bases = getBases();
@@ -116,8 +129,8 @@ async function fetchJsonFromBases(lang) {
     try {
       const r = await fetch(u, { cache: 'no-cache', mode: 'cors' });
       if (r.ok) return await r.json();
-    } catch (_err) {
-      // ignore and try next base
+    } catch {
+      // try next base
     }
   }
   return null;
@@ -129,6 +142,7 @@ async function fetchJsonFromBases(lang) {
  * - Fallback to 'en' from bases
  * - Fallback to built-in EN
  * Also updates URL (?lang=...) and localStorage.
+ * @param {string} lang
  */
 export async function loadLanguageOnline(lang) {
   CUR_LANG = lang === 'ko' || lang === 'en' ? lang : FALLBACK_LANG;
@@ -159,16 +173,22 @@ export async function loadLanguageOnline(lang) {
   const url = new URL(location.href);
   url.searchParams.set('lang', appliedLang);
   history.replaceState(null, '', url.toString());
-  localStorage.setItem('lang', appliedLang);
+  try {
+    localStorage.setItem('lang', appliedLang);
+  } catch {
+    // ignore storage access errors
+  }
 
   applyI18nToDOM();
 }
 
-// ───────────────────────────────────────────────────────────────────────────────
-// Lookup helpers
-// ───────────────────────────────────────────────────────────────────────────────
+/* ---------------------------------------------
+ * Lookup helpers
+ * ------------------------------------------- */
 /**
  * Safe lookup: "a.b.c" → DICT[a][b][c] (or returns path if missing)
+ * @param {string} path
+ * @returns {any}
  */
 export function t(path) {
   const segs = path.split('.');
@@ -180,20 +200,23 @@ export function t(path) {
   return cur;
 }
 
+/** @returns {string} current language code */
 export function currentLang() {
   return CUR_LANG;
 }
 
-// ───────────────────────────────────────────────────────────────────────────────
-// Sanitizer for HTML-enabled i18n strings
-// ───────────────────────────────────────────────────────────────────────────────
+/* ---------------------------------------------
+ * Sanitizer for HTML-enabled i18n strings
+ * ------------------------------------------- */
 /**
  * Allowlist-based sanitizer:
  * - First escape everything
  * - Then restore a small set of safe tags/attributes:
  *   Tags: b, i, em, strong, br, code, small, sup, sub, u, a
  *   <a> attributes: href (http/https/mailto/tel only), target (_self/_blank/_parent/_top),
- *                   rel (no opener for _blank)
+ *                   rel (noopener noreferrer for _blank)
+ * @param {string} input
+ * @returns {string}
  */
 function sanitizeHtml(input) {
   if (typeof input !== 'string') return '';
@@ -225,10 +248,10 @@ function sanitizeHtml(input) {
       if (!ok) href = '#';
 
       // normalize target and rel
-      if (target && !/^_self|_blank|_parent|_top$/i.test(target)) {
+      if (target && !/^(?:_self|_blank|_parent|_top)$/i.test(target)) {
         target = '_self';
       }
-      if (target === '_blank' && !rel) {
+      if (target.toLowerCase() === '_blank' && !rel) {
         rel = 'noopener noreferrer';
       }
 
@@ -247,29 +270,30 @@ function sanitizeHtml(input) {
   return unescapeAllowed;
 }
 
-// ───────────────────────────────────────────────────────────────────────────────
-// DOM application
-// ───────────────────────────────────────────────────────────────────────────────
+/* ---------------------------------------------
+ * DOM application
+ * ------------------------------------------- */
 /**
- * Apply i18n to the DOM:
- * - [data-i18n] → textContent (plain text only)
- * - [data-i18n-title] → title (plain text)
- * - [data-i18n-html] → innerHTML (sanitized)
- * - [data-i18n-id] (legacy mapping) → usageBody as HTML, others as text
- * - palette item labels are updated as plain text
+ * Check if a string contains allowlisted HTML tags.
+ * Tags: b, i, em, strong, br, code, small, sup, sub, u, a
+ * @param {string} s
+ * @returns {boolean}
  */
-
-// 1) 값에 허용태그가 있는지 감지
 function hasAllowedHtml(s) {
   if (typeof s !== 'string') return false;
-  // 허용 태그: b, i, em, strong, br, code, small, sup, sub, u, a
-  return /<(br|b|i|em|strong|code|small|sup|sub|u|a)\b|<\/(b|i|em|strong|code|small|sup|sub|u|a)>/i.test(s);
+  return /<(br|b|i|em|strong|code|small|sup|sub|u|a)\b|<\/(b|i|em|strong|code|small|sup|sub|u|a)>/i.test(
+    s,
+  );
 }
 
-// 2) 키를 받아 해당 엘리먼트에 렌더(자동 판별: HTML이면 innerHTML+sanitize, 아니면 textContent)
+/**
+ * Render a key into an element, auto-detecting whether to use HTML or text.
+ * If the developer wants to force HTML usage, add `data-i18n-html` to the element.
+ * @param {HTMLElement} el
+ * @param {string} key
+ */
 function renderI18n(el, key) {
   const val = t(key);
-  // 개발자가 강제로 HTML을 쓰고 싶으면 data-i18n-html 속성을 주면 됨
   const forceHtml = el.hasAttribute('data-i18n-html');
   if (forceHtml || hasAllowedHtml(val)) {
     el.innerHTML = sanitizeHtml(val);
@@ -278,23 +302,30 @@ function renderI18n(el, key) {
   }
 }
 
+/**
+ * Apply i18n to the DOM:
+ * - [data-i18n] → textContent or sanitized innerHTML (auto)
+ * - [data-i18n-title] → title (plain text)
+ * - [data-i18n-id] (legacy mapping) → auto (usageBody is HTML)
+ * - Palette item labels are updated as plain text
+ */
 export function applyI18nToDOM() {
-  // [data-i18n] : 자동 판별
+  // [data-i18n] : auto-detect HTML vs text
   document.querySelectorAll('[data-i18n]').forEach((el) => {
     renderI18n(el, el.getAttribute('data-i18n'));
   });
 
-  // [data-i18n-title] : title은 항상 텍스트
+  // [data-i18n-title] : title is always text
   document.querySelectorAll('[data-i18n-title]').forEach((el) => {
     el.title = t(el.getAttribute('data-i18n-title'));
   });
 
-  // [data-i18n-id] : 레거시 매핑도 자동 판별로 통일
+  // [data-i18n-id] : legacy mapping (unified to auto-detect)
   document.querySelectorAll('[data-i18n-id]').forEach((el) => {
     const id = el.getAttribute('data-i18n-id');
     const mapId = {
       usageTitle: 'ui.usageTitle',
-      usageBody : 'ui.usage',       // 예: 여긴 HTML 포함
+      usageBody: 'ui.usage', // contains HTML
       footer_bmc: 'ui.footer.bmc',
       footer_toss: 'ui.footer.toss',
       footer_credit: 'ui.footer.credit',
@@ -302,7 +333,7 @@ export function applyI18nToDOM() {
     if (mapId) renderI18n(el, mapId);
   });
 
-  // 팔레트 항목(텍스트)
+  // Palette items (plain text)
   const map = {
     hq: t('palette.hq'),
     flag: t('palette.flag'),
@@ -319,14 +350,15 @@ export function applyI18nToDOM() {
   });
 }
 
-// ───────────────────────────────────────────────────────────────────────────────
-// Block label updater for locale switching
-// ───────────────────────────────────────────────────────────────────────────────
+/* ---------------------------------------------
+ * Block label updater for locale switching
+ * ------------------------------------------- */
 /**
  * Update block labels to current locale.
  * - Non-editable labels are always replaced with current default.
  * - City labels: keep user-edited labels (b.customLabel === true).
- *   Replace only when the label is empty or still the default in another locale.
+ *   Replace only when the label is empty or looks like a previous default.
+ * @param {{blocks?: Array<{el?:HTMLElement, kind:string, size:number, customLabel?:boolean}>}} state
  */
 export function updateBlockLabelsForLocale(state) {
   if (!state?.blocks) return;
@@ -339,8 +371,10 @@ export function updateBlockLabelsForLocale(state) {
     if (kind === 'resource') return t('palette.resource');
     if (kind === 'block') return `${size}×${size}`;
     return '';
-    // Add other kinds if necessary
   };
+
+  // Defaults we want to auto-replace on locale switch
+  const PREV_DEFAULTS = new Set(['도시', 'City']);
 
   for (const b of state.blocks) {
     const labelEl = b.el?.querySelector?.('.label');
@@ -353,14 +387,7 @@ export function updateBlockLabelsForLocale(state) {
       if (b.customLabel === true) continue;
 
       const cur = (labelEl.textContent || '').trim();
-      if (!cur) {
-        labelEl.textContent = next;
-        continue;
-      }
-
-      // Replace if it looks like a previous default (ko/en)
-      const prevDefaults = ['도시', 'Town'];
-      if (prevDefaults.includes(cur)) {
+      if (!cur || PREV_DEFAULTS.has(cur)) {
         labelEl.textContent = next;
       }
     } else {
@@ -370,9 +397,9 @@ export function updateBlockLabelsForLocale(state) {
   }
 }
 
-// ───────────────────────────────────────────────────────────────────────────────
-// Convenience: init helper (optional)
-// ───────────────────────────────────────────────────────────────────────────────
+/* ---------------------------------------------
+ * Convenience: init helper (optional)
+ * ------------------------------------------- */
 /**
  * Optionally call this on boot:
  *   await initI18n(); // detect → load → apply

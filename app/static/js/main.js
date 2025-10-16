@@ -1,3 +1,12 @@
+// File: app/static/js/main.js
+/**
+ * App bootstrap:
+ * - Initialize layout, i18n, counters
+ * - Restore state from URL
+ * - Wire up interactions (drag/pan/zoom/tile toggle/cursor/info)
+ * - Kick off initial render + history snapshot
+ */
+
 import { initialLayout, renderUserTiles, recomputePaint, updateBadge, centerToCell } from './render.js';
 import { setupPaletteDrag, makeMovable } from './interactions/drag.js';
 import { setupPan } from './interactions/pan.js';
@@ -14,54 +23,66 @@ import { detectPreferredLang, loadLanguageOnline, currentLang, updateBlockLabels
 import { initCounters, updateAllCounts } from './counters.js';
 
 window.addEventListener('load', async () => {
-  // 초기 레이아웃
+  /* ---------------------------------------------
+   * Initial layout + counters
+   * ------------------------------------------- */
   initialLayout();
   initCounters();
 
+  /* ---------------------------------------------
+   * i18n (temporarily disable palette hit-testing to avoid accidental drags)
+   * ------------------------------------------- */
   const palette = document.getElementById('palette');
   if (palette) palette.style.pointerEvents = 'none';
-
-  // i18n 로드
   const lang = detectPreferredLang();
   await loadLanguageOnline(lang);
   updateBlockLabelsForLocale(state);
-
   if (palette) palette.style.pointerEvents = '';
 
-  // 언어 셀렉트 바인딩
+  // Bind language selector
   const sel = document.getElementById('langSelect');
-  if (sel){
+  if (sel) {
     sel.value = currentLang();
-    sel.addEventListener('change', async ()=>{
+    sel.addEventListener('change', async () => {
       await loadLanguageOnline(sel.value);
       updateBlockLabelsForLocale(state);
-      setTitles(); // 툴팁/단축키 텍스트 갱신
+      setTitles(); // refresh tooltips / shortcut labels
     });
   }
 
-  // URL 복원 (블록 + 빨간 칠)
+  /* ---------------------------------------------
+   * Restore from URL (blocks + red tiles)
+   * ------------------------------------------- */
   const parsed = parseFromURL();
-  if (parsed.blocks?.length){
+
+  if (parsed.blocks?.length) {
     state._restoring = true;
-    for (const it of parsed.blocks){
+    for (const it of parsed.blocks) {
       const left = it.cx * cell;
-      const top  = it.cy * cell;
+      const top = it.cy * cell;
       const el = createBlock(it.kind, it.size, left, top);
-      if (it.kind === 'city' && it.label){
+
+      // Restore city label if present
+      if (it.kind === 'city' && it.label) {
         const lbl = el.querySelector('.label');
         if (lbl) lbl.textContent = it.label;
       }
+
       makeMovable(el);
     }
     state._restoring = false;
   }
-  if (parsed.red?.length){
+
+  if (parsed.red?.length) {
     state.userPaint = new Set(parsed.red);
     renderUserTiles();
   }
+
   updateAllCounts();
 
-  // 인터랙션
+  /* ---------------------------------------------
+   * Interactions
+   * ------------------------------------------- */
   setupPaletteDrag();
   setupPan(expand);
   setupZoom(expand);
@@ -69,14 +90,18 @@ window.addEventListener('load', async () => {
   setupCursorBadge();
   setupActions();
 
-  // 초기 렌더/검증
+  /* ---------------------------------------------
+   * Initial render & validation
+   * ------------------------------------------- */
   recomputePaint();
   renderUserTiles();
   validateAllObjects();
 
-  // 히스토리 초기 스냅샷
+  /* ---------------------------------------------
+   * History: initial snapshot
+   * ------------------------------------------- */
   initHistoryWithCurrent();
 });
 
-// 디버그용
+// Debug helpers (optional)
 Object.assign(window, { state, centerToCell, updateBadge, saveCheckpoint });

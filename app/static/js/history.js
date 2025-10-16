@@ -1,94 +1,148 @@
-// assets/js/history.js
+// File: app/static/js/history.js
+/**
+ * Undo/Redo history for grid state.
+ *
+ * Stores serialized snapshots of the world and re-applies them on navigation.
+ * - Bounded stack with tail-drop policy
+ * - Notifies UI on changes (canUndo/canRedo)
+ */
+
 import { state, cell } from './state.js';
 import { rot } from './dom.js';
 import { serializeState, deserializeState, updateURLWithSerialized } from './urlState.js';
-import { createBlock } from './blocks.js';
+import { createBlock, validateAllObjects } from './blocks.js';
 import { renderUserTiles, recomputePaint } from './render.js';
-import { validateAllObjects } from './blocks.js';
 import { makeMovable } from './interactions/drag.js';
 import { updateAllCounts } from './counters.js';
 
-const LIMIT = 100;
+/** Max number of snapshots kept in history. Oldest entries are dropped. */
+const HISTORY_LIMIT = 100;
 
+/** @typedef {{ stack:string[], index:number, onChange: (null | ((canUndo:boolean, canRedo:boolean)=>void)) }} HistoryState */
+
+/** @type {HistoryState} */
 const historyState = {
   stack: [],
   index: -1,
   onChange: null,
 };
 
-function notify(){
+/* ---------------------------------------------
+ * Internal helpers
+ * ------------------------------------------- */
+
+/** Notify subscribers (e.g., toolbar buttons) about undo/redo availability. */
+function notify() {
   historyState.onChange?.(canUndo(), canRedo());
 }
 
-export function initHistoryWithCurrent(){
+/**
+ * Apply a serialized snapshot to the DOM and in-memory state.
+ * Uses a `_restoring` guard to batch recompute/validate at the end.
+ * @param {string} qs
+ */
+function applySerialized(qs) {
+  const parsed = deserializeState(qs);
+
+  // Clear existing
+  rot.querySelectorAll('.block').forEach((el) => el.remove());
+  state.blocks = [];
+  state.paintedSet.clear();
+  state.userPaint = new Set(parsed.red || []);
+  renderUserTiles();
+
+  // Rebuild (defer heavy ops until done)
+  state._restoring = true;
+  for (const it of parsed.blocks) {
+    const left = it.cx * cell;
+    const top = it.cy * cell;
+
+    const el = createBlock(it.kind, it.size, left, top);
+
+    // Restore city label if any
+    if (it.kind === 'city' && it.label) {
+      const lbl = el.querySelector('.label');
+      if (lbl) lbl.textContent = it.label;
+    }
+
+    makeMovable(el);
+  }
+  state._restoring = false;
+
+  // Single recompute/validate pass
+  recomputePaint();
+  validateAllObjects();
+  updateAllCounts();
+
+  // Sync URL (no re-serialize needed; we already have `qs`)
+  updateURLWithSerialized(qs);
+}
+
+/* ---------------------------------------------
+ * Public API
+ * ------------------------------------------- */
+
+/** Initialize history with the current state as the first snapshot. */
+export function initHistoryWithCurrent() {
   const qs = serializeState();
   historyState.stack = [qs];
   historyState.index = 0;
   notify();
 }
 
-export function saveCheckpoint(){
+/** Push a new snapshot if it differs from the current one; enforce size bound. */
+export function saveCheckpoint() {
   const qs = serializeState();
   const cur = historyState.stack[historyState.index];
-  if (qs === cur) return;
+  if (qs === cur) return; // no-op
+
+  // Drop future states if we branched
   historyState.stack = historyState.stack.slice(0, historyState.index + 1);
   historyState.stack.push(qs);
-  if (historyState.stack.length > LIMIT){
-    const drop = historyState.stack.length - LIMIT;
+
+  // Enforce limit (drop from the head)
+  if (historyState.stack.length > HISTORY_LIMIT) {
+    const drop = historyState.stack.length - HISTORY_LIMIT;
     historyState.stack.splice(0, drop);
-    historyState.index -= drop;
-    if (historyState.index < 0) historyState.index = 0;
+    historyState.index = Math.max(0, historyState.index - drop);
   }
+
   historyState.index = historyState.stack.length - 1;
   notify();
 }
 
-export function canUndo(){ return historyState.index > 0; }
-export function canRedo(){ return historyState.index < historyState.stack.length - 1; }
+/** @returns {boolean} */
+export function canUndo() {
+  return historyState.index > 0;
+}
 
-export function undo(){
+/** @returns {boolean} */
+export function canRedo() {
+  return historyState.index < historyState.stack.length - 1;
+}
+
+/** Step backward in history and re-apply. */
+export function undo() {
   if (!canUndo()) return;
   historyState.index -= 1;
   applySerialized(historyState.stack[historyState.index]);
   notify();
 }
-export function redo(){
+
+/** Step forward in history and re-apply. */
+export function redo() {
   if (!canRedo()) return;
   historyState.index += 1;
   applySerialized(historyState.stack[historyState.index]);
   notify();
 }
 
-function applySerialized(qs){
-  const parsed = deserializeState(qs);
-
-  // 기존 제거
-  rot.querySelectorAll('.block').forEach(el => el.remove());
-  state.blocks = [];
-  state.paintedSet.clear();
-  state.userPaint = new Set(parsed.red || []);
-  renderUserTiles();
-
-  // 복원 (recompute/validate 한 번만)
-  state._restoring = true;
-  for (const it of parsed.blocks){
-    const left = it.cx * cell;
-    const top  = it.cy * cell;
-    const el = createBlock(it.kind, it.size, left, top);
-    if (it.kind === 'city' && it.label){
-      const lbl = el.querySelector('.label');
-      if (lbl) lbl.textContent = it.label;
-    }
-    makeMovable(el);
-  }
-  state._restoring = false;
-  recomputePaint();
-  validateAllObjects();
-  updateAllCounts(); 
-  updateURLWithSerialized(qs);
-}
-
-export function onHistoryChange(cb){
+/**
+ * Subscribe to history changes. The callback is immediately invoked
+ * with the current `canUndo` / `canRedo` snapshot.
+ * @param {(canUndo:boolean, canRedo:boolean)=>void} cb
+ */
+export function onHistoryChange(cb) {
   historyState.onChange = cb;
   notify();
 }

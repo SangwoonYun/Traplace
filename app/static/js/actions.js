@@ -1,6 +1,27 @@
-// assets/js/actions.js
+// File: app/static/js/actions.js
+/**
+ * High-level UI actions and keyboard shortcuts.
+ * - Sets toolbar titles (with platform-specific shortcuts)
+ * - Applies city labels with distances to traps
+ * - Reset / Copy URL / Export PNG / Undo / Redo behaviors
+ */
+
 import { state } from './state.js';
-import { tilesLayer, outlinesLayer, outlinesPreviewLayer, previewLayer, userLayer, rot, btnReset, btnCopyURL, btnExportPNG, btnUndo, btnRedo } from './dom.js';
+import {
+  tilesLayer,
+  outlinesLayer,
+  outlinesPreviewLayer,
+  previewLayer,
+  userLayer,
+  rot,
+  btnReset,
+  btnCopyURL,
+  btnExportPNG,
+  btnUndo,
+  btnRedo,
+  btnHome,
+  btnCityTrapDist,
+} from './dom.js';
 import { recomputePaint, renderUserTiles, centerToWorldCenter } from './render.js';
 import { validateAllObjects } from './blocks.js';
 import { saveToURLImmediate } from './urlState.js';
@@ -9,68 +30,83 @@ import { undo, redo, onHistoryChange, saveCheckpoint } from './history.js';
 import { posToCell } from './transform.js';
 import { t } from './i18n.js';
 
-function isMac(){ return /Mac|iPhone|iPad/.test(navigator.platform); }
+/** Platform detection (used for shortcut hint labels). */
+function isMac() {
+  return /Mac|iPhone|iPad/.test(navigator.platform);
+}
 
-export function setTitles(){
+export function setTitles() {
   const mac = isMac();
   const sc = {
-    undo : mac ? '⌘Z'        : 'Ctrl+Z',
-    redo : mac ? '⇧⌘Z'       : 'Ctrl+Y',
-    reset: mac ? '⌥⌘R'       : 'Ctrl+Alt+R',
-    copy : mac ? '⌥⌘C'       : 'Ctrl+Alt+C',
-    export:mac ? '⌥⌘E'       : 'Ctrl+Alt+E',
-    dist : mac ? '⌥⌘D'       : 'Ctrl+Alt+D',
+    undo: mac ? '⌘Z' : 'Ctrl+Z',
+    redo: mac ? '⇧⌘Z' : 'Ctrl+Y',
+    reset: mac ? '⌥⌘R' : 'Ctrl+Alt+R',
+    copy: mac ? '⌥⌘C' : 'Ctrl+Alt+C',
+    export: mac ? '⌥⌘E' : 'Ctrl+Alt+E',
+    dist: mac ? '⌥⌘D' : 'Ctrl+Alt+D',
   };
-  if (btnUndo)        btnUndo.title        = `${t('ui.toolbar.undo')} (${sc.undo})`;
-  if (btnRedo)        btnRedo.title        = `${t('ui.toolbar.redo')} (${sc.redo})`;
-  if (btnReset)       btnReset.title       = `${t('ui.toolbar.reset')} (${sc.reset})`;
-  if (btnCopyURL)     btnCopyURL.title     = `${t('ui.toolbar.copy')} (${sc.copy})`;
-  if (btnExportPNG)   btnExportPNG.title   = `${t('ui.toolbar.export')} (${sc.export})`;
-  if (btnCityTrapDist)btnCityTrapDist.title= `${t('ui.toolbar.dist2label')} (${sc.dist})`;
+  if (btnUndo) btnUndo.title = `${t('ui.toolbar.undo')} (${sc.undo})`;
+  if (btnRedo) btnRedo.title = `${t('ui.toolbar.redo')} (${sc.redo})`;
+  if (btnReset) btnReset.title = `${t('ui.toolbar.reset')} (${sc.reset})`;
+  if (btnCopyURL) btnCopyURL.title = `${t('ui.toolbar.copy')} (${sc.copy})`;
+  if (btnExportPNG) btnExportPNG.title = `${t('ui.toolbar.export')} (${sc.export})`;
+  if (btnCityTrapDist) btnCityTrapDist.title = `${t('ui.toolbar.dist2label')} (${sc.dist})`;
 }
 
-/** 블록 중심 좌표(셀 단위, 실수 허용: +0.5) */
-function blockCenterInCells(b){
-  const { cx, cy } = posToCell(b.left, b.top); // 좌상단 셀
-  return { x: cx + b.size/2, y: cy + b.size/2 };
+/**
+ * Compute the center of a block in cell units (fractional allowed).
+ * @param {{left:number, top:number, size:number}} b
+ * @returns {{x:number, y:number}}
+ */
+function blockCenterInCells(b) {
+  const { cx, cy } = posToCell(b.left, b.top); // top-left cell
+  return { x: cx + b.size / 2, y: cy + b.size / 2 };
 }
 
-function setParenValues(labelEl, valuesStr, fallbackBaseText){
+/**
+ * Update a label element to append/replace a trailing "(...)" part with valuesStr.
+ * Keeps the base text if present; otherwise uses fallbackBaseText.
+ * @param {HTMLElement} labelEl
+ * @param {string} valuesStr
+ * @param {string} fallbackBaseText
+ */
+function setParenValues(labelEl, valuesStr, fallbackBaseText) {
   const cur = (labelEl.textContent || '').trim();
-  // 라벨 본문과 기존 괄호 값을 분리 (맨 끝 괄호 한 덩어리만 인식)
+  // Split base and trailing parenthesized values (only the last group)
   const m = cur.match(/^(.*?)(?:\s*\((.*?)\))?\s*$/);
   let base = (m && m[1]) ? m[1].trim() : '';
-  // base가 비어 있다면 기본 라벨(예: '도시')로 대체
   if (!base) base = (fallbackBaseText || '').trim();
 
   labelEl.textContent = base ? `${base} (${valuesStr})` : `(${valuesStr})`;
 }
 
-/** 도시 라벨의 괄호(...) 부분에
- *   모든 사냥함정까지 거리×3.19 → 반올림 정수, ","로 연결하여 채움.
- *   기존 라벨 본문은 유지, 괄호 안 값이 이미 있으면 갱신만.
+/**
+ * For every city label, compute distance to each trap (Euclidean),
+ * multiply by 3.19, round to integer, and fill into trailing "(...)".
+ * Keeps existing label base text and only updates the parentheses part.
  */
-function applyCityLabelsWithTrapDistance(){
-  const cities = state.blocks.filter(b => b.kind === 'city');
-  const traps  = state.blocks.filter(b => b.kind === 'trap');
+function applyCityLabelsWithTrapDistance() {
+  const cities = state.blocks.filter((b) => b.kind === 'city');
+  const traps = state.blocks.filter((b) => b.kind === 'trap');
 
-  if (cities.length === 0){
+  if (cities.length === 0) {
     alert(t('alert.noCities'));
     return;
   }
-  if (traps.length === 0){
-    alert(t('alert.noCities'));
+  if (traps.length === 0) {
+    // Fixed: previously used 'noCities' for both cases
+    alert(t('alert.noTraps'));
     return;
   }
 
   const trapCenters = traps.map(blockCenterInCells);
 
-  for (const city of cities){
+  for (const city of cities) {
     const c = blockCenterInCells(city);
-    const values = trapCenters.map(t => {
-      const dx = c.x - t.x;
-      const dy = c.y - t.y;
-      const d  = Math.hypot(dx, dy);
+    const values = trapCenters.map((tc) => {
+      const dx = c.x - tc.x;
+      const dy = c.y - tc.y;
+      const d = Math.hypot(dx, dy);
       return Math.round(d * 3.19);
     });
     const valuesStr = values.join(',');
@@ -82,11 +118,16 @@ function applyCityLabelsWithTrapDistance(){
     setParenValues(labelEl, valuesStr, fallbackBase);
   }
 
-  // URL/히스토리 저장
+  // Persist URL and history snapshot
   saveToURLImmediate();
   saveCheckpoint();
 }
 
+/**
+ * Shorten the current relative URL using the backend API.
+ * Falls back to absolute if the server responds with a relative short path.
+ * @returns {Promise<string>}
+ */
 async function shortenCurrentUrl() {
   saveToURLImmediate();
 
@@ -96,7 +137,7 @@ async function shortenCurrentUrl() {
   const res = await fetch('/api/shorten', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url: rel })
+    body: JSON.stringify({ url: rel }),
   });
 
   const data = await res.json().catch(() => null);
@@ -112,64 +153,70 @@ async function shortenCurrentUrl() {
   return out;
 }
 
-export function setupActions(){
+export function setupActions() {
   setTitles();
 
-  // 버튼 활성/비활성 동기화
-  onHistoryChange((canUndo, canRedo)=>{
+  // Sync button enabled/disabled states based on history capability
+  onHistoryChange((canUndo, canRedo) => {
     if (btnUndo) btnUndo.disabled = !canUndo;
     if (btnRedo) btnRedo.disabled = !canRedo;
   });
 
-  btnHome?.addEventListener('click', (e)=>{
+  // Home: center viewport to world center
+  btnHome?.addEventListener('click', (e) => {
     e.preventDefault();
     centerToWorldCenter();
   });
 
-  // Undo/Redo
-  btnUndo?.addEventListener('click', ()=> undo());
-  btnRedo?.addEventListener('click', ()=> redo());
+  // Undo / Redo
+  btnUndo?.addEventListener('click', () => undo());
+  btnRedo?.addEventListener('click', () => redo());
 
-  // 도시 라벨 = 사냥함정 거리
-  btnCityTrapDist?.addEventListener('click', ()=>{
+  // City labels <= distances to traps
+  btnCityTrapDist?.addEventListener('click', () => {
     applyCityLabelsWithTrapDistance();
   });
 
-  // 초기화
-  btnReset?.addEventListener('click', ()=>{
+  // Reset board
+  btnReset?.addEventListener('click', () => {
     if (!confirm(t('alert.resetConfirm'))) return;
-    rot.querySelectorAll('.block').forEach(el => el.remove());
+
+    rot.querySelectorAll('.block').forEach((el) => el.remove());
     state.blocks = [];
     state.paintedSet.clear();
     state.userPaint.clear();
+
     tilesLayer.innerHTML = '';
     userLayer.innerHTML = '';
     outlinesLayer.innerHTML = '';
     outlinesPreviewLayer.innerHTML = '';
     previewLayer.innerHTML = '';
+
     recomputePaint();
     renderUserTiles();
     validateAllObjects();
+
     saveToURLImmediate();
-    saveCheckpoint();  // 히스토리 스냅샷
+    saveCheckpoint(); // history snapshot
   });
 
-  // URL 복사 (TTL 7일) — 실패 시 전체 URL 폴백
-  btnCopyURL?.addEventListener('click', async ()=>{
-    const restoreIcon = () => setTimeout(()=> (btnCopyURL.textContent = '🔗'), 1200);
-    try{
+  // Copy URL (TTL 7 days via shortener) — on failure, fallback to full URL
+  btnCopyURL?.addEventListener('click', async () => {
+    const restoreIcon = () => setTimeout(() => (btnCopyURL.textContent = '🔗'), 1200);
+    try {
       const shortUrl = await shortenCurrentUrl();
       await navigator.clipboard.writeText(shortUrl);
       btnCopyURL.textContent = t('msg.copiedShort');
       restoreIcon();
-    }catch(e){
-      // 폴백: 전체 URL 복사
-      try{
+    } catch {
+      // Fallback: copy full URL
+      try {
         saveToURLImmediate();
         await navigator.clipboard.writeText(location.href);
         btnCopyURL.textContent = t('msg.copiedFull');
         restoreIcon();
-      }catch{
+      } catch {
+        // Legacy fallback using a temporary textarea
         const ta = document.createElement('textarea');
         ta.value = location.href;
         document.body.appendChild(ta);
@@ -181,54 +228,67 @@ export function setupActions(){
       }
     }
   });
- 
-  // PNG 내보내기
-  btnExportPNG?.addEventListener('click', async ()=>{
-    try{
+
+  // Export PNG
+  btnExportPNG?.addEventListener('click', async () => {
+    try {
       const blob = await exportPNG();
       const a = document.createElement('a');
-      const ts = new Date().toISOString().replace(/[:.]/g,'-');
+      const ts = new Date().toISOString().replace(/[:.]/g, '-');
       a.download = `grid-export-${ts}.png`;
       a.href = URL.createObjectURL(blob);
       document.body.appendChild(a);
       a.click();
       a.remove();
-      setTimeout(()=>URL.revokeObjectURL(a.href), 3000);
-    }catch(e){
+      setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+    } catch (e) {
       console.error(e);
       alert(t('alert.exportFail'));
     }
   });
 
-  // 단축키
-  window.addEventListener('keydown', (e)=>{
+  // Keyboard shortcuts (Cmd/Ctrl modifiers)
+  window.addEventListener('keydown', (e) => {
     const meta = e.metaKey || e.ctrlKey;
     if (!meta) return;
 
     const k = e.key.toLowerCase();
 
     // Undo: Cmd/Ctrl+Z
-    if (k === 'z' && !e.shiftKey && !e.altKey){
-      e.preventDefault(); undo(); return;
+    if (k === 'z' && !e.shiftKey && !e.altKey) {
+      e.preventDefault();
+      undo();
+      return;
     }
     // Redo: Shift+Cmd+Z or Ctrl+Y
-    if ((k === 'z' && e.shiftKey) || k === 'y'){
-      e.preventDefault(); redo(); return;
+    if ((k === 'z' && e.shiftKey) || k === 'y') {
+      e.preventDefault();
+      redo();
+      return;
     }
-    if (k === 'd' && e.altKey){
-      e.preventDefault(); btnCityTrapDist?.click(); return; 
+    // Distance labels: Cmd/Ctrl+Alt+D
+    if (k === 'd' && e.altKey) {
+      e.preventDefault();
+      btnCityTrapDist?.click();
+      return;
     }
     // Reset: Cmd/Ctrl+Alt+R
-    if (k === 'r' && e.altKey){
-      e.preventDefault(); btnReset?.click(); return;
+    if (k === 'r' && e.altKey) {
+      e.preventDefault();
+      btnReset?.click();
+      return;
     }
     // Copy URL: Cmd/Ctrl+Alt+C
-    if (k === 'c' && e.altKey){
-      e.preventDefault(); btnCopyURL?.click(); return;
+    if (k === 'c' && e.altKey) {
+      e.preventDefault();
+      btnCopyURL?.click();
+      return;
     }
     // Export PNG: Cmd/Ctrl+Alt+E
-    if (k === 'e' && e.altKey){
-      e.preventDefault(); btnExportPNG?.click(); return;
+    if (k === 'e' && e.altKey) {
+      e.preventDefault();
+      btnExportPNG?.click();
+      return;
     }
   });
 }
