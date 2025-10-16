@@ -33,11 +33,7 @@ def new_code(code_len: int) -> str:
     to the requested length.
     """
     code = to_base62(secrets.randbits(48))
-    code = (
-        _BASE62[0] * (code_len - len(code)) + code
-        if len(code) < code_len
-        else code[:code_len]
-    )
+    code = _BASE62[0] * (code_len - len(code)) + code if len(code) < code_len else code[:code_len]
     return code
 
 
