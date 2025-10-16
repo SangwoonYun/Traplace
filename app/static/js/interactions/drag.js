@@ -82,7 +82,7 @@ function computeEffectiveRect() {
   const { vp, tb, sb, pl, tr } = getOverlayRects();
   let left = vp.left;
   let top = vp.top;
-  let right = vp.right;
+  const right = vp.right;
   let bottom = vp.bottom;
 
   const intersectsHoriz = (a, b) => a.left < b.right && a.right > b.left;
