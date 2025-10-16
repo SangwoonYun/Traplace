@@ -70,4 +70,20 @@
   place-items: center;
   background: #ffffffcc;
   border-radius: 0;
+  transform: rotate(45deg) scale(-1);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+}
+.ghost-label{
+  transform: scaleY(-1) scaleX(-1) rotate(-45deg);
+  font-weight: 700;
+  color: #333;
+  user-select: none;
+  pointer-events: none;
+  text-align: center;
+}
+.block.is-lifted{
+  transform: scale(1.03);
+  transition: transform .08s ease;
+  opacity: .85;
+  outline: 2px solid rgba(21,87,255,.35);
 }

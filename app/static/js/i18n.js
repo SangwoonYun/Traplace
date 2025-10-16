@@ -344,6 +344,8 @@ export function applyI18nToDOM() {
     const label = map[kind] || (size ? `${size}×${size}` : '');
     const span = el.querySelector('.pi-text') || el;
     span.textContent = label;
+    el.setAttribute('role', 'option');
+    el.setAttribute('aria-label', label);
   });
 }
 
