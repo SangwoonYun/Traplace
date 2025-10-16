@@ -1,0 +1,5 @@
+# File: .prettierignore
+node_modules
+dist
+*.min.js
+static/img

@@ -1,4 +1,5 @@
 # 🎯 Traplace
+
 > A spatial simulation tool for **Kingshot** game, enabling strategic placement and visualization of city blocks.
 
 [![License](https://img.shields.io/github/license/SangwoonYun/Traplace.svg)](LICENSE)
@@ -12,10 +13,12 @@
 ---
 
 ## 🧭 Overview
-**Traplace** is an interactive map-based simulation tool that replicates the placement logic of the *Kingshot* game.  
+
+**Traplace** is an interactive map-based simulation tool that replicates the placement logic of the _Kingshot_ game.  
 It allows users to test, visualize, and optimize **territory layouts, alliance structures, and flag positions** using a dynamic diamond-grid system.
 
 ### ✨ Key Features
+
 - 🧱 **Diamond-grid coordinate system** (rotated -135°)
 - 🧭 **Zoom and pan** for large-scale maps
 - 🧩 **Interactive block placement** (1×1, 2×2, 3×3 tiles)
@@ -23,7 +26,7 @@ It allows users to test, visualize, and optimize **territory layouts, alliance s
 - 🌍 **Language auto-selection (i18n)** based on browser locale (EN/KR)
 - 💾 **Dynamic i18n file loading** with fallback to English
 
-![traplace_en.png](https://github.com/user-attachments/assets/ae8dc648-e31b-44a9-89b4-36fe7f5a0a47) 
+![traplace_en.png](https://github.com/user-attachments/assets/ae8dc648-e31b-44a9-89b4-36fe7f5a0a47)
 
 ---
 
@@ -48,10 +51,12 @@ Backend (Python)
 ## ⚙️ Installation
 
 ### Prerequisites
+
 - Python 3.13+
 - Git
 
 ### Setup
+
 ```bash
 git clone https://github.com/SangwoonYun/Traplace.git
 cd Traplace
@@ -59,6 +64,7 @@ pip install -r requirements.txt
 ```
 
 ### Run the Local Server
+
 ```bash
 python manage.py
 ```
@@ -69,18 +75,20 @@ Then open:
 ---
 
 ## 🌐 Internationalization (i18n)
+
 Traplace supports multilingual UI.
 
-| Language | File | Status |
-|-----------|------|--------|
-| English | `i18n/en.json` | ✅ |
-| Korean | `i18n/ko.json` | ✅ |
+| Language | File           | Status |
+| -------- | -------------- | ------ |
+| English  | `i18n/en.json` | ✅     |
+| Korean   | `i18n/ko.json` | ✅     |
 
 You can add more language files under `/i18n/` and Traplace will load them dynamically at runtime.
 
 ---
 
 ## 📦 Project Structure
+
 ```
 Traplace/
  ├─ app/
@@ -115,6 +123,7 @@ Traplace/
 ---
 
 ## 🌐 Deployment
+
 Traplace is currently hosted at:  
 🔗 [https://traplace.swyun.kr](https://traplace.swyun.kr)
 
@@ -123,11 +132,13 @@ Traplace is currently hosted at:
 ---
 
 ## 🧾 License
+
 This project is licensed under the **MIT License** — see [LICENSE](LICENSE).
 
 ---
 
 ## 👤 Author
+
 **#135 [KOR] 방구석개발자**  
 📧 dev.swyun@gmail.com  
 🐙 [@SangwoonYun](https://github.com/SangwoonYun)

@@ -6,6 +6,7 @@ Creates and configures the Flask application using an environment-aware configur
 """
 
 import os
+
 from flask import Flask
 
 from .config import get_config

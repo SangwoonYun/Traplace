@@ -7,7 +7,6 @@ function to resolve the appropriate configuration dynamically.
 """
 
 import os
-from typing import Type
 
 
 class BaseConfig:
@@ -31,7 +30,7 @@ class ProdConfig(BaseConfig):
     DEBUG: bool = False
 
 
-def get_config(name: str | None = None) -> Type[BaseConfig]:
+def get_config(name: str | None = None) -> type[BaseConfig]:
     """Return a configuration class based on the provided or detected environment name.
 
     Args:

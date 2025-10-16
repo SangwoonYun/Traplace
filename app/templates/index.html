@@ -1,169 +1,275 @@
 <!-- File: app/templates/index.html -->
 <!doctype html>
 <html lang="ko">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="light dark" />
-  <title>Kingshot Traplace</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Kingshot Traplace</title>
 
-  <!-- Icons & Styles -->
-  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/blocks.css') }}" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/ui.css') }}" />
-</head>
-<body>
-  <aside id="sidebar" class="sidebar">
-    <h2 data-i18n="ui.usageTitle">사용 방법</h2>
-    <div class="usage" data-i18n="ui.usage"><!-- 내용은 JS가 채웁니다 --></div>
+    <!-- Icons & Styles -->
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blocks.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ui.css') }}" />
+  </head>
+  <body>
+    <aside id="sidebar" class="sidebar">
+      <h2 data-i18n="ui.usageTitle">사용 방법</h2>
+      <div class="usage" data-i18n="ui.usage"><!-- 내용은 JS가 채웁니다 --></div>
 
-    <div class="palette-title" data-i18n="ui.paletteTitle">객체 팔레트</div>
-    <div id="palette" class="palette">
-      <div class="palette-item" data-kind="hq" data-size="3" role="button" tabindex="0" aria-label="평원본부">
-        <div class="pi-rot"></div>
-        <span class="pi-text">평원본부</span>
-      </div>
-      <div class="palette-item" data-kind="flag" data-size="1" role="button" tabindex="0" aria-label="연맹깃발">
-        <div class="pi-rot"></div>
-        <span class="pi-text">연맹깃발</span>
-      </div>
-      <div class="palette-item" data-kind="trap" data-size="3" role="button" tabindex="0" aria-label="사냥함정">
-        <div class="pi-rot"></div>
-        <span class="pi-text">사냥함정</span>
-      </div>
-      <div class="palette-item" data-kind="city" data-size="2" role="button" tabindex="0" aria-label="도시">
-        <div class="pi-rot"></div>
-        <span class="pi-text">도시</span>
-      </div>
-      <div class="palette-item" data-kind="resource" data-size="2" role="button" tabindex="0" aria-label="연맹자원">
-        <div class="pi-rot"></div>
-        <span class="pi-text">연맹자원</span>
-      </div>
-      <div class="palette-item" data-kind="block" data-size="1" role="button" tabindex="0" aria-label="1×1 블록">
-        <div class="pi-rot"></div>
-        <span class="pi-text">1×1</span>
-      </div>
-      <div class="palette-item" data-kind="block" data-size="2" role="button" tabindex="0" aria-label="2×2 블록">
-        <div class="pi-rot"></div>
-        <span class="pi-text">2×2</span>
-      </div>
-      <div class="palette-item" data-kind="block" data-size="3" role="button" tabindex="0" aria-label="3×3 블록">
-        <div class="pi-rot"></div>
-        <span class="pi-text">3×3</span>
-      </div>
-    </div>
-
-    <div class="sidebar-footer">
-      <!-- QR 코드 2개 -->
-      <div class="footer-qrs">
-        <div class="qr-item">
-          <a
-            class="qr-link"
-            href="https://www.buymeacoffee.com/swyun"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Buy me a coffee"
-          >
-            <img
-              class="qr-img"
-              src="{{ url_for('static', filename='img/qr-code-bmc.png') }}"
-              alt="Buy me a coffee QR"
-            />
-          </a>
-          <span class="qr-label">Buy me a coffee</span>
-        </div>
-
-        <div class="qr-item">
-          <a
-            class="qr-link"
-            href="supertoss://send?amount=0&bank=IBK%EA%B8%B0%EC%97%85%EC%9D%80%ED%96%89&accountNo=29810334201018&origin=qr"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="토스 송금"
-          >
-            <img
-              class="qr-img"
-              src="{{ url_for('static', filename='img/qr-code-toss.jpg') }}"
-              alt="Toss QR"
-            />
-          </a>
-          <span class="qr-label">Toss</span>
-        </div>
-      </div>
-
-      <!-- GitHub + 크레딧 -->
-      <div class="footer-info">
-        <a
-          class="github-link"
-          href="https://github.com/SangwoonYun/Traplace"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Traplace GitHub"
+      <div class="palette-title" data-i18n="ui.paletteTitle">객체 팔레트</div>
+      <div id="palette" class="palette">
+        <div
+          class="palette-item"
+          data-kind="hq"
+          data-size="3"
+          role="button"
+          tabindex="0"
+          aria-label="평원본부"
         >
-          <img
-            class="github-icon"
-            src="{{ url_for('static', filename='img/github-mark.svg') }}"
-            alt="GitHub"
-          />
-        </a>
-        <span class="credit">Created by #135 [KOR] 방구석개발자</span>
+          <div class="pi-rot"></div>
+          <span class="pi-text">평원본부</span>
+        </div>
+        <div
+          class="palette-item"
+          data-kind="flag"
+          data-size="1"
+          role="button"
+          tabindex="0"
+          aria-label="연맹깃발"
+        >
+          <div class="pi-rot"></div>
+          <span class="pi-text">연맹깃발</span>
+        </div>
+        <div
+          class="palette-item"
+          data-kind="trap"
+          data-size="3"
+          role="button"
+          tabindex="0"
+          aria-label="사냥함정"
+        >
+          <div class="pi-rot"></div>
+          <span class="pi-text">사냥함정</span>
+        </div>
+        <div
+          class="palette-item"
+          data-kind="city"
+          data-size="2"
+          role="button"
+          tabindex="0"
+          aria-label="도시"
+        >
+          <div class="pi-rot"></div>
+          <span class="pi-text">도시</span>
+        </div>
+        <div
+          class="palette-item"
+          data-kind="resource"
+          data-size="2"
+          role="button"
+          tabindex="0"
+          aria-label="연맹자원"
+        >
+          <div class="pi-rot"></div>
+          <span class="pi-text">연맹자원</span>
+        </div>
+        <div
+          class="palette-item"
+          data-kind="block"
+          data-size="1"
+          role="button"
+          tabindex="0"
+          aria-label="1×1 블록"
+        >
+          <div class="pi-rot"></div>
+          <span class="pi-text">1×1</span>
+        </div>
+        <div
+          class="palette-item"
+          data-kind="block"
+          data-size="2"
+          role="button"
+          tabindex="0"
+          aria-label="2×2 블록"
+        >
+          <div class="pi-rot"></div>
+          <span class="pi-text">2×2</span>
+        </div>
+        <div
+          class="palette-item"
+          data-kind="block"
+          data-size="3"
+          role="button"
+          tabindex="0"
+          aria-label="3×3 블록"
+        >
+          <div class="pi-rot"></div>
+          <span class="pi-text">3×3</span>
+        </div>
       </div>
-    </div>
-  </aside>
 
-  <header id="toolbar" class="toolbar" role="toolbar" aria-label="Editor toolbar">
-    <div class="tb-group">
-      <button id="btnUndo" class="tb-btn" type="button" title="되돌리기 (⌘Z / Ctrl+Z)" aria-label="되돌리기">↶</button>
-      <button id="btnRedo" class="tb-btn" type="button" title="다시하기 (⇧⌘Z 또는 Ctrl+Y)" aria-label="다시하기">↷</button>
-    </div>
-    <div class="tb-sep" aria-hidden="true"></div>
-    <div class="tb-group">
-      <button id="btnCityTrapDist" class="tb-btn" type="button" title="사냥함정과의 거리 예측 (⌥⌘D / Ctrl+Alt+D)" aria-label="거리 예측">📏</button>
-      <button id="btnReset" class="tb-btn danger" type="button" title="초기화 (⌥⌘R / Ctrl+Alt+R)" aria-label="초기화">🧹</button>
-      <button id="btnCopyURL" class="tb-btn" type="button" title="URL 복사 (⌥⌘C / Ctrl+Alt+C)" aria-label="URL 복사">🔗</button>
-      <button id="btnExportPNG" class="tb-btn primary" type="button" title="PNG 내보내기 (⌥⌘E / Ctrl+Alt+E)" aria-label="PNG 내보내기">🖼</button>
-    </div>
-    <div class="tb-flex-spacer" aria-hidden="true"></div>
-    <div class="tb-group">
-      <label class="lang-label" for="langSelect" data-i18n="ui.toolbar.lang">언어</label>
-      <select id="langSelect" class="lang-select" aria-label="Language">
-        <option value="en">🇺🇸 English</option>
-        <option value="ko">🇰🇷 한국어</option>
-      </select>
-    </div>
-  </header>
+      <div class="sidebar-footer">
+        <!-- QR 코드 2개 -->
+        <div class="footer-qrs">
+          <div class="qr-item">
+            <a
+              class="qr-link"
+              href="https://www.buymeacoffee.com/swyun"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Buy me a coffee"
+            >
+              <img
+                class="qr-img"
+                src="{{ url_for('static', filename='img/qr-code-bmc.png') }}"
+                alt="Buy me a coffee QR"
+              />
+            </a>
+            <span class="qr-label">Buy me a coffee</span>
+          </div>
 
-  <main id="viewport" class="viewport" aria-label="scrollable-viewport">
-    <div id="world" class="world">
-      <div id="rot" class="rot">
-        <div class="grid"></div>
-        <div id="tiles" class="tiles"></div>
-        <div id="tilesUser" class="tiles-user"></div>
-        <div id="tilesPreview" class="tiles-preview"></div>
-        <div id="outlines" class="outlines"></div>
-        <div id="outlinesPreview" class="outlines-preview"></div>
-        <div id="snap" class="snap-outline"></div>
+          <div class="qr-item">
+            <a
+              class="qr-link"
+              href="supertoss://send?amount=0&bank=IBK%EA%B8%B0%EC%97%85%EC%9D%80%ED%96%89&accountNo=29810334201018&origin=qr"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="토스 송금"
+            >
+              <img
+                class="qr-img"
+                src="{{ url_for('static', filename='img/qr-code-toss.jpg') }}"
+                alt="Toss QR"
+              />
+            </a>
+            <span class="qr-label">Toss</span>
+          </div>
+        </div>
+
+        <!-- GitHub + 크레딧 -->
+        <div class="footer-info">
+          <a
+            class="github-link"
+            href="https://github.com/SangwoonYun/Traplace"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Traplace GitHub"
+          >
+            <img
+              class="github-icon"
+              src="{{ url_for('static', filename='img/github-mark.svg') }}"
+              alt="GitHub"
+            />
+          </a>
+          <span class="credit">Created by #135 [KOR] 방구석개발자</span>
+        </div>
       </div>
-      <div id="badge" class="badge">
-        <button id="btnHome" class="home-btn" type="button" title="Home" aria-label="Home">🏠</button>
-        <span id="badgeText" aria-live="polite">x:-, y:-, 100%</span>
+    </aside>
+
+    <header id="toolbar" class="toolbar" role="toolbar" aria-label="Editor toolbar">
+      <div class="tb-group">
+        <button
+          id="btnUndo"
+          class="tb-btn"
+          type="button"
+          title="되돌리기 (⌘Z / Ctrl+Z)"
+          aria-label="되돌리기"
+        >
+          ↶
+        </button>
+        <button
+          id="btnRedo"
+          class="tb-btn"
+          type="button"
+          title="다시하기 (⇧⌘Z 또는 Ctrl+Y)"
+          aria-label="다시하기"
+        >
+          ↷
+        </button>
       </div>
+      <div class="tb-sep" aria-hidden="true"></div>
+      <div class="tb-group">
+        <button
+          id="btnCityTrapDist"
+          class="tb-btn"
+          type="button"
+          title="사냥함정과의 거리 예측 (⌥⌘D / Ctrl+Alt+D)"
+          aria-label="거리 예측"
+        >
+          📏
+        </button>
+        <button
+          id="btnReset"
+          class="tb-btn danger"
+          type="button"
+          title="초기화 (⌥⌘R / Ctrl+Alt+R)"
+          aria-label="초기화"
+        >
+          🧹
+        </button>
+        <button
+          id="btnCopyURL"
+          class="tb-btn"
+          type="button"
+          title="URL 복사 (⌥⌘C / Ctrl+Alt+C)"
+          aria-label="URL 복사"
+        >
+          🔗
+        </button>
+        <button
+          id="btnExportPNG"
+          class="tb-btn primary"
+          type="button"
+          title="PNG 내보내기 (⌥⌘E / Ctrl+Alt+E)"
+          aria-label="PNG 내보내기"
+        >
+          🖼
+        </button>
+      </div>
+      <div class="tb-flex-spacer" aria-hidden="true"></div>
+      <div class="tb-group">
+        <label class="lang-label" for="langSelect" data-i18n="ui.toolbar.lang">언어</label>
+        <select id="langSelect" class="lang-select" aria-label="Language">
+          <option value="en">🇺🇸 English</option>
+          <option value="ko">🇰🇷 한국어</option>
+        </select>
+      </div>
+    </header>
+
+    <main id="viewport" class="viewport" aria-label="scrollable-viewport">
+      <div id="world" class="world">
+        <div id="rot" class="rot">
+          <div class="grid"></div>
+          <div id="tiles" class="tiles"></div>
+          <div id="tilesUser" class="tiles-user"></div>
+          <div id="tilesPreview" class="tiles-preview"></div>
+          <div id="outlines" class="outlines"></div>
+          <div id="outlinesPreview" class="outlines-preview"></div>
+          <div id="snap" class="snap-outline"></div>
+        </div>
+        <div id="badge" class="badge">
+          <button id="btnHome" class="home-btn" type="button" title="Home" aria-label="Home">
+            🏠
+          </button>
+          <span id="badgeText" aria-live="polite">x:-, y:-, 100%</span>
+        </div>
+      </div>
+    </main>
+
+    <div
+      id="trashZone"
+      class="trash-zone"
+      data-i18n-title="ui.trash.title"
+      title="여기로 드래그하면 삭제"
+    >
+      <span class="trash-emoji" aria-hidden="true">🗑</span>
+      <span class="trash-label" data-i18n="ui.trash.label">여기로 드래그하면 삭제</span>
     </div>
-  </main>
 
-  <div
-    id="trashZone"
-    class="trash-zone"
-    data-i18n-title="ui.trash.title"
-    title="여기로 드래그하면 삭제"
-  >
-    <span class="trash-emoji" aria-hidden="true">🗑</span>
-    <span class="trash-label" data-i18n="ui.trash.label">여기로 드래그하면 삭제</span>
-  </div>
-
-  <noscript>이 앱을 사용하려면 JavaScript를 활성화하세요.</noscript>
-  <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
-</body>
+    <noscript>이 앱을 사용하려면 JavaScript를 활성화하세요.</noscript>
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+  </body>
 </html>

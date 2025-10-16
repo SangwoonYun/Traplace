@@ -55,8 +55,16 @@ export function centerToCell(cx, cy) {
   const m = new DOMMatrixReadOnly(getComputedStyle(rot).transform);
   const p = new DOMPoint(cx * cell, cy * cell).matrixTransform(m);
 
-  const targetLeft = clamp(p.x - viewport.clientWidth / 2, 0, world.scrollWidth - viewport.clientWidth);
-  const targetTop = clamp(p.y - viewport.clientHeight / 2, 0, world.scrollHeight - viewport.clientHeight);
+  const targetLeft = clamp(
+    p.x - viewport.clientWidth / 2,
+    0,
+    world.scrollWidth - viewport.clientWidth,
+  );
+  const targetTop = clamp(
+    p.y - viewport.clientHeight / 2,
+    0,
+    world.scrollHeight - viewport.clientHeight,
+  );
 
   viewport.scrollLeft = targetLeft;
   viewport.scrollTop = targetTop;

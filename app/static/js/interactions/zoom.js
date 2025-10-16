@@ -45,8 +45,16 @@ function setZoom(newZoom, pivotClientX, pivotClientY, expand) {
   const dx = pivotClientX - projected.x;
   const dy = pivotClientY - projected.y;
 
-  viewport.scrollLeft = clamp(viewport.scrollLeft - dx, 0, world.scrollWidth - viewport.clientWidth);
-  viewport.scrollTop  = clamp(viewport.scrollTop  - dy, 0, world.scrollHeight - viewport.clientHeight);
+  viewport.scrollLeft = clamp(
+    viewport.scrollLeft - dx,
+    0,
+    world.scrollWidth - viewport.clientWidth,
+  );
+  viewport.scrollTop = clamp(
+    viewport.scrollTop - dy,
+    0,
+    world.scrollHeight - viewport.clientHeight,
+  );
 
   expand();
 }

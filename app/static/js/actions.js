@@ -74,7 +74,7 @@ function setParenValues(labelEl, valuesStr, fallbackBaseText) {
   const cur = (labelEl.textContent || '').trim();
   // Split base and trailing parenthesized values (only the last group)
   const m = cur.match(/^(.*?)(?:\s*\((.*?)\))?\s*$/);
-  let base = (m && m[1]) ? m[1].trim() : '';
+  let base = m && m[1] ? m[1].trim() : '';
   if (!base) base = (fallbackBaseText || '').trim();
 
   labelEl.textContent = base ? `${base} (${valuesStr})` : `(${valuesStr})`;

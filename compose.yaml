@@ -4,7 +4,7 @@
 # - Healthchecks for both services
 # - Non-blocking depends_on (Compose v3 doesn't support health conditions)
 
-version: "3.9"
+version: '3.9'
 
 services:
   traplace:
@@ -14,16 +14,16 @@ services:
     pull_policy: always
     environment:
       # App runtime config
-      ENV: prod                 # switch to ProdConfig (DEBUG=False)
-      PORT: 8081                # must match the host port mapping below
-      WORKERS: 1                # override Gunicorn workers
+      ENV: prod # switch to ProdConfig (DEBUG=False)
+      PORT: 8081 # must match the host port mapping below
+      WORKERS: 1 # override Gunicorn workers
       REDIS_URL: redis://redis:6379/0
     ports:
-      - "8081:8081"
+      - '8081:8081'
     depends_on:
-      - redis                   # note: v3 does not wait for health automatically
+      - redis # note: v3 does not wait for health automatically
     healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8081/healthz || exit 1"]
+      test: ['CMD-SHELL', 'curl -fsS http://127.0.0.1:8081/healthz || exit 1']
       interval: 30s
       timeout: 3s
       retries: 3
@@ -31,8 +31,8 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: '10m'
+        max-file: '3'
     networks:
       - traplace-net
 
@@ -44,7 +44,7 @@ services:
     volumes:
       - redis-data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ['CMD', 'redis-cli', 'ping']
       interval: 30s
       timeout: 3s
       retries: 3

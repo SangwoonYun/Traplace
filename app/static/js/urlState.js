@@ -57,21 +57,30 @@ function encodeRedRLE(userPaintSet, useBase36 = true) {
   for (const y of ys) {
     const xs = byY.get(y).sort((a, b) => a - b);
     const runs = [];
-    let start = null, prev = null;
+    let start = null,
+      prev = null;
 
     for (const x of xs) {
-      if (start === null) { start = prev = x; continue; }
-      if (x === prev + 1) { prev = x; continue; }
+      if (start === null) {
+        start = prev = x;
+        continue;
+      }
+      if (x === prev + 1) {
+        prev = x;
+        continue;
+      }
       runs.push([start, prev]);
       start = prev = x;
     }
     if (start !== null) runs.push([start, prev]);
 
-    const runStr = runs.map(([a, b]) => {
-      const A = useBase36 ? toB36(a) : String(a);
-      const B = useBase36 ? toB36(b) : String(b);
-      return (a === b) ? A : `${A}-${B}`;
-    }).join(',');
+    const runStr = runs
+      .map(([a, b]) => {
+        const A = useBase36 ? toB36(a) : String(a);
+        const B = useBase36 ? toB36(b) : String(b);
+        return a === b ? A : `${A}-${B}`;
+      })
+      .join(',');
 
     const Y = useBase36 ? toB36(y) : String(y);
     rows.push(`${Y}:${runStr}`);
@@ -107,7 +116,8 @@ function decodeRed(str, useBase36) {
           const a = useBase36 ? fromB36(aStr) : parseInt(aStr, 10);
           const b = useBase36 ? fromB36(bStr) : parseInt(bStr, 10);
           if (!Number.isFinite(a) || !Number.isFinite(b)) continue;
-          const start = Math.min(a, b), end = Math.max(a, b);
+          const start = Math.min(a, b),
+            end = Math.max(a, b);
           for (let x = start; x <= end; x++) out.push(`${x},${y}`);
         } else {
           const x = useBase36 ? fromB36(r) : parseInt(r, 10);
@@ -204,11 +214,11 @@ export function deserializeState(qs) {
 
     const code = head[0];
     const sizeRaw = head.slice(1);
-    const size = isV2 ? parseInt(sizeRaw, 36) : (parseInt(sizeRaw || '1', 10) || 1);
+    const size = isV2 ? parseInt(sizeRaw, 36) : parseInt(sizeRaw || '1', 10) || 1;
 
     const [cxStr, cyStr] = tail.split(',');
-    const cx = isV2 ? parseInt(cxStr, 36) : (parseInt(cxStr, 10) || 0);
-    const cy = isV2 ? parseInt(cyStr, 36) : (parseInt(cyStr, 10) || 0);
+    const cx = isV2 ? parseInt(cxStr, 36) : parseInt(cxStr, 10) || 0;
+    const cy = isV2 ? parseInt(cyStr, 36) : parseInt(cyStr, 10) || 0;
 
     const kind = CODE_TO_KIND[code] || 'block';
     blocks.push({ kind, size, cx, cy, label });

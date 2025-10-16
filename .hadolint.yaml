@@ -1,0 +1,7 @@
+# File: .hadolint.yaml
+failure-threshold: warning
+override:
+  DL3008: ignore
+  DL3013: warning
+ignored:
+  - DL4006

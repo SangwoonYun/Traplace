@@ -1,6 +1,6 @@
 name: Release Image
 
-on:
+'on':
   push:
     tags:
       - '*'
@@ -60,4 +60,3 @@ jobs:
         run: |
           docker buildx imagetools inspect \
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
-
