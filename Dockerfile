@@ -21,8 +21,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 
 # ── OS packages (curl only for healthcheck) ────────────────────────────────────
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl=7.88.1-10+deb12u5 \
+# hadolint ignore=DL3008
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/*
 
 # ── Create non-root user early so we can COPY with proper ownership ────────────
