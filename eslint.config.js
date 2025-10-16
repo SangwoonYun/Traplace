@@ -1,6 +1,7 @@
 // File: eslint.config.js
 import js from '@eslint/js';
 import configPrettier from 'eslint-config-prettier';
+import globals from 'globals';
 
 export default [
   // Global ignores
@@ -15,24 +16,39 @@ export default [
     ],
   },
 
-  // ESLint recommended base
+  // Base recommended rules
   js.configs.recommended,
 
-  // Disable formatting-related rules (defer to Prettier)
+  // Turn off formatting-related rules (use Prettier)
   configPrettier,
 
-  // Project rules for our JS files
+  // Project rules
   {
     files: ['app/static/js/**/*.js'],
     languageOptions: {
-      ecmaVersion: 2022,
+      ecmaVersion: 2023,
       sourceType: 'module',
+      // ✅ Inject browser globals (covers window, document, fetch, URL, etc.)
       globals: {
-        window: 'readonly',
-        document: 'readonly',
-        navigator: 'readonly',
-        history: 'readonly',
-        location: 'readonly',
+        ...globals.browser,
+
+        // Extra DOM/Timing globals that some browsers expose but eslint/globals
+        // may not include consistently across versions:
+        DOMMatrixReadOnly: 'readonly',
+        DOMMatrix: 'readonly',
+        DOMPoint: 'readonly',
+        requestAnimationFrame: 'readonly',
+        getComputedStyle: 'readonly',
+        // (Most below are already in globals.browser, but kept for certainty)
+        alert: 'readonly',
+        confirm: 'readonly',
+        console: 'readonly',
+        localStorage: 'readonly',
+        URL: 'readonly',
+        URLSearchParams: 'readonly',
+        fetch: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
       },
     },
     rules: {

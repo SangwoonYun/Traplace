@@ -1,5 +1,6 @@
 {
   "name": "traplace",
+  "type": "module",
   "private": true,
   "scripts": {
     "lint:js": "eslint \"app/static/js/**/*.js\"",
