@@ -1,5 +1,5 @@
 ## Summary
-### Issue Ticket : NHT-@@@
+### Issue Ticket : #@@
 <!-- Write Issue ticket's title here! -->
 * 
 

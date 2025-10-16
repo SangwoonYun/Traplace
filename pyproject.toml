@@ -1,0 +1,24 @@
+# File: pyproject.toml
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+src = ["app", "manage.py", "wsgi.py"]
+extend-exclude = ["venv", ".venv", "node_modules", "static/vendor"]
+
+[tool.ruff.lint]
+select = [
+  "E",  # pycodestyle
+  "F",  # pyflakes
+  "I",  # isort
+  "UP", # pyupgrade
+  "B",  # flake8-bugbear
+  "SIM" # flake8-simplify
+]
+ignore = [
+  "E203", # whitespace before ':', compatible with Black-style formatting
+]
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+line-ending = "lf"

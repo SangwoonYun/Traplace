@@ -1,0 +1,8 @@
+# File: .hadolint.yaml
+failure-threshold: warning
+override:
+  # Allow unpinned apt packages in slim images (review if you want stricter pinning)
+  DL3008: warning
+  DL3013: warning
+ignored:
+  - DL4006 # using 'sh -c' in CMD is acceptable here for env expansion
