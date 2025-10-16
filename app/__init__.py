@@ -1,3 +1,11 @@
+# File: app/__init__.py
+"""
+Application factory.
+
+Creates and configures the Flask application using an environment-aware configuration.
+"""
+
+import os
 from flask import Flask
 
 from .config import get_config
@@ -5,13 +13,29 @@ from .extensions import init_extensions
 from .routes.core import bp as core_bp
 from .routes.shortener import bp as shortener_bp
 
+__all__ = ['create_app']
+
 
 def create_app(config_name: str | None = None) -> Flask:
-    app = Flask(__name__, template_folder="templates")
+    """Create and configure the Flask application.
+
+    Args:
+        config_name: Explicit configuration name (e.g., 'development', 'production').
+            If None, falls back to the ENV environment variable (default: 'development').
+
+    Returns:
+        A configured Flask application instance.
+    """
+    if config_name is None:
+        config_name = os.getenv('ENV', 'development')
+
+    app = Flask(__name__, template_folder='templates')
     app.config.from_object(get_config(config_name))
 
+    # Initialize extensions (DB, cache, login, etc.)
     init_extensions(app)
 
+    # Register blueprints
     app.register_blueprint(core_bp)
     app.register_blueprint(shortener_bp)
 
