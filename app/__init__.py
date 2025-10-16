@@ -21,7 +21,7 @@ def create_app(env: str | None = None) -> Flask:
     """Create and configure the Flask application.
 
     Args:
-        config_name: Explicit configuration name (e.g., 'development', 'production').
+        env: Explicit configuration name (e.g., 'development', 'production').
             If None, falls back to the ENV environment variable (default: 'development').
 
     Returns:
