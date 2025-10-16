@@ -1,3 +1,9 @@
+# File: compose.yaml
+# Compose file for Traplace (Flask + Gunicorn) with Redis backend.
+# - Explicit PORT mapping (matches app env)
+# - Healthchecks for both services
+# - Non-blocking depends_on (Compose v3 doesn't support health conditions)
+
 version: "3.9"
 
 services:
@@ -7,20 +13,17 @@ services:
     restart: unless-stopped
     pull_policy: always
     environment:
-      PORT: 8081
-      WORKERS: 1
-      # Flask app이 Redis에 접속할 수 있도록 URL 주입
+      # App runtime config
+      ENV: prod                 # switch to ProdConfig (DEBUG=False)
+      PORT: 8081                # must match the host port mapping below
+      WORKERS: 1                # override Gunicorn workers
       REDIS_URL: redis://redis:6379/0
     ports:
       - "8081:8081"
     depends_on:
-      - redis
+      - redis                   # note: v3 does not wait for health automatically
     healthcheck:
-      test:
-        - CMD
-        - curl
-        - -fsS
-        - http://127.0.0.1:8081/healthz
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8081/healthz || exit 1"]
       interval: 30s
       timeout: 3s
       retries: 3
