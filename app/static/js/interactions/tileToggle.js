@@ -18,7 +18,7 @@ import { saveCheckpoint } from '../history.js';
 export function setupTileToggle() {
   rot.addEventListener('click', (e) => {
     // Ignore drag events or clicks on existing blocks
-    if (state.drag || e.target.closest('.block')) return;
+    if (state.drag || state.panning || e.target.closest('.block')) return;
     if (e.button !== 0) return; // left click only
 
     // Determine clicked cell

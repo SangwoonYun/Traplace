@@ -14,13 +14,25 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/blocks.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/ui.css') }}" />
   </head>
-  <body>
-    <aside id="sidebar" class="sidebar">
-      <h2 data-i18n="ui.usageTitle">사용 방법</h2>
-      <div class="usage" data-i18n="ui.usage"><!-- 내용은 JS가 채웁니다 --></div>
 
-      <div class="palette-title" data-i18n="ui.paletteTitle">객체 팔레트</div>
-      <div id="palette" class="palette">
+  <body>
+    <!-- Sidebar: palette only (footer removed by convention) -->
+    <aside id="sidebar" class="sidebar">
+      <!-- Hidden on mobile: usage block -->
+      <h2 data-i18n="ui.usageTitle" data-mobile-hidden>사용 방법</h2>
+      <div class="usage" data-i18n="ui.usage" data-mobile-hidden></div>
+
+      <!-- Hidden on mobile: palette title -->
+      <div class="palette-title" data-i18n="ui.paletteTitle" data-mobile-hidden>객체 팔레트</div>
+
+      <!-- Palette -->
+      <div
+        id="palette"
+        class="palette palette--scroll"
+        role="listbox"
+        tabindex="0"
+        aria-label="Palette"
+      >
         <div
           class="palette-item"
           data-kind="hq"
@@ -32,6 +44,7 @@
           <div class="pi-rot"></div>
           <span class="pi-text">평원본부</span>
         </div>
+
         <div
           class="palette-item"
           data-kind="flag"
@@ -43,6 +56,7 @@
           <div class="pi-rot"></div>
           <span class="pi-text">연맹깃발</span>
         </div>
+
         <div
           class="palette-item"
           data-kind="trap"
@@ -54,6 +68,7 @@
           <div class="pi-rot"></div>
           <span class="pi-text">사냥함정</span>
         </div>
+
         <div
           class="palette-item"
           data-kind="city"
@@ -65,6 +80,7 @@
           <div class="pi-rot"></div>
           <span class="pi-text">도시</span>
         </div>
+
         <div
           class="palette-item"
           data-kind="resource"
@@ -76,6 +92,7 @@
           <div class="pi-rot"></div>
           <span class="pi-text">연맹자원</span>
         </div>
+
         <div
           class="palette-item"
           data-kind="block"
@@ -87,6 +104,7 @@
           <div class="pi-rot"></div>
           <span class="pi-text">1×1</span>
         </div>
+
         <div
           class="palette-item"
           data-kind="block"
@@ -98,6 +116,7 @@
           <div class="pi-rot"></div>
           <span class="pi-text">2×2</span>
         </div>
+
         <div
           class="palette-item"
           data-kind="block"
@@ -169,6 +188,7 @@
       </div>
     </aside>
 
+    <!-- Top toolbar -->
     <header id="toolbar" class="toolbar" role="toolbar" aria-label="Editor toolbar">
       <div class="tb-group">
         <button
@@ -190,7 +210,9 @@
           ↷
         </button>
       </div>
+
       <div class="tb-sep" aria-hidden="true"></div>
+
       <div class="tb-group">
         <button
           id="btnCityTrapDist"
@@ -229,7 +251,9 @@
           🖼
         </button>
       </div>
+
       <div class="tb-flex-spacer" aria-hidden="true"></div>
+
       <div class="tb-group">
         <label class="lang-label" for="langSelect" data-i18n="ui.toolbar.lang">언어</label>
         <select id="langSelect" class="lang-select" aria-label="Language">
@@ -239,6 +263,7 @@
       </div>
     </header>
 
+    <!-- Viewport / World -->
     <main id="viewport" class="viewport" aria-label="scrollable-viewport">
       <div id="world" class="world">
         <div id="rot" class="rot">
@@ -250,6 +275,7 @@
           <div id="outlinesPreview" class="outlines-preview"></div>
           <div id="snap" class="snap-outline"></div>
         </div>
+
         <div id="badge" class="badge">
           <button id="btnHome" class="home-btn" type="button" title="Home" aria-label="Home">
             🏠
@@ -259,6 +285,7 @@
       </div>
     </main>
 
+    <!-- Trash zone for delete via drag -->
     <div
       id="trashZone"
       class="trash-zone"
