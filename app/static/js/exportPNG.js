@@ -54,16 +54,14 @@ function trimCanvasByBackground(inCanvas, bgColor) {
   // Helper: test pixel at (x, y) equals background
   const isBg = (x, y) => {
     const i = (y * w + x) * 4;
-    return (
-      data[i + 0] === br &&
-      data[i + 1] === bg &&
-      data[i + 2] === bb &&
-      data[i + 3] === ba
-    );
+    return data[i + 0] === br && data[i + 1] === bg && data[i + 2] === bb && data[i + 3] === ba;
   };
 
   // Find bounds (minX, minY, maxX, maxY) where pixel != background
-  let minX = w, minY = h, maxX = -1, maxY = -1;
+  let minX = w,
+    minY = h,
+    maxX = -1,
+    maxY = -1;
 
   // Scan rows/cols; early breaks keep it linear-ish in practice
   for (let y = 0; y < h; y++) {
@@ -152,7 +150,10 @@ function usedCellsBBox() {
 
   if (!used.size) return null;
 
-  let minx = Infinity, miny = Infinity, maxx = -Infinity, maxy = -Infinity;
+  let minx = Infinity,
+    miny = Infinity,
+    maxx = -Infinity,
+    maxy = -Infinity;
   for (const key of used) {
     const [x, y] = key.split(',').map(Number);
     if (x < minx) minx = x;
@@ -180,7 +181,8 @@ function usedCellsBBox() {
  */
 function strokeCellPerimeter(ctx, set, x, y, color, lineWidth = 2, dashed = false) {
   const has = (xx, yy) => set.has(`${xx},${yy}`);
-  const px = x * cell, py = y * cell;
+  const px = x * cell,
+    py = y * cell;
 
   ctx.save();
   ctx.strokeStyle = color;
@@ -188,16 +190,28 @@ function strokeCellPerimeter(ctx, set, x, y, color, lineWidth = 2, dashed = fals
   if (dashed) ctx.setLineDash([6, 6]);
 
   if (!has(x, y - 1)) {
-    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px + cell, py); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(px, py);
+    ctx.lineTo(px + cell, py);
+    ctx.stroke();
   }
   if (!has(x + 1, y)) {
-    ctx.beginPath(); ctx.moveTo(px + cell, py); ctx.lineTo(px + cell, py + cell); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(px + cell, py);
+    ctx.lineTo(px + cell, py + cell);
+    ctx.stroke();
   }
   if (!has(x, y + 1)) {
-    ctx.beginPath(); ctx.moveTo(px, py + cell); ctx.lineTo(px + cell, py + cell); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(px, py + cell);
+    ctx.lineTo(px + cell, py + cell);
+    ctx.stroke();
   }
   if (!has(x - 1, y)) {
-    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, py + cell); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(px, py);
+    ctx.lineTo(px, py + cell);
+    ctx.stroke();
   }
 
   ctx.restore();
@@ -221,7 +235,8 @@ function styleForBlock(b, paintedSet) {
   for (let y = cy; y < cy + b.size && !invalid; y++) {
     for (let x = cx; x < cx + b.size; x++) {
       if (!paintedSet.has(`${x},${y}`)) {
-        invalid = true; break;
+        invalid = true;
+        break;
       }
     }
   }
@@ -281,7 +296,10 @@ function computeCanvasBoxAndShift(offX, offY, widthPx, heightPx) {
 
   const proj = P.map(([x, y]) => projectRaw(W, H, x, y));
 
-  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  let minX = Infinity,
+    minY = Infinity,
+    maxX = -Infinity,
+    maxY = -Infinity;
   for (const p of proj) {
     if (p.x < minX) minX = p.x;
     if (p.y < minY) minY = p.y;
@@ -337,8 +355,12 @@ export async function exportPNG() {
   const heightPx = heightCells * cell;
 
   // Canvas box & shift
-  const { boxW, boxH, shiftX, shiftY, W, H } =
-    computeCanvasBoxAndShift(offX, offY, widthPx, heightPx);
+  const { boxW, boxH, shiftX, shiftY, W, H } = computeCanvasBoxAndShift(
+    offX,
+    offY,
+    widthPx,
+    heightPx,
+  );
 
   const dpr = window.devicePixelRatio || 1;
 
@@ -364,10 +386,16 @@ export async function exportPNG() {
   ctx.strokeStyle = gridColor;
   ctx.lineWidth = 1;
   for (let x = offX; x <= offX + widthPx + 0.1; x += cell) {
-    ctx.beginPath(); ctx.moveTo(x, offY); ctx.lineTo(x, offY + heightPx); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, offY);
+    ctx.lineTo(x, offY + heightPx);
+    ctx.stroke();
   }
   for (let y = offY; y <= offY + heightPx + 0.1; y += cell) {
-    ctx.beginPath(); ctx.moveTo(offX, y); ctx.lineTo(offX + widthPx, y); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(offX, y);
+    ctx.lineTo(offX + widthPx, y);
+    ctx.stroke();
   }
   ctx.restore();
 
@@ -406,10 +434,11 @@ export async function exportPNG() {
     const { cx, cy } = posToCell(b.left, b.top);
     const centerCx = cx + Math.floor(b.size / 2);
     const centerCy = cy + Math.floor(b.size / 2);
-    const { minx: ax, miny: ay, maxx: bx, maxy: by } = areaBoundingBox(
-      b.kind, centerCx, centerCy,
-    );
-    const x = ax * cell, y = ay * cell, w = (bx - ax + 1) * cell, h = (by - ay + 1) * cell;
+    const { minx: ax, miny: ay, maxx: bx, maxy: by } = areaBoundingBox(b.kind, centerCx, centerCy);
+    const x = ax * cell,
+      y = ay * cell,
+      w = (bx - ax + 1) * cell,
+      h = (by - ay + 1) * cell;
     const inX = !(x + w < offX || x > offX + widthPx);
     const inY = !(y + h < offY || y > offY + heightPx);
     if (inX && inY) ctx.strokeRect(x, y, w, h);
@@ -420,7 +449,10 @@ export async function exportPNG() {
   for (const b of state.blocks) {
     const st = styleForBlock(b, painted);
     const { cx, cy } = posToCell(b.left, b.top);
-    const x = cx * cell, y = cy * cell, w = b.size * cell, h = b.size * cell;
+    const x = cx * cell,
+      y = cy * cell,
+      w = b.size * cell,
+      h = b.size * cell;
 
     // Skip outside crop
     if (x > offX + widthPx || x + w < offX || y > offY + heightPx || y + h < offY) continue;
@@ -437,11 +469,17 @@ export async function exportPNG() {
     // Label text — use i18n defaults; preserve city edits
     const labelEl = b.el?.querySelector('.label');
     let text =
-      b.kind === 'flag'     ? t('palette.flag') :
-      b.kind === 'hq'       ? t('palette.hq') :
-      b.kind === 'city'     ? t('palette.city') :
-      b.kind === 'resource' ? t('palette.resource') :
-      b.kind === 'trap'     ? t('palette.trap') : `${b.size}×${b.size}`;
+      b.kind === 'flag'
+        ? t('palette.flag')
+        : b.kind === 'hq'
+          ? t('palette.hq')
+          : b.kind === 'city'
+            ? t('palette.city')
+            : b.kind === 'resource'
+              ? t('palette.resource')
+              : b.kind === 'trap'
+                ? t('palette.trap')
+                : `${b.size}×${b.size}`;
 
     const userText = (labelEl?.textContent || '').trim();
     if (b.kind === 'city' && userText) text = userText;
