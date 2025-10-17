@@ -35,6 +35,17 @@ import {
 import { initCounters, updateAllCounts } from './counters.js';
 import { enableDragScroll } from './interactions/hscroll.js';
 
+/* ---------------------------------------------
+ * Constants
+ * ------------------------------------------- */
+
+const MOBILE_MEDIA = '(max-width: 991.98px)';
+
+/* ---------------------------------------------
+ * Bootstrap
+ * ------------------------------------------- */
+
+/** Initialize app once the window has fully loaded. */
 window.addEventListener('load', async () => {
   /* ---------------------------------------------
    * Initial layout + counters
@@ -43,19 +54,26 @@ window.addEventListener('load', async () => {
   initCounters();
 
   /* ---------------------------------------------
-   * i18n (temporarily disable palette hit-testing to avoid accidental drags)
+   * i18n (temporarily disable palette hit-testing)
    * ------------------------------------------- */
   const palette = document.getElementById('palette');
-  if (palette) palette.style.pointerEvents = 'none';
-  const lang = detectPreferredLang();
-  await loadLanguageOnline(lang);
-  updateBlockLabelsForLocale(state);
-  if (palette) palette.style.pointerEvents = '';
+  const prevPointerEvents = palette?.style.pointerEvents;
+  try {
+    if (palette) palette.style.pointerEvents = 'none';
+
+    const lang = detectPreferredLang();
+    await loadLanguageOnline(lang);
+    updateBlockLabelsForLocale(state);
+  } finally {
+    if (palette) palette.style.pointerEvents = prevPointerEvents ?? '';
+  }
+
   enableDragScroll(palette);
 
   // Bind language selector
   const sel = document.getElementById('langSelect');
   if (sel) {
+    // Make sure currentLang is reflected in the selector
     sel.value = currentLang();
     sel.addEventListener('change', async () => {
       await loadLanguageOnline(sel.value);
@@ -69,7 +87,7 @@ window.addEventListener('load', async () => {
    * ------------------------------------------- */
   const parsed = parseFromURL();
 
-  if (parsed.blocks?.length) {
+  if (parsed?.blocks?.length) {
     state._restoring = true;
     for (const it of parsed.blocks) {
       const left = it.cx * cell;
@@ -87,7 +105,7 @@ window.addEventListener('load', async () => {
     state._restoring = false;
   }
 
-  if (parsed.red?.length) {
+  if (parsed?.red?.length) {
     state.userPaint = new Set(parsed.red);
     renderUserTiles();
   }
@@ -111,13 +129,18 @@ window.addEventListener('load', async () => {
   renderUserTiles();
   validateAllObjects();
 
+  /* ---------------------------------------------
+   * Mobile centering (deferred to allow fixed UI to settle)
+   * ------------------------------------------- */
   const ensureCenterOnMobile = (retries = 3) => {
-    if (!window.matchMedia('(max-width: 991.98px)').matches) return;
+    if (!window.matchMedia(MOBILE_MEDIA).matches) return;
+
     // 2-frame delay to let fixed toolbars/palette and CSS vars settle
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         centerToWorldCenter();
-        // extra small retries guard for slow devices
+
+        // Small retry loop for slower devices
         let left = retries;
         const tick = () => {
           centerToWorldCenter();
@@ -127,8 +150,10 @@ window.addEventListener('load', async () => {
       });
     });
   };
+
   ensureCenterOnMobile();
-  // also on resize/orientation
+
+  // Also recenter on resize/orientation changes (light retries)
   const onResize = () => ensureCenterOnMobile(2);
   window.addEventListener('resize', onResize);
   window.addEventListener('orientationchange', onResize);
@@ -139,5 +164,8 @@ window.addEventListener('load', async () => {
   initHistoryWithCurrent();
 });
 
-// Debug helpers (optional)
+/* ---------------------------------------------
+ * Debug helpers (optional)
+ * ------------------------------------------- */
+
 Object.assign(window, { state, centerToCell, updateBadge, saveCheckpoint });
