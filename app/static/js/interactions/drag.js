@@ -20,6 +20,8 @@ import { t } from '../i18n.js';
 
 const EDGE_MARGIN = 72; // px from each edge to begin auto-scroll
 const MAX_SPEED = 500; // px/sec at the very edge
+const NEW_SCROLL_GRACE_MS = 180; // suppress edge scroll right after a new-drag starts
+const NEW_EDGE_DWELL_MS = 120; // require dwelling near an edge before scrolling (new-drag only)
 const LONG_PRESS_MS = 250; // touch long-press threshold
 const MOVE_TOL_CREATE = 8; // px slop when starting from palette
 const MOVE_TOL_MOVE = 6; // px slop when moving existing block
@@ -188,6 +190,15 @@ function updateGhost(clientX, clientY, px) {
 
 /** Compute scrolling velocity based on proximity to edges. */
 function computeEdgeVelocity(clientX, clientY) {
+  // Grace: right after creating from palette, suppress auto-scroll briefly.
+  if (state.drag?.mode === 'new') {
+    const now = performance.now();
+    const startedAt = state.drag.startedAt ?? now;
+    if (now - startedAt < NEW_SCROLL_GRACE_MS) {
+      return { vx: 0, vy: 0 };
+    }
+  }
+
   const vp = computeEffectiveRect();
   const ease = (d) => Math.min(1, Math.max(0, d / EDGE_MARGIN)); // 0..1
   let vx = 0;
@@ -209,6 +220,29 @@ function computeEdgeVelocity(clientX, clientY) {
   } else if (clientY > vp.bottom - EDGE_MARGIN) {
     const f = 1 - ease(vp.bottom - clientY);
     vy = MAX_SPEED * f;
+  }
+
+  // Dwell: require staying near the same edge for a short time (new-drag only).
+  if (state.drag?.mode === 'new' && (vx !== 0 || vy !== 0)) {
+    const now = performance.now();
+    // Determine which edge we're near (L/R/T/B)
+    const key =
+      clientX < vp.left + EDGE_MARGIN
+        ? 'L'
+        : clientX > vp.right - EDGE_MARGIN
+          ? 'R'
+          : clientY < vp.top + EDGE_MARGIN
+            ? 'T'
+            : 'B';
+
+    if (state.drag.edgeKey !== key) {
+      state.drag.edgeKey = key;
+      state.drag.edgeEnterAt = now;
+      return { vx: 0, vy: 0 };
+    }
+    if (now - (state.drag.edgeEnterAt ?? now) < NEW_EDGE_DWELL_MS) {
+      return { vx: 0, vy: 0 };
+    }
   }
 
   return { vx, vy };
@@ -414,7 +448,16 @@ export function setupPaletteDrag() {
 
         document.body.appendChild(ghost);
 
-        state.drag = { mode: 'new', size, kind, ghost, pointerId: e.pointerId };
+        state.drag = {
+          mode: 'new',
+          size,
+          kind,
+          ghost,
+          pointerId: e.pointerId,
+          startedAt: performance.now(),
+          edgeKey: null,
+          edgeEnterAt: 0,
+        };
         updateGhost(e.clientX, e.clientY, px);
 
         window.addEventListener('pointermove', onPointerMove);
