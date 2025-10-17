@@ -76,8 +76,8 @@ export function centerToWorldCenter() {
   const rows = Math.round(world.clientHeight / cell);
 
   // Center cell (0-indexed). Example: 1200×1200 → 599,599
-  const cx = Math.floor(cols / 2);
-  const cy = Math.floor(rows / 2);
+  const cx = Math.floor(cols / 2) -1;
+  const cy = Math.floor(rows / 2) -1;
 
   centerToCell(cx, cy);
 }
