@@ -192,9 +192,13 @@ export function setupPan(expand) {
     window.removeEventListener('pointercancel', onPointerCancel);
   };
 
-  window.addEventListener('pointerdown', (e) => {
-    if (e.pointerType === 'touch') {
-      window.__cancelPan?.();
-    }
-  }, { capture: true });
+  window.addEventListener(
+    'pointerdown',
+    (e) => {
+      if (e.pointerType === 'touch') {
+        window.__cancelPan?.();
+      }
+    },
+    { capture: true },
+  );
 }

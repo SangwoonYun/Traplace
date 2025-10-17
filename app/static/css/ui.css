@@ -425,8 +425,12 @@ body {
     padding: 6px clamp(8px, 2.8vw, 16px);
   }
 
-  .toolbar::-webkit-scrollbar { display: none; }
-  .toolbar { scrollbar-width: none; }
+  .toolbar::-webkit-scrollbar {
+    display: none;
+  }
+  .toolbar {
+    scrollbar-width: none;
+  }
 
   .tb-group {
     display: inline-flex;
@@ -482,7 +486,9 @@ body {
     cursor: not-allowed;
   }
 
-  .tb-btn > .icon { margin-right: clamp(4px, 1.2vw, 8px); }
+  .tb-btn > .icon {
+    margin-right: clamp(4px, 1.2vw, 8px);
+  }
 
   .badge {
     top: calc(var(--toolbar-h) + 6px);
