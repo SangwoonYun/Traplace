@@ -349,12 +349,12 @@ export async function exportPNG() {
   const redFill = cssVar('--paint-red', 'rgba(220,20,60,0.35)');
 
   // Crop region in unrotated space
-  const offX = minx * c;
-  const offY = miny * c;
+  const offX = minx * cellSize;
+  const offY = miny * cellSize;
   const widthCells = maxx - minx + 1;
   const heightCells = maxy - miny + 1;
-  const widthPx = widthCells * c;
-  const heightPx = heightCells * c;
+  const widthPx = widthCells * cellSize;
+  const heightPx = heightCells * cellSize;
 
   // Canvas box & shift
   const { boxW, boxH, shiftX, shiftY, W, H } = computeCanvasBoxAndShift(
