@@ -1,0 +1,49 @@
+{
+  "app": { "title": "Simulator Penempatan Aliansi" },
+  "ui": {
+    "usageTitle": "Cara Menggunakan",
+    "usage": "• <b>Seret dan lepas</b>: tempatkan item dari palet di sisi kiri (terkunci ke kisi).<br>• <b>Seret dengan tombol tengah mouse</b>: geser tampilan.<br>• <b>Ctrl/⌘ + Roda mouse</b>: perbesar/perkecil.<br>• <b>Cubit pada touchpad</b>: perbesar atau perkecil.<br>• <b>Klik sel</b>: aktifkan/nonaktifkan cat merah.<br>• <b>Label kota</b>: klik dua kali → edit (Enter untuk menyimpan / Esc untuk membatalkan).<br>• <b>Area bawah 🗑</b>: seret item ke sini untuk menghapusnya.<br>※ Cat biru dihasilkan oleh <b>Bendera (7×7)</b> dan <b>Markas Besar (15×15)</b>.",
+    "paletteTitle": "Palet",
+    "toolbar": {
+      "undo": "Batalkan",
+      "redo": "Ulangi",
+      "reset": "Atur ulang",
+      "copy": "Salin URL pendek",
+      "export": "Ekspor sebagai PNG",
+      "dist2label": "Ukur waktu perpindahan",
+      "lang": "Bahasa",
+      "home": "Kembali ke tengah"
+    },
+    "trash": {
+      "label": "Seret ke sini untuk menghapus",
+      "title": "Seret blok ke area ini untuk menghapusnya"
+    },
+    "footer": {
+      "credit": "Created by #135 [KOR] 방구석개발자",
+      "bmc": "Buy me a coffee",
+      "toss": "Toss"
+    }
+  },
+  "palette": {
+    "hq": "Markas Besar",
+    "flag": "Bendera",
+    "trap": "Perangkap Pemburu",
+    "city": "Kota",
+    "resource": "Sumber Daya",
+    "block1": "1×1",
+    "block2": "2×2",
+    "block3": "3×3"
+  },
+  "alert": {
+    "noCities": "Tidak ada kota.",
+    "noTraps": "Tidak ada perangkap.",
+    "resetConfirm": "Atur ulang semua? (Semua objek dan ubin merah akan dihapus)",
+    "exportFail": "Gagal mengekspor PNG."
+  },
+  "msg": {
+    "copiedShort": "URL pendek disalin!",
+    "copiedFull": "URL lengkap disalin",
+    "shortenError": "Gagal membuat URL pendek.",
+    "copyError": "Gagal menyalin."
+  }
+}

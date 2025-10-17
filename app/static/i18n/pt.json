@@ -1,0 +1,49 @@
+{
+  "app": { "title": "Simulador de Posicionamento da Aliança" },
+  "ui": {
+    "usageTitle": "Como usar",
+    "usage": "• <b>Arrastar e soltar</b>: coloque itens da paleta à esquerda (alinhamento com a grade).<br>• <b>Arrastar com o botão do meio do mouse</b>: mover a visualização.<br>• <b>Ctrl/⌘ + Roda do mouse</b>: aumentar/diminuir o zoom.<br>• <b>Pinch no touchpad</b>: ampliar ou reduzir.<br>• <b>Clique em uma célula</b>: alternar a pintura vermelha.<br>• <b>Etiqueta da cidade</b>: clique duas vezes → editar (Enter para salvar / Esc para cancelar).<br>• <b>Área inferior 🗑</b>: arraste um item aqui para excluí-lo.<br>※ A pintura azul é gerada por <b>Bandeira (7×7)</b> e <b>Quartel-General (15×15)</b>.",
+    "paletteTitle": "Paleta",
+    "toolbar": {
+      "undo": "Desfazer",
+      "redo": "Refazer",
+      "reset": "Redefinir",
+      "copy": "Copiar URL curta",
+      "export": "Exportar como PNG",
+      "dist2label": "Medir tempo de movimento",
+      "lang": "Idioma",
+      "home": "Ir para o centro"
+    },
+    "trash": {
+      "label": "Arraste aqui para excluir",
+      "title": "Arraste um bloco para esta área para excluí-lo"
+    },
+    "footer": {
+      "credit": "Created by #135 [KOR] 방구석개발자",
+      "bmc": "Buy me a coffee",
+      "toss": "Toss"
+    }
+  },
+  "palette": {
+    "hq": "Quartel-General",
+    "flag": "Bandeira",
+    "trap": "Armadilha de caça",
+    "city": "Cidade",
+    "resource": "Recurso",
+    "block1": "1×1",
+    "block2": "2×2",
+    "block3": "3×3"
+  },
+  "alert": {
+    "noCities": "Nenhuma cidade.",
+    "noTraps": "Nenhuma armadilha.",
+    "resetConfirm": "Redefinir tudo? (Todos os objetos e células vermelhas serão removidos)",
+    "exportFail": "Falha ao exportar PNG."
+  },
+  "msg": {
+    "copiedShort": "URL curta copiada!",
+    "copiedFull": "URL completa copiada",
+    "shortenError": "Falha ao criar URL curta.",
+    "copyError": "Falha ao copiar."
+  }
+}
