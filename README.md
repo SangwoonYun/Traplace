@@ -78,10 +78,23 @@ Then open:
 
 Traplace supports multilingual UI.
 
-| Language | File           | Status |
-| -------- | -------------- | ------ |
-| English  | `i18n/en.json` | ✅     |
-| Korean   | `i18n/ko.json` | ✅     |
+| Language         | File              | Status |
+| ---------------- | ----------------- | ------ |
+| English          | `i18n/en.json`    | ✅     |
+| 한국어           | `i18n/ko.json`    | ✅     |
+| 简体中文         | `i18n/zh-CN.json` | ✅     |
+| 繁體中文         | `i18n/zh-TW.json` | ✅     |
+| 日本語           | `i18n/ja.json`    | ✅     |
+| Français         | `i18n/fr.json`    | ✅     |
+| Deutsch          | `i18n/de.json`    | ✅     |
+| Español          | `i18n/es.json`    | ✅     |
+| Italiano         | `i18n/it.json`    | ✅     |
+| Polski           | `i18n/pl.json`    | ✅     |
+| Português        | `i18n/pt.json`    | ✅     |
+| العربية          | `i18n/ar.json`    | ❌     |
+| Türkçe           | `i18n/tr.json`    | ✅     |
+| ไทย              | `i18n/th.json`    | ✅     |
+| Bahasa Indonesia | `i18n/id.json`    | ✅     |
 
 You can add more language files under `/i18n/` and Traplace will load them dynamically at runtime.
 

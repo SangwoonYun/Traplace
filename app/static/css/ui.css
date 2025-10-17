@@ -225,6 +225,13 @@
   padding: 6px 10px;
 }
 
+/* RTL: toolbar occupies the space left of the right-side sidebar */
+body.rtl .toolbar,
+html[dir='rtl'] .toolbar {
+  left: 0;
+  right: var(--sidebar-w);
+}
+
 .tb-group {
   display: flex;
   gap: 6px;
@@ -356,6 +363,13 @@ body {
   user-select: none;
 }
 
+/* RTL: trash zone also offsets from the right-side sidebar */
+body.rtl .trash-zone,
+html[dir='rtl'] .trash-zone {
+  left: 0;
+  right: var(--sidebar-w);
+}
+
 .trash-zone.active {
   background: var(--trash-bg-active);
   border-top-color: var(--trash-border-active);
@@ -379,6 +393,31 @@ body {
     --sidebar-footer-border: rgba(255, 255, 255, 0.12);
   }
 }
+
+/* =============================================
+ * RTL helper tweaks
+ * =========================================== */
+/* Set overall document flow when <html dir="rtl"> or body.rtl is applied */
+body.rtl {
+  direction: rtl;
+}
+body.rtl .toolbar,
+body.rtl .tb-group,
+body.rtl .sidebar,
+body.rtl .palette,
+body.rtl .trash-zone {
+  direction: rtl;
+}
+
+/* Keep the floating HUD anchored on the right in RTL as well */
+body.rtl #badge {
+  left: auto;
+  right: 12px;
+}
+
+/* If you use directional icons, you can flip them like this:
+body.rtl .icon-arrow { transform: scaleX(-1); }
+*/
 
 /* ---------------------------------------------
  * Responsive: tablet-portrait & phones (< 992px) 

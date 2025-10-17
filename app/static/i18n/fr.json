@@ -1,0 +1,49 @@
+{
+  "app": { "title": "Simulateur de Placement d'Alliance" },
+  "ui": {
+    "usageTitle": "Comment utiliser",
+    "usage": "• <b>Glisser-déposer</b> : placez des éléments depuis la palette de gauche (alignement sur la grille).<br>• <b>Glisser avec le bouton du milieu</b> : déplacer la vue.<br>• <b>Ctrl/⌘ + Molette</b> : zoom avant/arrière.<br>• <b>Pincement sur le pavé tactile</b> : zoomer/dézoomer.<br>• <b>Cliquez sur une cellule</b> : activer/désactiver la peinture rouge.<br>• Étiquette de <b>ville</b> : double-cliquez → modifier (Entrée pour enregistrer / Échap pour annuler).<br>• Zone inférieure <b>🗑</b> : faites glisser un élément ici pour le supprimer.<br>※ La peinture bleue est générée par les <b>bannières (7×7)</b> et les <b>QG (15×15)</b>.",
+    "paletteTitle": "Palette",
+    "toolbar": {
+      "undo": "Annuler",
+      "redo": "Rétablir",
+      "reset": "Réinitialiser",
+      "copy": "Copier l’URL courte",
+      "export": "Exporter en PNG",
+      "dist2label": "Mesurer le temps de déplacement",
+      "lang": "Langue",
+      "home": "Aller au centre"
+    },
+    "trash": {
+      "label": "Faites glisser ici pour supprimer",
+      "title": "Faites glisser un bloc dans cette zone pour le supprimer"
+    },
+    "footer": {
+      "credit": "Created by #135 [KOR] 방구석개발자",
+      "bmc": "Buy me a coffee",
+      "toss": "Toss"
+    }
+  },
+  "palette": {
+    "hq": "QG",
+    "flag": "Bannière",
+    "trap": "Piège de chasse",
+    "city": "Ville",
+    "resource": "Ressource",
+    "block1": "1×1",
+    "block2": "2×2",
+    "block3": "3×3"
+  },
+  "alert": {
+    "noCities": "Aucune ville.",
+    "noTraps": "Aucun piège.",
+    "resetConfirm": "Tout réinitialiser ? (Tous les objets et tuiles rouges seront supprimés)",
+    "exportFail": "Échec de l’exportation du PNG."
+  },
+  "msg": {
+    "copiedShort": "URL courte copiée !",
+    "copiedFull": "URL complète copiée",
+    "shortenError": "Échec de la création de l’URL courte.",
+    "copyError": "Échec de la copie."
+  }
+}

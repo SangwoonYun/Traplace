@@ -1,0 +1,49 @@
+{
+  "app": { "title": "İttifak Yerleşim Simülatörü" },
+  "ui": {
+    "usageTitle": "Nasıl kullanılır",
+    "usage": "• <b>Sürükle ve bırak</b>: Sol taraftaki paletten öğeleri yerleştirin (ızgaraya hizalanır).<br>• <b>Orta fare tuşuyla sürükle</b>: Görünümü kaydır.<br>• <b>Ctrl/⌘ + Fare tekerleği</b>: Yakınlaştır / Uzaklaştır.<br>• <b>Dokunmatik yüzeyde kıstırma</b>: Yakınlaştır veya uzaklaştır.<br>• <b>Bir hücreye tıklayın</b>: Kırmızı boyayı aç/kapat.<br>• <b>Şehir</b> etiketi: Çift tıklayın → Düzenle (Enter ile kaydet / Esc ile iptal).<br>• Alt kısımdaki <b>🗑 alanına</b>: Bir öğeyi buraya sürükleyerek silin.<br>※ Mavi boyalar <b>Bayrak (7×7)</b> ve <b>Karargâh (15×15)</b> tarafından oluşturulur.",
+    "paletteTitle": "Palet",
+    "toolbar": {
+      "undo": "Geri al",
+      "redo": "Yinele",
+      "reset": "Sıfırla",
+      "copy": "Kısa URL’yi kopyala",
+      "export": "PNG olarak dışa aktar",
+      "dist2label": "Hareket süresini ölç",
+      "lang": "Dil",
+      "home": "Merkeze git"
+    },
+    "trash": {
+      "label": "Silmek için buraya sürükle",
+      "title": "Bir bloğu bu alana sürükleyerek silin"
+    },
+    "footer": {
+      "credit": "Created by #135 [KOR] 방구석개발자",
+      "bmc": "Buy me a coffee",
+      "toss": "Toss"
+    }
+  },
+  "palette": {
+    "hq": "Karargâh",
+    "flag": "Bayrak",
+    "trap": "Av Tuzağı",
+    "city": "Şehir",
+    "resource": "Kaynak",
+    "block1": "1×1",
+    "block2": "2×2",
+    "block3": "3×3"
+  },
+  "alert": {
+    "noCities": "Hiç şehir yok.",
+    "noTraps": "Hiç tuzak yok.",
+    "resetConfirm": "Her şeyi sıfırlamak istiyor musunuz? (Tüm nesneler ve kırmızı kutular silinecektir)",
+    "exportFail": "PNG dışa aktarımı başarısız oldu."
+  },
+  "msg": {
+    "copiedShort": "Kısa URL kopyalandı!",
+    "copiedFull": "Tam URL kopyalandı",
+    "shortenError": "Kısa URL oluşturulamadı.",
+    "copyError": "Kopyalama başarısız oldu."
+  }
+}

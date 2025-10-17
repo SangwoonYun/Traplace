@@ -13,6 +13,23 @@
  * Config / Globals
  * ------------------------------------------- */
 const FALLBACK_LANG = 'en';
+export const SUPPORTED_LANGS = [
+  'en',
+  'ko',
+  'zh-CN',
+  'zh-TW',
+  'ja',
+  'fr',
+  'de',
+  'es',
+  'it',
+  'pl',
+  'pt',
+  'tr',
+  'ar',
+  'th',
+  'id',
+];
 
 /** @type {Record<string, any> | null} */
 let DICT = null; // Active dictionary
@@ -92,6 +109,34 @@ function getBases() {
 /* ---------------------------------------------
  * Language detection & fetching
  * ------------------------------------------- */
+
+/**
+ * Normalize browser/lang codes to our supported set.
+ */
+function normalizeLang(raw) {
+  if (!raw) return FALLBACK_LANG;
+  const lc = raw.trim().toLowerCase();
+  if (lc.startsWith('zh-hans')) return 'zh-CN';
+  if (lc.startsWith('zh-hant')) return 'zh-TW';
+  // exact match
+  const exact = SUPPORTED_LANGS.find((s) => s.toLowerCase() === lc);
+  if (exact) return exact;
+  // base match (e.g., "pt-br" -> "pt")
+  const base = lc.split('-')[0];
+  const baseHit = SUPPORTED_LANGS.find((s) => s.split('-')[0] === base);
+  return baseHit || FALLBACK_LANG;
+}
+
+const RTL_BASES = new Set(['ar', 'fa', 'ur', 'he']);
+
+function setDirByLang(lang) {
+  const base = lang.split('-')[0];
+  const isRTL = RTL_BASES.has(base);
+  document.documentElement.lang = lang;
+  document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+  document.body && document.body.classList.toggle('rtl', isRTL);
+}
+
 /**
  * Detect preferred language:
  * 1) URL ?lang=xx
@@ -101,19 +146,18 @@ function getBases() {
  */
 export function detectPreferredLang() {
   const url = new URL(location.href);
-  const qp = (url.searchParams.get('lang') || '').toLowerCase();
-  if (qp) return qp;
+  const qp = url.searchParams.get('lang') || '';
+  if (qp) return normalizeLang(qp);
 
   try {
     const saved = localStorage.getItem('lang');
-    if (saved) return saved;
+    if (saved) return normalizeLang(saved);
   } catch {
     // ignore storage access errors
   }
 
-  const nav = (navigator.language || 'en').toLowerCase();
-  if (nav.startsWith('ko')) return 'ko';
-  return 'en';
+  const nav = navigator.language || FALLBACK_LANG;
+  return normalizeLang(nav);
 }
 
 /**
@@ -145,7 +189,7 @@ async function fetchJsonFromBases(lang) {
  * @param {string} lang
  */
 export async function loadLanguageOnline(lang) {
-  CUR_LANG = lang === 'ko' || lang === 'en' ? lang : FALLBACK_LANG;
+  CUR_LANG = normalizeLang(lang);
 
   // Temporary DICT to avoid flash of empty content
   if (!DICT) DICT = BUILTIN_EN;
@@ -178,6 +222,9 @@ export async function loadLanguageOnline(lang) {
   } catch {
     // ignore storage access errors
   }
+
+  // Update directionality for RTL/LTR
+  setDirByLang(CUR_LANG);
 
   applyI18nToDOM();
 }
@@ -317,6 +364,17 @@ export function applyI18nToDOM() {
     el.title = t(el.getAttribute('data-i18n-title'));
   });
 
+  // [data-i18n-aria] : arbitrary attributes mapping: "aria-label:ui.trash.label,title:ui.trash.title"
+  document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
+    const pairs = (el.getAttribute('data-i18n-aria') || '').split(',');
+    for (const pair of pairs) {
+      const [attr, key] = pair.split(':').map((s) => s && s.trim());
+      if (!attr || !key) continue;
+      const val = t(key);
+      if (val && typeof val === 'string') el.setAttribute(attr, val);
+    }
+  });
+
   // [data-i18n-id] : legacy mapping (unified to auto-detect)
   document.querySelectorAll('[data-i18n-id]').forEach((el) => {
     const id = el.getAttribute('data-i18n-id');
@@ -405,5 +463,6 @@ export function updateBlockLabelsForLocale(state) {
  */
 export async function initI18n() {
   const lang = detectPreferredLang();
+  setDirByLang(lang);
   await loadLanguageOnline(lang);
 }
