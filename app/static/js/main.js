@@ -1,154 +1,143 @@
 // File: app/static/js/main.js
 /**
- * App bootstrap
+ * App bootstrap:
  * - Initialize layout, i18n, counters
  * - Restore state from URL
- * - Wire up interactions (drag / pan / zoom / tile toggle / cursor / actions)
- * - Initial render + history snapshot
+ * - Wire up interactions (drag/pan/zoom/tile toggle/cursor/info)
+ * - Kick off initial render + history snapshot
  */
 
-import { setupActions, setTitles } from './actions.js';
-import { validateAllObjects, createBlock } from './blocks.js';
-import { initCounters, updateAllCounts } from './counters.js';
-import { enableDragScroll } from './interactions/hscroll.js';
-import { expand } from './interactions/expand.js';
-import { setupPaletteDrag, makeMovable } from './interactions/drag.js';
-import { setupCursorBadge } from './interactions/cursor.js';
-import { setupPan } from './interactions/pan.js';
-import { setupTileToggle } from './interactions/tileToggle.js';
-import { setupZoom } from './interactions/zoom.js';
 import {
-  currentLang,
-  detectPreferredLang,
-  loadLanguageOnline,
-  updateBlockLabelsForLocale,
-} from './i18n.js';
-import { initHistoryWithCurrent, saveCheckpoint } from './history.js';
-import {
+  initialLayout,
+  renderUserTiles,
+  recomputePaint,
+  updateBadge,
   centerToCell,
   centerToWorldCenter,
-  initialLayout,
-  recomputePaint,
-  renderUserTiles,
-  updateBadge,
 } from './render.js';
-import { cell, state } from './state.js';
+import { setupPaletteDrag, makeMovable } from './interactions/drag.js';
+import { setupPan } from './interactions/pan.js';
+import { setupZoom } from './interactions/zoom.js';
+import { setupTileToggle } from './interactions/tileToggle.js';
+import { setupCursorBadge } from './interactions/cursor.js';
+import { validateAllObjects, createBlock } from './blocks.js';
+import { expand } from './interactions/expand.js';
 import { parseFromURL } from './urlState.js';
+import { cell, state } from './state.js';
+import { setupActions, setTitles } from './actions.js';
+import { initHistoryWithCurrent, saveCheckpoint } from './history.js';
+import {
+  detectPreferredLang,
+  loadLanguageOnline,
+  currentLang,
+  updateBlockLabelsForLocale,
+} from './i18n.js';
+import { initCounters, updateAllCounts } from './counters.js';
+import { enableDragScroll } from './interactions/hscroll.js';
 
-window.addEventListener(
-  'load',
-  async () => {
-    /* ---------------------------------------------
-     * 1) Layout + counters
-     * ------------------------------------------- */
-    initialLayout();
-    initCounters();
+window.addEventListener('load', async () => {
+  /* ---------------------------------------------
+   * Initial layout + counters
+   * ------------------------------------------- */
+  initialLayout();
+  initCounters();
 
-    /* ---------------------------------------------
-     * 2) i18n (pause palette hit-testing during load)
-     * ------------------------------------------- */
-    const palette = document.getElementById('palette');
-    if (palette) palette.style.pointerEvents = 'none';
+  /* ---------------------------------------------
+   * i18n (temporarily disable palette hit-testing to avoid accidental drags)
+   * ------------------------------------------- */
+  const palette = document.getElementById('palette');
+  if (palette) palette.style.pointerEvents = 'none';
+  const lang = detectPreferredLang();
+  await loadLanguageOnline(lang);
+  updateBlockLabelsForLocale(state);
+  if (palette) palette.style.pointerEvents = '';
+  enableDragScroll(palette);
 
-    const lang = detectPreferredLang();
-    await loadLanguageOnline(lang);
-    updateBlockLabelsForLocale(state);
+  // Bind language selector
+  const sel = document.getElementById('langSelect');
+  if (sel) {
+    sel.value = currentLang();
+    sel.addEventListener('change', async () => {
+      await loadLanguageOnline(sel.value);
+      updateBlockLabelsForLocale(state);
+      setTitles(); // refresh tooltips / shortcut labels
+    });
+  }
 
-    if (palette) {
-      palette.style.pointerEvents = '';
-      enableDragScroll(palette);
-    }
+  /* ---------------------------------------------
+   * Restore from URL (blocks + red tiles)
+   * ------------------------------------------- */
+  const parsed = parseFromURL();
 
-    // Language selector
-    const langSelect = document.getElementById('langSelect');
-    if (langSelect) {
-      langSelect.value = currentLang();
-      langSelect.addEventListener('change', async () => {
-        await loadLanguageOnline(langSelect.value);
-        updateBlockLabelsForLocale(state);
-        setTitles(); // refresh tooltips / shortcut labels
-      });
-    }
+  if (parsed.blocks?.length) {
+    state._restoring = true;
+    for (const it of parsed.blocks) {
+      const left = it.cx * cell;
+      const top = it.cy * cell;
+      const el = createBlock(it.kind, it.size, left, top);
 
-    /* ---------------------------------------------
-     * 3) State restore (blocks + red tiles)
-     * ------------------------------------------- */
-    const parsed = parseFromURL();
-
-    if (parsed.blocks?.length) {
-      state._restoring = true;
-      for (const it of parsed.blocks) {
-        const left = it.cx * cell;
-        const top = it.cy * cell;
-        const el = createBlock(it.kind, it.size, left, top);
-
-        if (it.kind === 'city' && it.label) {
-          const lbl = el.querySelector('.label');
-          if (lbl) lbl.textContent = it.label;
-        }
-        makeMovable(el);
+      // Restore city label if present
+      if (it.kind === 'city' && it.label) {
+        const lbl = el.querySelector('.label');
+        if (lbl) lbl.textContent = it.label;
       }
-      state._restoring = false;
+
+      makeMovable(el);
     }
+    state._restoring = false;
+  }
 
-    if (parsed.red?.length) {
-      state.userPaint = new Set(parsed.red);
-      renderUserTiles();
-    }
-
-    updateAllCounts();
-
-    /* ---------------------------------------------
-     * 4) Interactions
-     * ------------------------------------------- */
-    setupPaletteDrag();
-    setupPan(expand);
-    setupZoom(expand);
-    setupTileToggle();
-    setupCursorBadge();
-    setupActions();
-
-    /* ---------------------------------------------
-     * 5) Initial render + validation
-     * ------------------------------------------- */
-    recomputePaint();
+  if (parsed.red?.length) {
+    state.userPaint = new Set(parsed.red);
     renderUserTiles();
-    validateAllObjects();
+  }
 
-    /* ---------------------------------------------
-     * 6) Ensure center on mobile (after fixed bars settle)
-     *    - run twice via rAF to wait for layout
-     *    - small timed retries for slow devices
-     * ------------------------------------------- */
-    const ensureCenterOnMobile = (retries = 3) => {
-      if (!window.matchMedia('(max-width: 991.98px)').matches) return;
+  updateAllCounts();
+
+  /* ---------------------------------------------
+   * Interactions
+   * ------------------------------------------- */
+  setupPaletteDrag();
+  setupPan(expand);
+  setupZoom(expand);
+  setupTileToggle();
+  setupCursorBadge();
+  setupActions();
+
+  /* ---------------------------------------------
+   * Initial render & validation
+   * ------------------------------------------- */
+  recomputePaint();
+  renderUserTiles();
+  validateAllObjects();
+
+  const ensureCenterOnMobile = (retries = 3) => {
+    if (!window.matchMedia('(max-width: 991.98px)').matches) return;
+    // 2-frame delay to let fixed toolbars/palette and CSS vars settle
+    requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
+        centerToWorldCenter();
+        // extra small retries guard for slow devices
+        let left = retries;
+        const tick = () => {
           centerToWorldCenter();
-          let left = retries;
-          const tick = () => {
-            centerToWorldCenter();
-            if (--left > 0) setTimeout(tick, 50);
-          };
-          setTimeout(tick, 50);
-        });
+          if (--left > 0) setTimeout(tick, 50);
+        };
+        setTimeout(tick, 50);
       });
-    };
+    });
+  };
+  ensureCenterOnMobile();
+  // also on resize/orientation
+  const onResize = () => ensureCenterOnMobile(2);
+  window.addEventListener('resize', onResize);
+  window.addEventListener('orientationchange', onResize);
 
-    ensureCenterOnMobile();
-
-    // Re-center when rotating or resizing (reduced retries)
-    const onResize = () => ensureCenterOnMobile(2);
-    window.addEventListener('resize', onResize, { passive: true });
-    window.addEventListener('orientationchange', onResize);
-
-    /* ---------------------------------------------
-     * 7) History snapshot
-     * ------------------------------------------- */
-    initHistoryWithCurrent();
-  },
-  { once: true },
-);
+  /* ---------------------------------------------
+   * History: initial snapshot
+   * ------------------------------------------- */
+  initHistoryWithCurrent();
+});
 
 // Debug helpers (optional)
 Object.assign(window, { state, centerToCell, updateBadge, saveCheckpoint });

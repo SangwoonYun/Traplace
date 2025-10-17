@@ -1,141 +1,136 @@
 // File: app/static/js/interactions/pan.js
 /**
- * Viewport panning (mouse middle-button or single-finger touch).
- *
- * Behavior
- * - Lazy start: do not capture/preventDefault until the pointer moves beyond SLOP.
- * - Once started, capture the pointer and preventDefault to keep smooth panning.
- * - Calls `expand()` while panning to allow auto-grow near edges.
- *
- * Notes
- * - Respects block long-press: if another gesture (drag) begins, pending pan is canceled.
- * - Middle-click default behavior (auto-scroll icon) is suppressed.
+ * Middle-button panning for the viewport.
+ * - Press and hold mouse wheel (button=1) to pan.
+ * - Uses pointer capture to keep receiving move events.
+ * - Calls `expand()` while panning to auto-grow the world if enabled.
  */
 
 import { state } from '../state.js';
 import { viewport, rot } from '../dom.js';
 
-const PAN_SLOP_PX = 6; // pixels required before we "commit" to panning
-
 /**
- * Set up panning handlers.
- * @param {() => void} expand - Called during pan to auto-expand the world if enabled.
+ * Wire up panning behavior.
+ * @param {() => void} expand Callback to attempt auto-expansion when near edges
  */
 export function setupPan(expand) {
-  // ────────────────────────────────────────────────────────────────────────────
-  // Internal helpers
-  // ────────────────────────────────────────────────────────────────────────────
+  const PAN_SLOP = 6; // px: 이만큼 움직여야 '패닝 시작'으로 간주
 
-  function startPan(e) {
-    // Commit to panning: capture pointer and switch cursor.
+  function beginPan(e){
+    // 실제 패닝 시작 시점에만 capture + preventDefault
+    e.preventDefault();
     viewport.setPointerCapture?.(e.pointerId);
-    state.panning.moved = true;
+    state.panning.moved = true; // 확정
     viewport.classList.add('panning');
-
-    // Switch move listener from passive "probe" to active pan handler.
-    window.removeEventListener('pointermove', onPointerMovePassive);
-    window.addEventListener('pointermove', onPanMoveActive, { passive: false });
   }
 
-  function endPan() {
-    viewport.classList.remove('panning');
+  function clearPanListeners(){
     window.removeEventListener('pointermove', onPointerMovePassive);
-    window.removeEventListener('pointermove', onPanMoveActive);
     window.removeEventListener('pointerup', onPointerUp);
     window.removeEventListener('pointercancel', onPointerCancel);
-    state.panning = null;
   }
 
-  // ────────────────────────────────────────────────────────────────────────────
-  // Event handlers
-  // ────────────────────────────────────────────────────────────────────────────
-
-  // 1) Before pan is committed: observe movement to decide if we start panning.
-  function onPointerMovePassive(e) {
+  function onPointerMovePassive(e){
+    // 아직 패닝 미시작 상태에서만 호출됨 (지연 시작)
     if (!state.panning || e.pointerId !== state.panning.pointerId) return;
-
-    // If a different gesture (e.g., long-press drag) started, abort pending panning.
-    if (state.drag) {
-      endPan();
-      return;
-    }
-
     const dx = e.clientX - state.panning.startX;
     const dy = e.clientY - state.panning.startY;
-    if (Math.abs(dx) < PAN_SLOP_PX && Math.abs(dy) < PAN_SLOP_PX) return;
-
-    // Crossed slop → begin real pan.
-    startPan(e);
-
-    // Apply the first movement immediately for responsiveness.
-    doPanScroll(dx, dy);
+    // 이미 드래그가 시작되면(롱프레스) 패닝 후보 취소
+    if (state.drag) { state.panning = null; clearPanListeners(); return; }
+    if (Math.abs(dx) < PAN_SLOP && Math.abs(dy) < PAN_SLOP) return;
+    // ✅ 슬롭을 넘김 → 이제 진짜 패닝 시작
+    beginPan(e);
+    // move 핸들러를 실제 패닝용으로 교체
+    window.removeEventListener('pointermove', onPointerMovePassive);
+    window.addEventListener('pointermove', onPanMoveActive, { passive:false });
   }
 
-  // 2) After pan is committed: perform scrolling, keep pivoting around cursor.
-  function onPanMoveActive(e) {
+  function onPanMoveActive(e){
     if (!state.panning || e.pointerId !== state.panning.pointerId) return;
     e.preventDefault();
     const dx = e.clientX - state.panning.startX;
     const dy = e.clientY - state.panning.startY;
-    doPanScroll(dx, dy);
-  }
-
-  function doPanScroll(dx, dy) {
     viewport.scrollLeft = state.panning.startLeft - dx;
-    viewport.scrollTop = state.panning.startTop - dy;
+    viewport.scrollTop  = state.panning.startTop  - dy;
     expand();
   }
 
-  function onPointerUp(e) {
-    if (!state.panning || e.pointerId !== state.panning.pointerId) {
-      endPan();
-      return;
+  function onPointerUp(e){
+    // 패닝이 확정되기 전에 손을 떼면 아무 일도 없게
+    if (!state.panning || e.pointerId !== state.panning.pointerId){
+      state.panning=null; clearPanListeners(); return;
     }
-    // If we never crossed the slop, we never actually started panning.
-    // In that case, simply clean up without side effects.
-    endPan();
-  }
-
-  function onPointerCancel(e) {
-    if (!state.panning || e.pointerId !== state.panning.pointerId) {
-      endPan();
-      return;
+    if (!state.panning.moved){
+      // 패닝 미시작 → 클릭/롱프레스 등 다른 제스처에 양보
+      state.panning=null; clearPanListeners(); return;
     }
-    endPan();
+    // 패닝 확정 상태였다면 종료 처리
+    viewport.classList.remove('panning');
+    state.panning=null;
+    window.removeEventListener('pointermove', onPanMoveActive);
+    clearPanListeners();
   }
 
-  // ────────────────────────────────────────────────────────────────────────────
-  // Binding
-  // ────────────────────────────────────────────────────────────────────────────
-
-  function bindPanStart(targetEl) {
-    targetEl.addEventListener('pointerdown', (e) => {
-      // Desktop: middle button; Mobile: one-finger touch.
-      const isMiddleMouse = e.pointerType === 'mouse' && e.button === 1;
-      const isSingleTouch = e.pointerType === 'touch' && e.button === 0;
-      if (!isMiddleMouse && !isSingleTouch) return;
-
-      // Do not capture or preventDefault yet; we might long-press for drag.
-      state.panning = {
-        pointerId: e.pointerId,
-        startX: e.clientX,
-        startY: e.clientY,
-        startLeft: viewport.scrollLeft,
-        startTop: viewport.scrollTop,
-        moved: false,
-      };
-
-      // Probe movement in passive mode; switch to active if we cross the slop.
-      window.addEventListener('pointermove', onPointerMovePassive, { passive: true });
-      window.addEventListener('pointerup', onPointerUp, { once: true });
-      window.addEventListener('pointercancel', onPointerCancel, { once: true });
-    });
+  function onPointerCancel(e){
+    viewport.classList.remove('panning');
+    state.panning=null;
+    window.removeEventListener('pointermove', onPanMoveActive);
+    clearPanListeners();
   }
 
-  bindPanStart(viewport);
-  bindPanStart(rot);
+  const bind = (targetEl) => targetEl.addEventListener('pointerdown', (e)=>{
+    // 데스크탑: 휠버튼, 모바일: 터치 한 손가락
+    const isMiddleMouse = e.button === 1 && e.pointerType === 'mouse';
+    const isTouchOneFinger = e.button === 0 && e.pointerType === 'touch';
+    if (!(isMiddleMouse || isTouchOneFinger)) return;
 
-  // Prevent default browser auto-scroll icon on middle-click.
+    // ⚠️ 여기서는 preventDefault/capture 하지 않음 (롱프레스가 필요할 수 있음)
+    state.panning = {
+      pointerId: e.pointerId,
+      startX: e.clientX, startY: e.clientY,
+      startLeft: viewport.scrollLeft, startTop: viewport.scrollTop,
+      moved: false,
+    };
+    // 지연 시작용 리스너
+    window.addEventListener('pointermove', onPointerMovePassive, { passive:true });
+    window.addEventListener('pointerup', onPointerUp, { once:true });
+    window.addEventListener('pointercancel', onPointerCancel, { once:true });
+  });
+  bind(viewport);
+  bind(rot);
+
+  function onPanMove(e) {
+    if (!state.panning || e.pointerId !== state.panning.pointerId) return;
+    e.preventDefault();
+    const dx = e.clientX - state.panning.startX;
+    const dy = e.clientY - state.panning.startY;
+    if (!state.panning.moved) {
+      if (Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
+      state.panning.moved = true;
+      if (window.__cancelAllLongPress) window.__cancelAllLongPress();
+    }
+    viewport.scrollLeft = state.panning.startLeft - dx;
+    viewport.scrollTop  = state.panning.startTop  - dy;
+    expand();
+  }
+
+  function onPanEnd(e) {
+    if (!state.panning || e.pointerId !== state.panning.pointerId){
+      state.panning=null; viewport.classList.remove('panning'); return;
+    }
+    state.panning=null; viewport.classList.remove('panning');
+    window.removeEventListener('pointermove', onPanMove);
+  }
+
+  function onPanCancel(e){
+    if (!state.panning || e.pointerId !== state.panning.pointerId){
+      state.panning=null; viewport.classList.remove('panning'); return;
+    }
+    state.panning=null; viewport.classList.remove('panning');
+    window.removeEventListener('pointermove', onPanMove);
+  }
+
+  // Prevent default middle-click behavior (auto-scroll icons, etc.)
   viewport.addEventListener('auxclick', (e) => {
     if (e.button === 1) e.preventDefault();
   });
