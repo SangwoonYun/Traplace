@@ -25,7 +25,7 @@ export function enableDragScroll(el) {
    * ----------------------------------------- */
 
   /** Get the current clientX from mouse or the first touch. */
-  const getClientX = (e) => (e.touches?.[0]?.clientX ?? e.clientX);
+  const getClientX = (e) => e.touches?.[0]?.clientX ?? e.clientX;
 
   /* -------------------------------------------
    * Handlers

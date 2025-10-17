@@ -7,14 +7,7 @@
  */
 
 import { state } from '../state.js';
-import {
-  previewLayer,
-  outlinesPreviewLayer,
-  snapEl,
-  palette,
-  trash,
-  viewport,
-} from '../dom.js';
+import { previewLayer, outlinesPreviewLayer, snapEl, palette, trash, viewport } from '../dom.js';
 import { clientToLocalRot, snapLocal } from '../transform.js';
 import { PAINTER_KINDS } from '../painter.js';
 import { showPreview, clearPreview } from '../render.js';
@@ -48,7 +41,7 @@ if (!window.__ctxmenuBound) {
     (e) => {
       if (window.__suppressContextMenu) e.preventDefault();
     },
-    { capture: true }
+    { capture: true },
   );
   window.__ctxmenuBound = true;
 }
@@ -93,7 +86,7 @@ function computeEffectiveRect() {
   const { vp, tb, sb, pl, tr } = getRects();
   let left = vp.left;
   let top = vp.top;
-  let right = vp.right;
+  const right = vp.right;
   let bottom = vp.bottom;
 
   const intersectsHoriz = (a, b) => a.left < b.right && a.right > b.left;
@@ -112,8 +105,7 @@ function computeEffectiveRect() {
     const vpH = vp.bottom - vp.top;
     const sbW = sb.right - sb.left;
     const sbH = sb.bottom - sb.top;
-    const looksLikeLeftSidebar =
-      sb.left <= vp.left + 8 && sbW < vpW * 0.6 && sbH > vpH * 0.5;
+    const looksLikeLeftSidebar = sb.left <= vp.left + 8 && sbW < vpW * 0.6 && sbH > vpH * 0.5;
     if (looksLikeLeftSidebar) {
       left = Math.max(left, sb.right);
     }
@@ -456,7 +448,7 @@ export function setupPaletteDrag() {
             item.removeEventListener('pointermove', onMoveCheck);
             window.__suppressContextMenu = false;
           },
-          { once: true }
+          { once: true },
         );
       } else {
         // mouse: start immediately (desktop)
@@ -541,7 +533,7 @@ export function makeMovable(el) {
           // short tap ends here (no move)
           window.__suppressContextMenu = false;
         },
-        { once: true }
+        { once: true },
       );
     } else {
       // mouse: immediate
