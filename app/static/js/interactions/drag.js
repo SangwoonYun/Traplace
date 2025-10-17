@@ -19,11 +19,11 @@ import { t } from '../i18n.js';
  * Constants
  * ------------------------------------------- */
 
-const EDGE_MARGIN = 72; // px from each edge to begin auto-scroll
-const BOTTOM_EDGE_MARGIN = 24; // px from bottom to begin auto-scroll (narrower near trash)
+const EDGE_MARGIN = 20; // px from each edge to begin auto-scroll
+const BOTTOM_EDGE_MARGIN = 14; // px from bottom to begin auto-scroll (narrower near trash)
 const MAX_SPEED = 500; // px/sec at the very edge
-const NEW_SCROLL_GRACE_MS = 180; // suppress edge scroll right after a new-drag starts
-const NEW_EDGE_DWELL_MS = 120; // require dwelling near an edge before scrolling (new-drag only)
+const NEW_SCROLL_GRACE_MS = 500; // suppress edge scroll right after a new-drag starts
+const NEW_EDGE_DWELL_MS = 500; // require dwelling near an edge before scrolling (new-drag only)
 const LONG_PRESS_MS = 250; // touch long-press threshold
 const MOVE_TOL_CREATE = 8; // px slop when starting from palette
 const MOVE_TOL_MOVE = 6; // px slop when moving existing block
