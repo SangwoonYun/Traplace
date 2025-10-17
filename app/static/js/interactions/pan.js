@@ -181,4 +181,24 @@ export function setupPan(expand) {
   viewport.addEventListener('auxclick', (e) => {
     if (e.button === 1) e.preventDefault();
   });
+
+  // Global cancel hook
+  window.__cancelPan = () => {
+    viewport.classList.remove('panning');
+    state.panning = null;
+    window.removeEventListener('pointermove', onPointerMovePassive);
+    window.removeEventListener('pointermove', onPanMoveActive);
+    window.removeEventListener('pointerup', onPointerUp);
+    window.removeEventListener('pointercancel', onPointerCancel);
+  };
+
+  window.addEventListener(
+    'pointerdown',
+    (e) => {
+      if (e.pointerType === 'touch') {
+        window.__cancelPan?.();
+      }
+    },
+    { capture: true },
+  );
 }

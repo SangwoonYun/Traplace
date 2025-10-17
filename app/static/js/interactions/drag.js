@@ -54,10 +54,13 @@ function hapticTap(duration = 12) {
   try {
     const now = Date.now();
     if (now - lastVibeAt < VIBRATE_MIN_GAP_MS) return;
-    if (navigator && typeof navigator.vibrate === 'function') {
-      navigator.vibrate(duration);
-      lastVibeAt = now;
-    }
+    if (!('vibrate' in navigator)) return;
+
+    const ua = navigator.userActivation;
+    if (ua && !ua.isActive) return;
+
+    navigator.vibrate(duration);
+    lastVibeAt = now;
   } catch {
     /* no-op */
   }

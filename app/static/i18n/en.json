@@ -29,7 +29,7 @@
     "flag": "Banner",
     "trap": "Hunting Trap",
     "city": "Town",
-    "resource": "Alliance Resource",
+    "resource": "Resource",
     "block1": "1×1",
     "block2": "2×2",
     "block3": "3×3"
