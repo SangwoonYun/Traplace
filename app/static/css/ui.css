@@ -225,6 +225,13 @@
   padding: 6px 10px;
 }
 
+/* RTL: toolbar occupies the space left of the right-side sidebar */
+body.rtl .toolbar,
+html[dir="rtl"] .toolbar {
+  left: 0;
+  right: var(--sidebar-w);
+}
+
 .tb-group {
   display: flex;
   gap: 6px;
@@ -354,6 +361,13 @@ body {
     background 0.15s ease,
     border-color 0.15s ease;
   user-select: none;
+}
+
+/* RTL: trash zone also offsets from the right-side sidebar */
+body.rtl .trash-zone,
+html[dir="rtl"] .trash-zone {
+  left: 0;
+  right: var(--sidebar-w);
 }
 
 .trash-zone.active {

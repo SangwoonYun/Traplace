@@ -20,6 +20,12 @@
   cursor: grabbing;
 }
 
+/* RTL: Let inline content inside blocks follow RTL flow (labels, etc.) */
+body.rtl .block,
+html[dir="rtl"] .block {
+  direction: rtl;
+}
+
 /* ---------------------------------------------
  * Internal Label (orientation corrected by 45°)
  * ------------------------------------------- */
@@ -31,6 +37,12 @@
   text-align: center;
   user-select: none;
   pointer-events: none;
+}
+
+/* RTL: keep label text in RTL flow if present (user-edited city names, etc.) */
+body.rtl .block .label,
+html[dir="rtl"] .block .label {
+  direction: rtl;
 }
 
 /* Editing Mode */
@@ -81,6 +93,13 @@
   pointer-events: none;
   text-align: center;
 }
+
+/* RTL: ghost label respects RTL text flow too */
+body.rtl .ghost-label,
+html[dir="rtl"] .ghost-label {
+  direction: rtl;
+}
+
 .block.is-lifted {
   transform: scale(1.03);
   transition: transform 0.08s ease;
