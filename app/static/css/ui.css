@@ -380,6 +380,25 @@ body {
   }
 }
 
+/* =============================================
+ * RTL helper tweaks
+ * =========================================== */
+/* Set overall document flow when <html dir="rtl"> or body.rtl is applied */
+body.rtl { direction: rtl; }
+body.rtl .toolbar,
+body.rtl .tb-group,
+body.rtl .sidebar,
+body.rtl .palette,
+body.rtl .trash-zone { direction: rtl; }
+
+/* Keep the floating HUD anchored on the right in RTL as well */
+body.rtl #badge { left: auto; right: 12px; }
+
+/* If you use directional icons, you can flip them like this:
+body.rtl .icon-arrow { transform: scaleX(-1); }
+*/
+
+
 /* ---------------------------------------------
  * Responsive: tablet-portrait & phones (< 992px) 
  * ------------------------------------------- */
