@@ -13,7 +13,7 @@ import {
   recomputePaint,
   updateBadge,
   centerToCell,
-  centerToWorldCenter,
+  setWorldSizeCells,
 } from './render.js';
 import { setupPaletteDrag, makeMovable } from './interactions/drag.js';
 import { setupPan } from './interactions/pan.js';
@@ -23,7 +23,7 @@ import { setupCursorBadge } from './interactions/cursor.js';
 import { validateAllObjects, createBlock } from './blocks.js';
 import { expand } from './interactions/expand.js';
 import { parseFromURL } from './urlState.js';
-import { cell, state } from './state.js';
+import { state, cellPx, BASE_CELLS_X, BASE_CELLS_Y } from './state.js';
 import { setupActions, setTitles } from './actions.js';
 import { initHistoryWithCurrent, saveCheckpoint } from './history.js';
 import {
@@ -90,8 +90,9 @@ window.addEventListener('load', async () => {
   if (parsed?.blocks?.length) {
     state._restoring = true;
     for (const it of parsed.blocks) {
-      const left = it.cx * cell;
-      const top = it.cy * cell;
+      const c = cellPx();
+      const left = it.cx * c;
+      const top = it.cy * c;
       const el = createBlock(it.kind, it.size, left, top);
 
       // Restore city label if present
@@ -130,38 +131,63 @@ window.addEventListener('load', async () => {
   validateAllObjects();
 
   /* ---------------------------------------------
-   * Mobile centering (deferred to allow fixed UI to settle)
-   * ------------------------------------------- */
-  const ensureCenterOnMobile = (retries = 3) => {
-    if (!window.matchMedia(MOBILE_MEDIA).matches) return;
-
-    // 2-frame delay to let fixed toolbars/palette and CSS vars settle
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        centerToWorldCenter();
-
-        // Small retry loop for slower devices
-        let left = retries;
-        const tick = () => {
-          centerToWorldCenter();
-          if (--left > 0) setTimeout(tick, 50);
-        };
-        setTimeout(tick, 50);
-      });
-    });
-  };
-
-  ensureCenterOnMobile();
-
-  // Also recenter on resize/orientation changes (light retries)
-  const onResize = () => ensureCenterOnMobile(2);
-  window.addEventListener('resize', onResize);
-  window.addEventListener('orientationchange', onResize);
-
-  /* ---------------------------------------------
    * History: initial snapshot
    * ------------------------------------------- */
   initHistoryWithCurrent();
+});
+
+/* ---------------------------------------------
+ * Visual viewport height variable (--app-vh)
+ *  - Prevents 100vh white mask under mobile browser toolbars
+ *  - Always stores px (e.g., "734px")
+ * ------------------------------------------- */
+function updateAppVhVar() {
+  const vv = window.visualViewport;
+  const h = Math.max(0, Math.floor((vv?.height || window.innerHeight)));
+  document.documentElement.style.setProperty('--app-vh', `${h}px`);
+}
+
+// Initialize once on load
+updateAppVhVar();
+
+// Keep in sync with viewport/toolbars movement
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', () => {
+    updateAppVhVar();
+    // Layout depends on viewport height; keep world & overlays consistent
+    requestAnimationFrame(relayoutForCellChange);
+  });
+  window.visualViewport.addEventListener('scroll', () => {
+    // Some browsers change visual viewport on scroll (address bar hides/shows)
+    updateAppVhVar();
+    requestAnimationFrame(relayoutForCellChange);
+  });
+}
+
+/* ---------------------------------------------
+ * Resize / orientationchange reflow
+ *  - Keep world pixel size in sync with dynamic --cell
+ *  - Prevent stale scroll clamp after media query changes
+ * ------------------------------------------- */
+function relayoutForCellChange() {
+ // Recompute world px size against the latest cellPx()
+ setWorldSizeCells(BASE_CELLS_X, BASE_CELLS_Y);
+ // Repaint overlays
+ renderUserTiles();
+ recomputePaint();
+ // Keep badge up to date
+ updateBadge();
+}
+
+window.addEventListener('resize', () => {
+  // Debounce-ish via rAF to avoid thrash
+  requestAnimationFrame(relayoutForCellChange);
+});
+
+window.addEventListener('orientationchange', () => {
+  // Some mobile browsers fire resize later; do one pass immediately
+  updateAppVhVar();
+  relayoutForCellChange();
 });
 
 /* ---------------------------------------------

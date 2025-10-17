@@ -8,7 +8,7 @@
  * - Badge updates
  */
 
-import { cell, state, BASE_CELLS_X, BASE_CELLS_Y } from './state.js';
+import { cellPx, state, BASE_CELLS_X, BASE_CELLS_Y } from './state.js';
 import {
   viewport,
   world,
@@ -32,8 +32,9 @@ import { posToCell, keyOf, clamp } from './transform.js';
  * @param {number} rows
  */
 export function setWorldSizeCells(cols, rows) {
-  const pxW = cols * cell;
-  const pxH = rows * cell;
+  const c = cellPx();
+  const pxW = cols * c;
+  const pxH = rows * c;
 
   world.style.width = `${pxW}px`;
   world.style.height = `${pxH}px`;
@@ -53,18 +54,13 @@ export function setWorldSizeCells(cols, rows) {
  */
 export function centerToCell(cx, cy) {
   const m = new DOMMatrixReadOnly(getComputedStyle(rot).transform);
-  const p = new DOMPoint(cx * cell, cy * cell).matrixTransform(m);
+  const c = cellPx();
+  const p = new DOMPoint(cx * c, cy * c).matrixTransform(m);
 
-  const targetLeft = clamp(
-    p.x - viewport.clientWidth / 2,
-    0,
-    world.scrollWidth - viewport.clientWidth,
-  );
-  const targetTop = clamp(
-    p.y - viewport.clientHeight / 2,
-    0,
-    world.scrollHeight - viewport.clientHeight,
-  );
+  const maxLeft = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+  const maxTop  = Math.max(0, viewport.scrollHeight - viewport.clientHeight);
+  const targetLeft = clamp(p.x - viewport.clientWidth / 2, 0, maxLeft);
+  const targetTop  = clamp(p.y - viewport.clientHeight / 2, 0, maxTop);
 
   viewport.scrollLeft = targetLeft;
   viewport.scrollTop = targetTop;
@@ -72,12 +68,13 @@ export function centerToCell(cx, cy) {
 
 /** Center the view to the geometric center of the world. */
 export function centerToWorldCenter() {
-  const cols = Math.round(world.clientWidth / cell);
-  const rows = Math.round(world.clientHeight / cell);
+  const c = cellPx();
+  const cols = Math.round(world.clientWidth / c);
+  const rows = Math.round(world.clientHeight / c);
 
   // Center cell (0-indexed). Example: 1200×1200 → 599,599
-  const cx = Math.floor(cols / 2) -1;
-  const cy = Math.floor(rows / 2) -1;
+  const cx = Math.floor(cols / 2) - 1;
+  const cy = Math.floor(rows / 2) - 1;
 
   centerToCell(cx, cy);
 }
@@ -94,6 +91,7 @@ export function centerToWorldCenter() {
 export function renderCells(layer, cellList, opts) {
   layer.innerHTML = '';
 
+  const cpx = cellPx();
   const set = new Set(cellList.map((c) => keyOf(c.x, c.y)));
   const style = getComputedStyle(document.documentElement);
   const col = style.getPropertyValue('--paint-blue-border').trim() || 'rgba(66,133,244,0.9)';
@@ -103,10 +101,10 @@ export function renderCells(layer, cellList, opts) {
   for (const c of cellList) {
     const t = document.createElement('div');
     t.className = 'tile';
-    t.style.left = `${c.x * cell}px`;
-    t.style.top = `${c.y * cell}px`;
-    t.style.width = `${cell}px`;
-    t.style.height = `${cell}px`;
+    t.style.left = `${c.x * cpx}px`;
+    t.style.top = `${c.y * cpx}px`;
+    t.style.width = `${cpx}px`;
+    t.style.height = `${cpx}px`;
 
     const topMissing = !set.has(keyOf(c.x, c.y - 1));
     const rightMissing = !set.has(keyOf(c.x + 1, c.y));
@@ -129,10 +127,11 @@ export function renderUserTiles() {
     const [x, y] = k.split(',').map(Number);
     const d = document.createElement('div');
     d.className = 'tile-red';
-    d.style.left = `${x * cell}px`;
-    d.style.top = `${y * cell}px`;
-    d.style.width = `${cell}px`;
-    d.style.height = `${cell}px`;
+    const cpx = cellPx();
+    d.style.left = `${x * cpx}px`;
+    d.style.top = `${y * cpx}px`;
+    d.style.width = `${cpx}px`;
+    d.style.height = `${cpx}px`;
     userLayer.appendChild(d);
   }
 }
@@ -150,10 +149,11 @@ export function renderOutlines() {
 
     const el = document.createElement('div');
     el.className = 'area-outline';
-    el.style.left = `${minx * cell}px`;
-    el.style.top = `${miny * cell}px`;
-    el.style.width = `${(maxx - minx + 1) * cell}px`;
-    el.style.height = `${(maxy - miny + 1) * cell}px`;
+    const cpx = cellPx();
+    el.style.left = `${minx * cpx}px`;
+    el.style.top = `${miny * cpx}px`;
+    el.style.width = `${(maxx - minx + 1) * cpx}px`;
+    el.style.height = `${(maxy - miny + 1) * cpx}px`;
     outlinesLayer.appendChild(el);
   }
 }
@@ -212,10 +212,11 @@ export function showPreview(kind, snappedLeft, snappedTop, size, show = true) {
   const { minx, miny, maxx, maxy } = areaBoundingBox(kind, centerCx, centerCy);
   const rect = document.createElement('div');
   rect.className = 'area-outline';
-  rect.style.left = `${minx * cell}px`;
-  rect.style.top = `${miny * cell}px`;
-  rect.style.width = `${(maxx - minx + 1) * cell}px`;
-  rect.style.height = `${(maxy - miny + 1) * cell}px`;
+  const cpx = cellPx();
+  rect.style.left = `${minx * cpx}px`;
+  rect.style.top = `${miny * cpx}px`;
+  rect.style.width = `${(maxx - minx + 1) * cpx}px`;
+  rect.style.height = `${(maxy - miny + 1) * cpx}px`;
   outlinesPreviewLayer.appendChild(rect);
 }
 

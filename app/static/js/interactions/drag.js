@@ -6,7 +6,7 @@
  * - Edge auto-scroll while dragging near viewport edges
  */
 
-import { state } from '../state.js';
+import { state, cellPx } from '../state.js';
 import { previewLayer, outlinesPreviewLayer, snapEl, palette, trash, viewport } from '../dom.js';
 import { clientToLocalRot, snapLocal } from '../transform.js';
 import { PAINTER_KINDS } from '../painter.js';
@@ -19,6 +19,7 @@ import { t } from '../i18n.js';
  * ------------------------------------------- */
 
 const EDGE_MARGIN = 72; // px from each edge to begin auto-scroll
+const BOTTOM_EDGE_MARGIN = 24; // px from bottom to begin auto-scroll (narrower near trash)
 const MAX_SPEED = 500; // px/sec at the very edge
 const NEW_SCROLL_GRACE_MS = 180; // suppress edge scroll right after a new-drag starts
 const NEW_EDGE_DWELL_MS = 120; // require dwelling near an edge before scrolling (new-drag only)
@@ -27,13 +28,12 @@ const MOVE_TOL_CREATE = 8; // px slop when starting from palette
 const MOVE_TOL_MOVE = 6; // px slop when moving existing block
 const VIBRATE_MIN_GAP_MS = 120; // throttle for hapticTap
 
+// Additional deadzone above trash to avoid accidental auto-scroll while aiming trash
+const TRASH_DEADZONE = 56; // px
+
 /* ---------------------------------------------
  * Utilities
  * ------------------------------------------- */
-
-/** Get grid cell size (px) from CSS variable. */
-const getCellPx = () =>
-  parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cell'), 10) || 48;
 
 /** Global contextmenu suppression (once). */
 if (!window.__ctxmenuBound) {
@@ -115,7 +115,7 @@ function computeEffectiveRect() {
 
   // Bottom trash-zone
   if (tr && tr.top < bottom && intersectsHoriz(tr, vp)) {
-    bottom = Math.min(bottom, tr.top);
+    bottom = Math.min(bottom, tr.top + TRASH_DEADZONE);
   }
 
   // Sanity
@@ -153,17 +153,17 @@ function updateDragAt(clientX, clientY) {
 
   const { x, y } = clientToLocalRot(clientX, clientY);
   const { size, kind } = state.drag;
-  const cellPx = getCellPx();
+  const cpx = cellPx();
 
-  const left = x - (size * cellPx) / 2;
-  const top = y - (size * cellPx) / 2;
+  const left = x - (size * cpx) / 2;
+  const top = y - (size * cpx) / 2;
   const snapped = snapLocal(left, top, size);
 
   snapEl.style.display = 'block';
   snapEl.style.left = `${snapped.left}px`;
   snapEl.style.top = `${snapped.top}px`;
-  snapEl.style.width = `${size * cellPx}px`;
-  snapEl.style.height = `${size * cellPx}px`;
+  snapEl.style.width = `${size * cpx}px`;
+  snapEl.style.height = `${size * cpx}px`;
 
   if (PAINTER_KINDS.has(kind)) {
     showPreview(kind, snapped.left, snapped.top, size, true);
@@ -173,7 +173,7 @@ function updateDragAt(clientX, clientY) {
   }
 
   if (state.drag.ghost) {
-    updateGhost(clientX, clientY, size * cellPx);
+    updateGhost(clientX, clientY, size * cpx);
   }
 }
 
@@ -200,25 +200,25 @@ function computeEdgeVelocity(clientX, clientY) {
   }
 
   const vp = computeEffectiveRect();
-  const ease = (d) => Math.min(1, Math.max(0, d / EDGE_MARGIN)); // 0..1
+  const ease = (d, margin) => Math.min(1, Math.max(0, d / margin)); // 0..1
   let vx = 0;
   let vy = 0;
 
   // Left / Right
   if (clientX < vp.left + EDGE_MARGIN) {
-    const f = 1 - ease(clientX - vp.left);
+    const f = 1 - ease(clientX - vp.left, EDGE_MARGIN);
     vx = -MAX_SPEED * f;
   } else if (clientX > vp.right - EDGE_MARGIN) {
-    const f = 1 - ease(vp.right - clientX);
+    const f = 1 - ease(vp.right - clientX, EDGE_MARGIN);
     vx = MAX_SPEED * f;
   }
 
   // Top / Bottom
   if (clientY < vp.top + EDGE_MARGIN) {
-    const f = 1 - ease(clientY - vp.top);
+    const f = 1 - ease(clientY - vp.top, EDGE_MARGIN);
     vy = -MAX_SPEED * f;
-  } else if (clientY > vp.bottom - EDGE_MARGIN) {
-    const f = 1 - ease(vp.bottom - clientY);
+  } else if (clientY > vp.bottom - BOTTOM_EDGE_MARGIN) {
+    const f = 1 - ease(vp.bottom - clientY, BOTTOM_EDGE_MARGIN);
     vy = MAX_SPEED * f;
   }
 
@@ -332,10 +332,9 @@ function onPointerUp(e) {
     if (!droppingInTrash) {
       const { x, y } = clientToLocalRot(e.clientX, e.clientY);
       const { size, kind } = state.drag;
-      const cellPx = getCellPx();
-
-      const left = x - (size * cellPx) / 2;
-      const top = y - (size * cellPx) / 2;
+      const cpx = cellPx();
+      const left = x - (size * cpx) / 2;
+      const top = y - (size * cpx) / 2;
       const snapped = snapLocal(left, top, size);
 
       const el = createBlock(kind, size, snapped.left, snapped.top);
@@ -353,10 +352,9 @@ function onPointerUp(e) {
     } else {
       const { x, y } = clientToLocalRot(e.clientX, e.clientY);
       const size = state.drag.size;
-      const cellPx = getCellPx();
-
-      const left = x - (size * cellPx) / 2;
-      const top = y - (size * cellPx) / 2;
+      const cpx = cellPx();
+      const left = x - (size * cpx) / 2;
+      const top = y - (size * cpx) / 2;
       const snapped = snapLocal(left, top, size);
 
       updateBlockPosition(state.drag.node, snapped.left, snapped.top);
@@ -422,8 +420,7 @@ export function setupPaletteDrag() {
 
         const size = parseInt(item.dataset.size, 10);
         const kind = item.dataset.kind;
-        const cellPx = getCellPx();
-        const px = size * cellPx;
+        const px = size * cellPx();
 
         const ghost = document.createElement('div');
         ghost.className = 'ghost';
@@ -526,8 +523,7 @@ export function makeMovable(el) {
 
       const size = parseInt(el.dataset.size, 10);
       const kind = el.dataset.kind;
-      const cellPx = getCellPx();
-      const px = size * cellPx;
+      const px = size * cellPx();
 
       const ghost = document.createElement('div');
       ghost.className = 'ghost';

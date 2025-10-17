@@ -7,7 +7,7 @@
  * - Notifies UI on changes (canUndo/canRedo)
  */
 
-import { state, cell } from './state.js';
+import { state, cellPx } from './state.js';
 import { rot } from './dom.js';
 import { serializeState, deserializeState, updateURLWithSerialized } from './urlState.js';
 import { createBlock, validateAllObjects } from './blocks.js';
@@ -43,6 +43,7 @@ function notify() {
  */
 function applySerialized(qs) {
   const parsed = deserializeState(qs);
+  const c = cellPx();
 
   // Clear existing
   rot.querySelectorAll('.block').forEach((el) => el.remove());
@@ -54,8 +55,8 @@ function applySerialized(qs) {
   // Rebuild (defer heavy ops until done)
   state._restoring = true;
   for (const it of parsed.blocks) {
-    const left = it.cx * cell;
-    const top = it.cy * cell;
+    const left = it.cx * c;
+    const top = it.cy * c;
 
     const el = createBlock(it.kind, it.size, left, top);
 

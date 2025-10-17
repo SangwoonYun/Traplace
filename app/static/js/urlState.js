@@ -15,7 +15,7 @@
  *  - parseFromURL(): { blocks, red }
  */
 
-import { state, cell } from './state.js';
+import { state, cellPx } from './state.js';
 
 /* ---------------------------------------------
  * Kind ↔ code mapping (compact token)
@@ -151,8 +151,9 @@ function decodeRed(str, useBase36) {
  */
 export function serializeState() {
   const bItems = state.blocks.map((b) => {
-    const cx = Math.round(b.left / cell);
-    const cy = Math.round(b.top / cell);
+    const c = cellPx();
+    const cx = Math.round(b.left / c);
+    const cy = Math.round(b.top / c);
     const code = KIND_TO_CODE[b.kind] ?? 'B';
     const size36 = toB36(b.size);
     const cx36 = toB36(cx);

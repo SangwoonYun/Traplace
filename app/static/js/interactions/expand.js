@@ -5,7 +5,7 @@
  * - Respects the runtime toggle: state.AUTO_EXPAND
  */
 
-import { state, cell, EXPAND_CELLS, EXPAND_MARGIN } from '../state.js';
+import { state, cellPx, EXPAND_CELLS, EXPAND_MARGIN } from '../state.js';
 import { viewport, world } from '../dom.js';
 import { renderUserTiles, recomputePaint, setWorldSizeCells } from '../render.js';
 
@@ -22,24 +22,23 @@ export function expand() {
   const nearBottom =
     viewport.scrollTop + viewport.clientHeight > viewport.scrollHeight - EXPAND_MARGIN;
 
-  let grew = false;
+  if (!nearRight && !nearBottom) return;
 
   // Current dimensions (in cells)
-  const curCols = Math.round(world.clientWidth / cell);
-  const curRows = Math.round(world.clientHeight / cell);
+  const c = cellPx();
+  const curCols = Math.ceil(world.clientWidth / c);
+  const curRows = Math.ceil(world.clientHeight / c);
 
-  if (nearRight) {
-    setWorldSizeCells(curCols + EXPAND_CELLS, curRows);
-    grew = true;
-  }
-  if (nearBottom) {
-    setWorldSizeCells(curCols, curRows + EXPAND_CELLS);
-    grew = true;
-  }
+  // Compute new dimensions in a single pass to avoid overwriting one axis
+  const newCols = curCols + (nearRight ? EXPAND_CELLS : 0);
+  const newRows = curRows + (nearBottom ? EXPAND_CELLS : 0);
 
-  if (grew) {
-    // Repaint overlays based on the enlarged world
-    renderUserTiles();
-    recomputePaint();
-  }
+  // If nothing actually changes, bail out
+  if (newCols === curCols && newRows === curRows) return;
+
+  setWorldSizeCells(newCols, newRows);
+
+  // Repaint overlays based on the enlarged world
+  renderUserTiles();
+  recomputePaint();
 }
