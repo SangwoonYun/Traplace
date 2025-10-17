@@ -22,7 +22,7 @@
 
 /* RTL: Let inline content inside blocks follow RTL flow (labels, etc.) */
 body.rtl .block,
-html[dir="rtl"] .block {
+html[dir='rtl'] .block {
   direction: rtl;
 }
 
@@ -41,7 +41,7 @@ html[dir="rtl"] .block {
 
 /* RTL: keep label text in RTL flow if present (user-edited city names, etc.) */
 body.rtl .block .label,
-html[dir="rtl"] .block .label {
+html[dir='rtl'] .block .label {
   direction: rtl;
 }
 
@@ -96,7 +96,7 @@ html[dir="rtl"] .block .label {
 
 /* RTL: ghost label respects RTL text flow too */
 body.rtl .ghost-label,
-html[dir="rtl"] .ghost-label {
+html[dir='rtl'] .ghost-label {
   direction: rtl;
 }
 

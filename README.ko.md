@@ -90,24 +90,23 @@ Traplace는 다음 주소에서 서비스되고 있습니다:
 
 Traplace는 다국어 UI를 지원합니다.
 
-| 언어                  | 파일               | 상태    |
-| -------------------- | ----------------- | ------ |
-| English              | `i18n/en.json`    | ✅     |
-| 한국어               | `i18n/ko.json`    | ✅     |
-| 简体中文             | `i18n/zh-CN.json` | ✅     |
-| 繁體中文             | `i18n/zh-TW.json` | ✅     |
-| 日本語               | `i18n/ja.json`    | ✅     |
-| Français             | `i18n/fr.json`    | ✅     |
-| Deutsch              | `i18n/de.json`    | ✅     |
-| Español              | `i18n/es.json`    | ✅     |
-| Italiano             | `i18n/it.json`    | ✅     |
-| Polski               | `i18n/pl.json`    | ✅     |
-| Português            | `i18n/pt.json`    | ✅     |
-| العربية              | `i18n/ar.json`    | ❌     |
-| Türkçe               | `i18n/tr.json`    | ✅     |
-| ไทย                  | `i18n/th.json`    | ✅     |
-| Bahasa Indonesia     | `i18n/id.json`    | ✅     |
-
+| 언어             | 파일              | 상태 |
+| ---------------- | ----------------- | ---- |
+| English          | `i18n/en.json`    | ✅   |
+| 한국어           | `i18n/ko.json`    | ✅   |
+| 简体中文         | `i18n/zh-CN.json` | ✅   |
+| 繁體中文         | `i18n/zh-TW.json` | ✅   |
+| 日本語           | `i18n/ja.json`    | ✅   |
+| Français         | `i18n/fr.json`    | ✅   |
+| Deutsch          | `i18n/de.json`    | ✅   |
+| Español          | `i18n/es.json`    | ✅   |
+| Italiano         | `i18n/it.json`    | ✅   |
+| Polski           | `i18n/pl.json`    | ✅   |
+| Português        | `i18n/pt.json`    | ✅   |
+| العربية          | `i18n/ar.json`    | ❌   |
+| Türkçe           | `i18n/tr.json`    | ✅   |
+| ไทย              | `i18n/th.json`    | ✅   |
+| Bahasa Indonesia | `i18n/id.json`    | ✅   |
 
 새로운 언어 파일을 `/i18n/` 폴더에 추가하면 런타임 시 자동으로 감지됩니다.
 

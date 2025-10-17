@@ -68,7 +68,7 @@
     margin: 0;
     height: 100vh;
     display: grid;
-    grid-template-areas: "sidebar main";
+    grid-template-areas: 'sidebar main';
     grid-template-columns: var(--sidebar-w) 1fr;
     font-family:
       system-ui,
@@ -84,14 +84,18 @@
   }
 
   /* Place elements into fixed areas */
-  .sidebar { grid-area: sidebar; }
-  .viewport { grid-area: main; }
+  .sidebar {
+    grid-area: sidebar;
+  }
+  .viewport {
+    grid-area: main;
+  }
 
   /* RTL: swap the areas so sidebar moves to the right, sizes stay correct */
   body.rtl,
-  html[dir="rtl"] body {
+  html[dir='rtl'] body {
     direction: rtl;
-    grid-template-areas: "main sidebar";
+    grid-template-areas: 'main sidebar';
     grid-template-columns: 1fr var(--sidebar-w);
   }
 

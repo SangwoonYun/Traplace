@@ -14,7 +14,21 @@
  * ------------------------------------------- */
 const FALLBACK_LANG = 'en';
 export const SUPPORTED_LANGS = [
-  'en','ko','zh-CN','zh-TW','ja','fr','de','es','it','pl','pt','tr','ar','th','id'
+  'en',
+  'ko',
+  'zh-CN',
+  'zh-TW',
+  'ja',
+  'fr',
+  'de',
+  'es',
+  'it',
+  'pl',
+  'pt',
+  'tr',
+  'ar',
+  'th',
+  'id',
 ];
 
 /** @type {Record<string, any> | null} */
@@ -105,15 +119,15 @@ function normalizeLang(raw) {
   if (lc.startsWith('zh-hans')) return 'zh-CN';
   if (lc.startsWith('zh-hant')) return 'zh-TW';
   // exact match
-  const exact = SUPPORTED_LANGS.find(s => s.toLowerCase() === lc);
+  const exact = SUPPORTED_LANGS.find((s) => s.toLowerCase() === lc);
   if (exact) return exact;
   // base match (e.g., "pt-br" -> "pt")
   const base = lc.split('-')[0];
-  const baseHit = SUPPORTED_LANGS.find(s => s.split('-')[0] === base);
+  const baseHit = SUPPORTED_LANGS.find((s) => s.split('-')[0] === base);
   return baseHit || FALLBACK_LANG;
 }
 
-const RTL_BASES = new Set(['ar','fa','ur','he']);
+const RTL_BASES = new Set(['ar', 'fa', 'ur', 'he']);
 
 function setDirByLang(lang) {
   const base = lang.split('-')[0];
@@ -132,7 +146,7 @@ function setDirByLang(lang) {
  */
 export function detectPreferredLang() {
   const url = new URL(location.href);
-  const qp = (url.searchParams.get('lang') || '');
+  const qp = url.searchParams.get('lang') || '';
   if (qp) return normalizeLang(qp);
 
   try {
@@ -142,7 +156,7 @@ export function detectPreferredLang() {
     // ignore storage access errors
   }
 
-  const nav = (navigator.language || FALLBACK_LANG);
+  const nav = navigator.language || FALLBACK_LANG;
   return normalizeLang(nav);
 }
 
@@ -354,7 +368,7 @@ export function applyI18nToDOM() {
   document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
     const pairs = (el.getAttribute('data-i18n-aria') || '').split(',');
     for (const pair of pairs) {
-      const [attr, key] = pair.split(':').map(s => s && s.trim());
+      const [attr, key] = pair.split(':').map((s) => s && s.trim());
       if (!attr || !key) continue;
       const val = t(key);
       if (val && typeof val === 'string') el.setAttribute(attr, val);
