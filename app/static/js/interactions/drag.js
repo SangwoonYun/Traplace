@@ -9,6 +9,7 @@
 import { state, cellPx } from '../state.js';
 import { previewLayer, outlinesPreviewLayer, snapEl, palette, trash, viewport } from '../dom.js';
 import { clientToLocalRot, snapLocal } from '../transform.js';
+import { setDragScrollLock } from './hscroll.js';
 import { PAINTER_KINDS } from '../painter.js';
 import { showPreview, clearPreview } from '../render.js';
 import { createBlock, updateBlockPosition, deleteBlock } from '../blocks.js';
@@ -18,11 +19,11 @@ import { t } from '../i18n.js';
  * Constants
  * ------------------------------------------- */
 
-const EDGE_MARGIN = 72; // px from each edge to begin auto-scroll
-const BOTTOM_EDGE_MARGIN = 24; // px from bottom to begin auto-scroll (narrower near trash)
+const EDGE_MARGIN = 20; // px from each edge to begin auto-scroll
+const BOTTOM_EDGE_MARGIN = 14; // px from bottom to begin auto-scroll (narrower near trash)
 const MAX_SPEED = 500; // px/sec at the very edge
-const NEW_SCROLL_GRACE_MS = 180; // suppress edge scroll right after a new-drag starts
-const NEW_EDGE_DWELL_MS = 120; // require dwelling near an edge before scrolling (new-drag only)
+const NEW_SCROLL_GRACE_MS = 500; // suppress edge scroll right after a new-drag starts
+const NEW_EDGE_DWELL_MS = 500; // require dwelling near an edge before scrolling (new-drag only)
 const LONG_PRESS_MS = 250; // touch long-press threshold
 const MOVE_TOL_CREATE = 8; // px slop when starting from palette
 const MOVE_TOL_MOVE = 6; // px slop when moving existing block
@@ -300,6 +301,25 @@ function inTrash(clientX, clientY) {
   return clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom;
 }
 
+/** Check if the pointer is currently inside the palette area. */
+function inPalette(clientX, clientY) {
+  if (!palette) return false;
+  const r = palette.getBoundingClientRect();
+  return clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom;
+}
+
+/** Lock/unlock palette horizontal drag-scroll. */
+function lockPaletteScroll(v) {
+  try {
+    if (!palette) return;
+    setDragScrollLock?.(palette, !!v);
+    // Defensive: also hint the hscroll logic by clearing any in-progress flag
+    if (v && palette.dataset.scrolling === '1') delete palette.dataset.scrolling;
+  } catch {
+    /* no-op */
+  }
+}
+
 /* ---------------------------------------------
  * Pointer handlers (shared for create/move)
  * ------------------------------------------- */
@@ -327,7 +347,7 @@ function onPointerUp(e) {
     return;
   }
 
-  const droppingInTrash = inTrash(e.clientX, e.clientY);
+  const droppingInTrash = inTrash(e.clientX, e.clientY) || inPalette(e.clientX, e.clientY);
 
   if (state.drag.mode === 'new') {
     removeGhost();
@@ -388,6 +408,7 @@ function cleanupDrag() {
   if (state.drag?.node) state.drag.node.classList.remove('is-lifted');
 
   removeGhost();
+  lockPaletteScroll(false);
 
   window.removeEventListener('pointermove', onPointerMove);
   state.drag = null;
@@ -417,6 +438,8 @@ export function setupPaletteDrag() {
 
       const startDrag = () => {
         hapticTap(15);
+        lockPaletteScroll(true);
+
         window.__suppressContextMenu = true;
 
         if (palette?.dataset?.scrolling === '1') delete palette.dataset.scrolling;
@@ -462,6 +485,7 @@ export function setupPaletteDrag() {
 
         window.addEventListener('pointermove', onPointerMove);
         window.addEventListener('pointerup', onPointerUp, { once: true });
+        window.addEventListener('pointercancel', () => cleanupDrag(), { once: true });
       };
 
       if (isTouch) {
@@ -517,6 +541,7 @@ export function makeMovable(el) {
 
     const startMove = () => {
       if (state.panning && state.panning.moved) return;
+      lockPaletteScroll(true);
 
       hapticTap(15);
       window.__suppressContextMenu = true;
@@ -549,6 +574,7 @@ export function makeMovable(el) {
 
       window.addEventListener('pointermove', onPointerMove);
       window.addEventListener('pointerup', onPointerUp, { once: true });
+      window.addEventListener('pointercancel', () => cleanupDrag(), { once: true });
     };
 
     if (isTouch) {
