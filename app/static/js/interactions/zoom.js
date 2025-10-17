@@ -82,6 +82,22 @@ export function setupZoom(expand) {
   const touches = new Map(); // pointerId -> {x,y}
   let pinchStart = null; // {dist, zoom, centerX, centerY}
 
+  function lockTouchAction() {
+    if (viewport.dataset.taSaved !== '1') {
+      viewport.dataset.taSaved = '1';
+      viewport.dataset.taPrev = viewport.style.touchAction || '';
+    }
+    viewport.style.touchAction = 'none';
+  }
+
+  function restoreTouchAction() {
+    if (touches.size <= 1 && viewport.dataset.taSaved === '1') {
+      viewport.style.touchAction = viewport.dataset.taPrev || '';
+      delete viewport.dataset.taPrev;
+      delete viewport.dataset.taSaved;
+    }
+  }
+
   function updatePinchZoom() {
     if (touches.size !== 2) return;
 
@@ -108,12 +124,18 @@ export function setupZoom(expand) {
     if (touches.has(e.pointerId)) {
       touches.delete(e.pointerId);
       if (touches.size < 2) pinchStart = null;
+      restoreTouchAction();
     }
   }
 
   viewport.addEventListener('pointerdown', (e) => {
     if (e.pointerType === 'touch') {
       touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (touches.size === 2) {
+        window.__cancelPan?.();
+        pinchStart = null;
+        lockTouchAction();
+      }
       updatePinchZoom();
     }
   });
