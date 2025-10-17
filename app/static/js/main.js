@@ -36,12 +36,6 @@ import { initCounters, updateAllCounts } from './counters.js';
 import { enableDragScroll } from './interactions/hscroll.js';
 
 /* ---------------------------------------------
- * Constants
- * ------------------------------------------- */
-
-const MOBILE_MEDIA = '(max-width: 991.98px)';
-
-/* ---------------------------------------------
  * Bootstrap
  * ------------------------------------------- */
 
@@ -143,7 +137,7 @@ window.addEventListener('load', async () => {
  * ------------------------------------------- */
 function updateAppVhVar() {
   const vv = window.visualViewport;
-  const h = Math.max(0, Math.floor((vv?.height || window.innerHeight)));
+  const h = Math.max(0, Math.floor(vv?.height || window.innerHeight));
   document.documentElement.style.setProperty('--app-vh', `${h}px`);
 }
 
@@ -170,13 +164,13 @@ if (window.visualViewport) {
  *  - Prevent stale scroll clamp after media query changes
  * ------------------------------------------- */
 function relayoutForCellChange() {
- // Recompute world px size against the latest cellPx()
- setWorldSizeCells(BASE_CELLS_X, BASE_CELLS_Y);
- // Repaint overlays
- renderUserTiles();
- recomputePaint();
- // Keep badge up to date
- updateBadge();
+  // Recompute world px size against the latest cellPx()
+  setWorldSizeCells(BASE_CELLS_X, BASE_CELLS_Y);
+  // Repaint overlays
+  renderUserTiles();
+  recomputePaint();
+  // Keep badge up to date
+  updateBadge();
 }
 
 window.addEventListener('resize', () => {

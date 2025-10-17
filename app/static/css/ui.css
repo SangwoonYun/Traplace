@@ -283,7 +283,8 @@
   overflow: auto;
 }
 
-html, body {
+html,
+body {
   overscroll-behavior-y: none;
 }
 
@@ -392,9 +393,7 @@ html, body {
   /* Stable height using visual viewport (no white mask on mobile toolbars) */
   .viewport {
     /* Prefer dynamic viewport units when available */
-    height: calc(
-      var(--app-vh, 100dvh) - env(safe-area-inset-bottom, 0px)
-    );
+    height: calc(var(--app-vh, 100dvh) - env(safe-area-inset-bottom, 0px));
     padding-top: calc(var(--toolbar-h) + var(--palettebar-h));
     overflow: auto;
   }

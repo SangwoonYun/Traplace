@@ -19,10 +19,7 @@ export const EXPAND_MARGIN = 300; // px
 // NOTE: Make cell size dynamic so that media queries / orientation changes
 // don't desync world pixel size vs scrollable bounds.
 export function cellPx() {
-  const v = parseInt(
-    getComputedStyle(document.documentElement).getPropertyValue('--cell'),
-    10,
-  );
+  const v = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cell'), 10);
   return Number.isFinite(v) && v > 0 ? v : 48;
 }
 /* ---------------------------------------------
