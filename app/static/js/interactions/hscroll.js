@@ -33,6 +33,8 @@ export function enableDragScroll(el) {
 
   /** mousedown / touchstart */
   const onDown = (e) => {
+    // If locked, ignore starting a drag-scroll gesture
+    if (el.dataset.lockScroll === '1') return;
     // Accept left mouse button or any touch
     if (e.button != null && e.button !== 0) return;
 
@@ -48,8 +50,15 @@ export function enableDragScroll(el) {
   const onMove = (e) => {
     if (!dragging) return;
 
-    // Convert pan gesture into scroll (touchmove is passive:false)
-    e.preventDefault();
+    // If locked mid-gesture, just swallow movement to avoid jumpiness
+    if (el.dataset.lockScroll === '1') {
+      // touchmove handler is passive:false → we can prevent native scrolling
+      if (e.cancelable) e.preventDefault();
+      return;
+    }
+
+    // Convert pan gesture into scroll (touchmove is passive:false so we can preventDefault)
+    if (e.cancelable) e.preventDefault();
 
     const dx = getClientX(e) - startX;
     el.scrollLeft = startScrollLeft - dx;
@@ -79,4 +88,20 @@ export function enableDragScroll(el) {
   el.addEventListener('touchmove', onMove, { passive: false });
   el.addEventListener('touchend', onUp);
   el.addEventListener('touchcancel', onUp);
+}
+
+/**
+ * Optional helper to toggle lock explicitly from other modules.
+ * @param {HTMLElement} el
+ * @param {boolean} locked
+ */
+export function setDragScrollLock(el, locked) {
+  if (!el) return;
+  if (locked) {
+    el.dataset.lockScroll = '1';
+    el.classList.add('scroll-locked');
+  } else {
+    delete el.dataset.lockScroll;
+    el.classList.remove('scroll-locked');
+  }
 }
