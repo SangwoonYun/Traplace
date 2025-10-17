@@ -348,7 +348,7 @@ function onPointerUp(e) {
   }
 
   const droppingInTrash = inTrash(e.clientX, e.clientY) || inPalette(e.clientX, e.clientY);
-
+ 
   if (state.drag.mode === 'new') {
     removeGhost();
 
