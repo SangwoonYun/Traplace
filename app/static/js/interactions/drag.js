@@ -348,7 +348,7 @@ function onPointerUp(e) {
   }
 
   const droppingInTrash = inTrash(e.clientX, e.clientY) || inPalette(e.clientX, e.clientY);
- 
+
   if (state.drag.mode === 'new') {
     removeGhost();
 
@@ -486,7 +486,7 @@ export function setupPaletteDrag() {
         window.addEventListener('pointermove', onPointerMove);
         window.addEventListener('pointerup', onPointerUp, { once: true });
         window.addEventListener('pointercancel', () => cleanupDrag(), { once: true });
-       };
+      };
 
       if (isTouch) {
         // long-press unless the user scrolls
