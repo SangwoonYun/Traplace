@@ -7,7 +7,7 @@
  * - Common helpers: keyOf, clamp
  */
 
-import { cell } from './state.js';
+import { cellPx } from './state.js';
 import { world, rot } from './dom.js';
 
 /* ---------------------------------------------
@@ -45,11 +45,12 @@ export function clientToLocalRot(clientX, clientY) {
  * @returns {{left:number, top:number}}
  */
 export function snapLocal(left, top, size) {
-  let gx = Math.round(left / cell) * cell;
-  let gy = Math.round(top / cell) * cell;
+  const c = cellPx();
+  let gx = Math.round(left / c) * c;
+  let gy = Math.round(top / c) * c;
 
-  const maxLeft = world.clientWidth - size * cell;
-  const maxTop = world.clientHeight - size * cell;
+  const maxLeft = world.clientWidth - size * c;
+  const maxTop = world.clientHeight - size * c;
 
   gx = Math.max(0, Math.min(gx, maxLeft));
   gy = Math.max(0, Math.min(gy, maxTop));
@@ -66,7 +67,8 @@ export function snapLocal(left, top, size) {
  * @returns {{cx:number, cy:number}}
  */
 export function posToCell(left, top) {
-  return { cx: Math.round(left / cell), cy: Math.round(top / cell) };
+  const c = cellPx();
+  return { cx: Math.round(left / c), cy: Math.round(top / c) };
 }
 
 /**
@@ -76,11 +78,12 @@ export function posToCell(left, top) {
  * @returns {{cx:number, cy:number}}
  */
 export function pointToCell(px, py) {
-  let cx = Math.floor(px / cell);
-  let cy = Math.floor(py / cell);
+  const c = cellPx();
+  let cx = Math.floor(px / c);
+  let cy = Math.floor(py / c);
 
-  const maxCx = Math.ceil(world.clientWidth / cell) - 1;
-  const maxCy = Math.ceil(world.clientHeight / cell) - 1;
+  const maxCx = Math.ceil(world.clientWidth / c) - 1;
+  const maxCy = Math.ceil(world.clientHeight / c) - 1;
 
   cx = Math.max(0, Math.min(cx, maxCx));
   cy = Math.max(0, Math.min(cy, maxCy));

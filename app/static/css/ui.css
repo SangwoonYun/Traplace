@@ -278,7 +278,14 @@
 
 /* Offset to avoid toolbar overlap */
 .viewport {
-  padding-top: 56px;
+  /* Prevent overscroll chaining to document on mobile; stabilize inner scroll */
+  overscroll-behavior: contain;
+  overflow: auto;
+}
+
+html,
+body {
+  overscroll-behavior-y: none;
 }
 
 /* ---------------------------------------------
@@ -382,6 +389,13 @@
   body {
     overflow-x: hidden;
     width: 100%;
+  }
+  /* Stable height using visual viewport (no white mask on mobile toolbars) */
+  .viewport {
+    /* Prefer dynamic viewport units when available */
+    height: calc(var(--app-vh, 100dvh) - env(safe-area-inset-bottom, 0px));
+    padding-top: calc(var(--toolbar-h) + var(--palettebar-h));
+    overflow: auto;
   }
 
   :root {
@@ -504,4 +518,9 @@
     left: 0;
     right: 0;
   }
+}
+
+#world {
+  padding-bottom: 16px;
+  box-sizing: content-box;
 }

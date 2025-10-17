@@ -1,89 +1,82 @@
 // File: app/static/js/interactions/hscroll.js
 /**
- * Horizontal drag-to-scroll for the palette bar (mouse & touch via Pointer Events).
- * - Uses a small slop so short taps don't trigger scrolling.
- * - While actively scrolling, sets `data-scrolling="1"` on the element so
- *   palette long-press pick-up logic can cancel itself (see drag.js).
- * - Adds/removes a CSS helper class `.is-dragging` for cursor styling.
+ * Drag-to-scroll helper for a horizontally scrollable element (mouse & touch).
+ * Keeps a 'is-dragging' class and sets data-scrolling='1' while dragging.
+ * No pointer capture is used; window-level mouseup ends the gesture.
  */
 
-const SLOP_PX = 6; // movement threshold before we consider it a scroll
+/* ---------------------------------------------
+ * Public API
+ * ------------------------------------------- */
 
+/**
+ * Enable horizontal drag-to-scroll interactions on the given element.
+ * @param {HTMLElement} el The scrollable container (with overflow-x)
+ */
 export function enableDragScroll(el) {
   if (!el) return;
 
-  let active = false; // true once slop exceeded
-  let tracking = false; // true between pointerdown..up (before/after slop)
-  let pid = null; // pointerId we are tracking
-  let startX = 0; // pointerdown x
-  let startScrollLeft = 0; // scrollLeft at pointerdown
+  let dragging = false;
+  let startX = 0; // clientX at gesture start
+  let startScrollLeft = 0; // el.scrollLeft at gesture start
 
-  const getX = (e) => e.clientX ?? e.touches?.[0]?.clientX ?? 0;
+  /* -------------------------------------------
+   * Helpers
+   * ----------------------------------------- */
 
-  function beginScroll(e) {
-    // Convert “candidate” into active drag-scroll
-    active = true;
-    el.classList.add('is-dragging');
-    el.dataset.scrolling = '1';
-    // Keep receiving moves even if pointer leaves the element
-    el.setPointerCapture?.(pid);
-    // Prevent context menu on long press while actively scrolling
-    e.preventDefault();
-  }
+  /** Get the current clientX from mouse or the first touch. */
+  const getClientX = (e) => e.touches?.[0]?.clientX ?? e.clientX;
 
-  function onPointerDown(e) {
-    // Only left button (mouse) or primary touch
+  /* -------------------------------------------
+   * Handlers
+   * ----------------------------------------- */
+
+  /** mousedown / touchstart */
+  const onDown = (e) => {
+    // Accept left mouse button or any touch
     if (e.button != null && e.button !== 0) return;
-    if (tracking) return;
 
-    tracking = true;
-    active = false;
-    pid = e.pointerId ?? 'mouse';
-    startX = getX(e);
+    dragging = true;
+    startX = getClientX(e);
     startScrollLeft = el.scrollLeft;
 
-    // We don't call preventDefault here to keep click/long-press semantics
-    // until the gesture exceeds the slop (then beginScroll will preventDefault).
-  }
+    el.classList.add('is-dragging');
+    el.dataset.scrolling = '1';
+  };
 
-  function onPointerMove(e) {
-    if (!tracking || pid !== (e.pointerId ?? 'mouse')) return;
+  /** mousemove / touchmove */
+  const onMove = (e) => {
+    if (!dragging) return;
 
-    const dx = getX(e) - startX;
+    // Convert pan gesture into scroll (touchmove is passive:false)
+    e.preventDefault();
 
-    if (!active) {
-      // Wait for slop before taking over the gesture
-      if (Math.abs(dx) >= SLOP_PX) beginScroll(e);
-      else return;
-    }
-
-    // Actively scrolling
-    e.preventDefault(); // turn the gesture into a scroll
+    const dx = getClientX(e) - startX;
     el.scrollLeft = startScrollLeft - dx;
-  }
+  };
 
-  function endScroll() {
-    if (!tracking) return;
-    tracking = false;
-    active = false;
-    pid = null;
+  /** mouseup / touchend / touchcancel */
+  const onUp = () => {
+    if (!dragging) return;
+    dragging = false;
     el.classList.remove('is-dragging');
     delete el.dataset.scrolling;
-  }
+  };
 
-  function onPointerUp(e) {
-    if (pid !== (e.pointerId ?? 'mouse')) return;
-    endScroll();
-  }
+  /* -------------------------------------------
+   * Wiring
+   * ----------------------------------------- */
 
-  function onPointerCancel(e) {
-    if (pid !== (e.pointerId ?? 'mouse')) return;
-    endScroll();
-  }
+  // Mouse
+  el.addEventListener('mousedown', onDown);
+  el.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
 
-  // Pointer Events cover both mouse and touch on modern browsers
-  el.addEventListener('pointerdown', onPointerDown, { passive: true });
-  el.addEventListener('pointermove', onPointerMove, { passive: false });
-  el.addEventListener('pointerup', onPointerUp, { passive: true });
-  el.addEventListener('pointercancel', onPointerCancel, { passive: true });
+  // Touch
+  // - touchstart is passive:true (no preventDefault there)
+  // - touchmove is passive:false because we call preventDefault
+  el.addEventListener('touchstart', onDown, { passive: true });
+  el.addEventListener('touchmove', onMove, { passive: false });
+  el.addEventListener('touchend', onUp);
+  el.addEventListener('touchcancel', onUp);
 }

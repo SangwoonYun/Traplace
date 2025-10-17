@@ -4,7 +4,7 @@
  * Defines how each object type paints the grid and computes affected areas.
  */
 
-import { cell } from './state.js';
+import { cellPx } from './state.js';
 import { world } from './dom.js';
 
 /** Paint radii (in cell units) for each painter kind. */
@@ -27,8 +27,9 @@ export const PAINTER_KINDS = new Set(['flag', 'hq']);
 export function cellsForKindAt(kind, centerCx, centerCy) {
   const r = KIND_PAINT_RADIUS[kind] ?? 0;
   const cells = [];
-  const maxX = Math.ceil(world.clientWidth / cell);
-  const maxY = Math.ceil(world.clientHeight / cell);
+  const c = cellPx();
+  const maxX = Math.ceil(world.clientWidth / c);
+  const maxY = Math.ceil(world.clientHeight / c);
 
   const minx = Math.max(0, centerCx - r);
   const maxx = Math.min(maxX - 1, centerCx + r);
@@ -52,8 +53,9 @@ export function cellsForKindAt(kind, centerCx, centerCy) {
  */
 export function areaBoundingBox(kind, centerCx, centerCy) {
   const r = KIND_PAINT_RADIUS[kind] ?? 0;
-  const maxX = Math.ceil(world.clientWidth / cell);
-  const maxY = Math.ceil(world.clientHeight / cell);
+  const c = cellPx();
+  const maxX = Math.ceil(world.clientWidth / c);
+  const maxY = Math.ceil(world.clientHeight / c);
 
   return {
     minx: Math.max(0, centerCx - r),

@@ -16,11 +16,12 @@ export const EXPAND_MARGIN = 300; // px
 /* ---------------------------------------------
  * Cell size (px) from CSS variable with fallback
  * ------------------------------------------- */
-export const cell = (() => {
+// NOTE: Make cell size dynamic so that media queries / orientation changes
+// don't desync world pixel size vs scrollable bounds.
+export function cellPx() {
   const v = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cell'), 10);
   return Number.isFinite(v) && v > 0 ? v : 48;
-})();
-
+}
 /* ---------------------------------------------
  * Runtime state
  * ------------------------------------------- */

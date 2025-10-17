@@ -9,7 +9,7 @@
  *  4) Return a PNG Blob
  */
 
-import { state, cell } from './state.js';
+import { state, cellPx } from './state.js';
 import { world } from './dom.js';
 import { PAINTER_KINDS, cellsForKindAt, areaBoundingBox } from './painter.js';
 import { posToCell } from './transform.js';
@@ -181,8 +181,9 @@ function usedCellsBBox() {
  */
 function strokeCellPerimeter(ctx, set, x, y, color, lineWidth = 2, dashed = false) {
   const has = (xx, yy) => set.has(`${xx},${yy}`);
-  const px = x * cell,
-    py = y * cell;
+  const c = cellPx();
+  const px = x * c,
+    py = y * c;
 
   ctx.save();
   ctx.strokeStyle = color;
@@ -192,25 +193,25 @@ function strokeCellPerimeter(ctx, set, x, y, color, lineWidth = 2, dashed = fals
   if (!has(x, y - 1)) {
     ctx.beginPath();
     ctx.moveTo(px, py);
-    ctx.lineTo(px + cell, py);
+    ctx.lineTo(px + c, py);
     ctx.stroke();
   }
   if (!has(x + 1, y)) {
     ctx.beginPath();
-    ctx.moveTo(px + cell, py);
-    ctx.lineTo(px + cell, py + cell);
+    ctx.moveTo(px + c, py);
+    ctx.lineTo(px + c, py + c);
     ctx.stroke();
   }
   if (!has(x, y + 1)) {
     ctx.beginPath();
-    ctx.moveTo(px, py + cell);
-    ctx.lineTo(px + cell, py + cell);
+    ctx.moveTo(px, py + c);
+    ctx.lineTo(px + c, py + c);
     ctx.stroke();
   }
   if (!has(x - 1, y)) {
     ctx.beginPath();
     ctx.moveTo(px, py);
-    ctx.lineTo(px, py + cell);
+    ctx.lineTo(px, py + c);
     ctx.stroke();
   }
 
@@ -339,6 +340,7 @@ export async function exportPNG() {
   if (!bbox) throw new Error('No used grid. Place objects or paint before exporting.');
 
   const { minx, miny, maxx, maxy, painted } = bbox;
+  const cellSize = cellPx();
 
   const gridColor = cssVar('--grid-bold', '#d0d0d0');
   const bgColor = cssVar('--bg', '#ffffff');
@@ -347,12 +349,12 @@ export async function exportPNG() {
   const redFill = cssVar('--paint-red', 'rgba(220,20,60,0.35)');
 
   // Crop region in unrotated space
-  const offX = minx * cell;
-  const offY = miny * cell;
+  const offX = minx * c;
+  const offY = miny * c;
   const widthCells = maxx - minx + 1;
   const heightCells = maxy - miny + 1;
-  const widthPx = widthCells * cell;
-  const heightPx = heightCells * cell;
+  const widthPx = widthCells * c;
+  const heightPx = heightCells * c;
 
   // Canvas box & shift
   const { boxW, boxH, shiftX, shiftY, W, H } = computeCanvasBoxAndShift(
@@ -385,13 +387,13 @@ export async function exportPNG() {
   ctx.save();
   ctx.strokeStyle = gridColor;
   ctx.lineWidth = 1;
-  for (let x = offX; x <= offX + widthPx + 0.1; x += cell) {
+  for (let x = offX; x <= offX + widthPx + 0.1; x += cellSize) {
     ctx.beginPath();
     ctx.moveTo(x, offY);
     ctx.lineTo(x, offY + heightPx);
     ctx.stroke();
   }
-  for (let y = offY; y <= offY + heightPx + 0.1; y += cell) {
+  for (let y = offY; y <= offY + heightPx + 0.1; y += cellSize) {
     ctx.beginPath();
     ctx.moveTo(offX, y);
     ctx.lineTo(offX + widthPx, y);
@@ -405,7 +407,7 @@ export async function exportPNG() {
   for (const key of state.userPaint) {
     const [x, y] = key.split(',').map(Number);
     if (x < minx || x > maxx || y < miny || y > maxy) continue;
-    ctx.fillRect(x * cell, y * cell, cell, cell);
+    ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
   }
   ctx.restore();
 
@@ -415,7 +417,7 @@ export async function exportPNG() {
   for (const key of painted) {
     const [x, y] = key.split(',').map(Number);
     if (x < minx || x > maxx || y < miny || y > maxy) continue;
-    ctx.fillRect(x * cell, y * cell, cell, cell);
+    ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
   }
   for (const key of painted) {
     const [x, y] = key.split(',').map(Number);
@@ -435,10 +437,10 @@ export async function exportPNG() {
     const centerCx = cx + Math.floor(b.size / 2);
     const centerCy = cy + Math.floor(b.size / 2);
     const { minx: ax, miny: ay, maxx: bx, maxy: by } = areaBoundingBox(b.kind, centerCx, centerCy);
-    const x = ax * cell,
-      y = ay * cell,
-      w = (bx - ax + 1) * cell,
-      h = (by - ay + 1) * cell;
+    const x = ax * cellSize,
+      y = ay * cellSize,
+      w = (bx - ax + 1) * cellSize,
+      h = (by - ay + 1) * cellSize;
     const inX = !(x + w < offX || x > offX + widthPx);
     const inY = !(y + h < offY || y > offY + heightPx);
     if (inX && inY) ctx.strokeRect(x, y, w, h);
@@ -449,10 +451,10 @@ export async function exportPNG() {
   for (const b of state.blocks) {
     const st = styleForBlock(b, painted);
     const { cx, cy } = posToCell(b.left, b.top);
-    const x = cx * cell,
-      y = cy * cell,
-      w = b.size * cell,
-      h = b.size * cell;
+    const x = cx * cellSize,
+      y = cy * cellSize,
+      w = b.size * cellSize,
+      h = b.size * cellSize;
 
     // Skip outside crop
     if (x > offX + widthPx || x + w < offX || y > offY + heightPx || y + h < offY) continue;
