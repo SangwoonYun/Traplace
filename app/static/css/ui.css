@@ -100,8 +100,20 @@
 
 .palette-item[data-kind='hq'] .pi-rot,
 .palette-item[data-kind='flag'] .pi-rot {
-  background: var(--ok-bg, #fafafa);
-  border-color: var(--ok-border, #555);
+  background: #b3e5fc;
+  border-color: #4fc3f7;
+}
+
+.palette-item[data-kind='trap'] .pi-rot {
+  background: #ccff90;
+  border-color: #9ccc65;
+}
+
+.palette-item[data-kind='block'][data-size='1'] .pi-rot,
+.palette-item[data-kind='block'][data-size='2'] .pi-rot,
+.palette-item[data-kind='block'][data-size='3'] .pi-rot {
+  background: #fff59d;
+  border-color: #fbc02d;
 }
 
 /* Palette count badge */

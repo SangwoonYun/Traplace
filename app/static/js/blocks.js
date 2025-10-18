@@ -22,18 +22,42 @@ import { onCreateBlock, onDeleteBlock } from './counters.js';
  */
 function applyBlockStyle(b, invalid) {
   const el = b.el;
-  if (b.kind === 'resource') {
-    el.style.background = 'var(--resource-bg)';
-    el.style.borderColor = 'var(--resource-border)';
+  const styles = getComputedStyle(document.documentElement);
+
+  if (invalid) {
+    el.style.background = styles.getPropertyValue('--warn-bg)');
+    el.style.borderColor = styles.getPropertyValue('--warn-border)');
     return;
   }
-  if (invalid) {
-    el.style.background = 'var(--warn-bg)';
-    el.style.borderColor = 'var(--warn-border)';
-  } else {
-    el.style.background = 'var(--ok-bg)';
-    el.style.borderColor = 'var(--ok-border)';
+
+  switch (b.kind) {
+    case 'resource':
+      el.style.background = styles.getPropertyValue('--resource-bg)');
+      el.style.borderColor = styles.getPropertyValue('--resource-border)');
+      return;
+
+    case 'hq':
+    case 'flag':
+      el.style.background = styles.getPropertyValue('--flag-bg');
+      el.style.borderColor = styles.getPropertyValue('--flag-border');
+      return;
+
+    case 'trap':
+      el.style.background = styles.getPropertyValue('--trap-bg');
+      el.style.borderColor = styles.getPropertyValue('--trap-border');
+      return;
+
+    case 'block':
+      if (b.size === 1 || b.size === 2 || b.size === 3) {
+        el.style.background = styles.getPropertyValue('--block123-bg');
+        el.style.borderColor = styles.getPropertyValue('--block123-border');
+        return;
+      }
+      break;
   }
+
+  el.style.background = styles.getPropertyValue('--ok-bg');
+  el.style.borderColor = styles.getPropertyValue('--ok-border');
 }
 
 /* ---------------------------------------------

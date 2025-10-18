@@ -31,6 +31,12 @@
   --warn-border: #cc1e1e;
   --resource-bg: #ffe5e5;
   --resource-border: #d00000;
+  --flag-bg: #b3e5fc;
+  --flag-border: #4fc3f7;
+  --trap-bg: #ccff90;
+  --trap-border: #9ccc65;
+  --block123-bg: #fff59d;
+  --block123-border: #fbc02d;
 
   /* World / Zoom */
   --zoom: 1; /* 1 = 100% */
