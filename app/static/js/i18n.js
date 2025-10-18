@@ -26,7 +26,7 @@ export const SUPPORTED_LANGS = [
   'pl',
   'pt',
   'tr',
-  'ar',
+  // 'ar',
   'th',
   'id',
 ];
