@@ -237,6 +237,119 @@
   padding: 6px 10px;
 }
 
+/* =========================================
+ * Toolbar Color Picker (round swatches)
+ * index.html: #colorPicker
+ * =======================================*/
+#colorPicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#colorPicker .swatch,
+#colorPicker input[type='color'] {
+  width: 26px;
+  height: 26px;
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 0, 0, 0.9);
+  background: transparent;
+  padding: 0;
+  outline: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease;
+}
+
+#colorPicker .swatch[data-color='#ffffff'] {
+  background: #ffffff;
+}
+#colorPicker .swatch[data-color='#4169E1'] {
+  background: #4169e1;
+}
+#colorPicker .swatch[data-color='#ff4500'] {
+  background: #ff4500;
+}
+
+#colorPicker input[type='color'] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+#colorPicker input[type='color']::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border-radius: 9999px;
+}
+#colorPicker input[type='color']::-webkit-color-swatch {
+  border: none;
+  border-radius: 9999px;
+}
+
+#colorPicker .swatch.is-active::after,
+#colorPicker [aria-checked='true'].swatch::after {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  font-weight: 900;
+  color: #000000;
+  text-shadow:
+    0 0 2px rgba(0, 0, 0, 0.9),
+    0 0 4px rgba(255, 255, 255, 0.7),
+    0 0 6px rgba(255, 255, 255, 0.5);
+  filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.8));
+  z-index: 3;
+  transform: scale(1.2);
+  pointer-events: none;
+}
+#colorPicker .swatch.is-active,
+#colorPicker [aria-checked='true'].swatch {
+  box-shadow: 0 0 0 2px var(--focus-ring, #3b82f6);
+}
+#colorPicker .custom-picker {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 6px;
+  row-gap: 2px;
+}
+#colorPicker .swatch.custom {
+  display: inline-flex;
+  position: relative;
+}
+#colorPicker .swatch.custom .custom-emoji {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 1;
+}
+#colorPicker #tintConfirm.tiny {
+  font-size: 12px;
+  padding: 2px 6px;
+  line-height: 1.2;
+}
+#colorPicker #tintConfirm {
+  display: none;
+}
+#colorPicker #tintConfirm.show {
+  display: inline-block;
+}
+
 /* RTL: toolbar occupies the space left of the right-side sidebar */
 body.rtl .toolbar,
 html[dir='rtl'] .toolbar {

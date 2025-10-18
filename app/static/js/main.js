@@ -34,6 +34,7 @@ import {
 } from './i18n.js';
 import { initCounters, updateAllCounts } from './counters.js';
 import { enableDragScroll } from './interactions/hscroll.js';
+import { setupColorPicker } from './colorPicker.js';
 
 /* ---------------------------------------------
  * Bootstrap
@@ -116,6 +117,7 @@ window.addEventListener('load', async () => {
   setupTileToggle();
   setupCursorBadge();
   setupActions();
+  setupColorPicker();
 
   /* ---------------------------------------------
    * Initial render & validation
