@@ -133,6 +133,92 @@
 }
 
 /* ---------------------------------------------
+ * Custom Block Controls
+ * ------------------------------------------- */
+.custom-block-controls {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.control-group label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #333;
+}
+
+.size-input-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+#customSize {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 0;
+}
+
+.btn-create {
+  padding: 6px 12px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-create:hover {
+  background: #1565c0;
+}
+
+.btn-create:active {
+  background: #0d47a1;
+}
+
+.color-picker {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.color-btn {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.color-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.color-btn.active {
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.5);
+  transform: scale(1.05);
+}
+
+/* ---------------------------------------------
  * Sidebar Footer (QR / GitHub credit)
  * ------------------------------------------- */
 .sidebar-footer {
