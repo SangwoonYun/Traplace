@@ -439,8 +439,8 @@ export function updateBlockLabelsForLocale(state) {
 
     const next = defaultTextFor(b.kind, b.size);
 
-    if (b.kind === 'city') {
-      // Preserve user edits
+    if (b.kind === 'city' || b.kind === 'block') {
+      // Preserve user edits for cities and custom blocks
       if (b.customLabel === true) continue;
 
       const cur = (labelEl.textContent || '').trim();
