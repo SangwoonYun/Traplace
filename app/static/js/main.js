@@ -20,7 +20,7 @@ import { setupPan } from './interactions/pan.js';
 import { setupZoom } from './interactions/zoom.js';
 import { setupTileToggle } from './interactions/tileToggle.js';
 import { setupCursorBadge } from './interactions/cursor.js';
-import { validateAllObjects, createBlock } from './blocks.js';
+import { validateAllObjects, createBlock, updateMapZIndex } from './blocks.js';
 import { expand } from './interactions/expand.js';
 import { parseFromURL } from './urlState.js';
 import { state, cellPx, BASE_CELLS_X, BASE_CELLS_Y } from './state.js';
@@ -34,6 +34,7 @@ import {
 } from './i18n.js';
 import { initCounters, updateAllCounts } from './counters.js';
 import { enableDragScroll } from './interactions/hscroll.js';
+import { setupCustomBlocks } from './customBlocks.js';
 
 /* ---------------------------------------------
  * Bootstrap
@@ -89,15 +90,65 @@ window.addEventListener('load', async () => {
       const top = it.cy * c;
       const el = createBlock(it.kind, it.size, left, top);
 
-      // Restore city label if present
-      if (it.kind === 'city' && it.label) {
+      // Get the block object
+      const b = state.blocks.find(x => x.el === el);
+
+      // Restore city/block label if present
+      if ((it.kind === 'city' || it.kind === 'block') && it.label) {
         const lbl = el.querySelector('.label');
         if (lbl) lbl.textContent = it.label;
+        if (b) b.customLabel = true;
+      }
+
+      // Restore z-index if present
+      if (it.zIndex !== undefined && b) {
+        b.zIndex = it.zIndex;
+        el.style.zIndex = String(it.zIndex);
+        el.dataset.zIndex = String(it.zIndex);
+      }
+
+      // Restore custom color if present
+      if (it.customColor && b) {
+        b.customColor = it.customColor;
+        el.style.background = it.customColor.bg;
+        el.style.borderColor = it.customColor.border;
       }
 
       makeMovable(el);
     }
     state._restoring = false;
+    
+    // Update map z-index after all blocks are restored
+    updateMapZIndex();
+
+    // Auto-scroll to center of all blocks after restoration
+    if (state.blocks.length > 0) {
+      // Calculate bounding box of all blocks
+      let minCx = Infinity, maxCx = -Infinity;
+      let minCy = Infinity, maxCy = -Infinity;
+
+      for (const b of state.blocks) {
+        const c = cellPx();
+        const cx = Math.round(b.left / c);
+        const cy = Math.round(b.top / c);
+        const endCx = cx + b.size;
+        const endCy = cy + b.size;
+
+        minCx = Math.min(minCx, cx);
+        maxCx = Math.max(maxCx, endCx);
+        minCy = Math.min(minCy, cy);
+        maxCy = Math.max(maxCy, endCy);
+      }
+
+      // Center on the middle of the bounding box
+      const centerCx = Math.floor((minCx + maxCx) / 2);
+      const centerCy = Math.floor((minCy + maxCy) / 2);
+      
+      // Delay centering to ensure layout is complete
+      requestAnimationFrame(() => {
+        centerToCell(centerCx, centerCy);
+      });
+    }
   }
 
   if (parsed?.red?.length) {
@@ -116,6 +167,7 @@ window.addEventListener('load', async () => {
   setupTileToggle();
   setupCursorBadge();
   setupActions();
+  setupCustomBlocks();
 
   /* ---------------------------------------------
    * Initial render & validation
