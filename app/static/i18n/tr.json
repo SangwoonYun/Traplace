@@ -4,6 +4,11 @@
     "usageTitle": "Nasıl kullanılır",
     "usage": "• <b>Sürükle ve bırak</b>: Sol taraftaki paletten öğeleri yerleştirin (ızgaraya hizalanır).<br>• <b>Orta fare tuşuyla sürükle</b>: Görünümü kaydır.<br>• <b>Ctrl/⌘ + Fare tekerleği</b>: Yakınlaştır / Uzaklaştır.<br>• <b>Dokunmatik yüzeyde kıstırma</b>: Yakınlaştır veya uzaklaştır.<br>• <b>Bir hücreye tıklayın</b>: Kırmızı boyayı aç/kapat.<br>• <b>Şehir</b> etiketi: Çift tıklayın → Düzenle (Enter ile kaydet / Esc ile iptal).<br>• Alt kısımdaki <b>🗑 alanına</b>: Bir öğeyi buraya sürükleyerek silin.<br>※ Mavi boyalar <b>Bayrak (7×7)</b> ve <b>Karargâh (15×15)</b> tarafından oluşturulur.",
     "paletteTitle": "Palet",
+    "customBlock": {
+      "size": "Özel boyut",
+      "create": "Oluştur",
+      "color": "Renk"
+    },
     "toolbar": {
       "undo": "Geri al",
       "redo": "Yinele",
