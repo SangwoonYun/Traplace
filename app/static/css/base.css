@@ -31,6 +31,8 @@
   --warn-border: #cc1e1e;
   --resource-bg: #ffe5e5;
   --resource-border: #d00000;
+  --city-bg: #e3f2fd;
+  --city-border: #1976d2;
 
   /* World / Zoom */
   --zoom: 1; /* 1 = 100% */
@@ -42,7 +44,7 @@
 /* Optional: dark mode background */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0b0b0c;
+    /* --bg: #0b0b0c; */
   }
 }
 
