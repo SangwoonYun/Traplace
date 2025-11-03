@@ -17,8 +17,21 @@ bp = Blueprint('policies', __name__)
 
 # Supported languages (matches i18n system)
 SUPPORTED_LANGS = [
-    'en', 'ko', 'zh-CN', 'zh-TW', 'ja', 'fr', 'de', 'es',
-    'it', 'pl', 'pt', 'tr', 'ar', 'th', 'id'
+    'en',
+    'ko',
+    'zh-CN',
+    'zh-TW',
+    'ja',
+    'fr',
+    'de',
+    'es',
+    'it',
+    'pl',
+    'pt',
+    'tr',
+    'ar',
+    'th',
+    'id',
 ]
 
 # Date format by language
@@ -96,7 +109,7 @@ def privacy():
         data=content,
         footer=footer,
         last_updated=last_updated,
-        is_machine_translated=is_machine_translated
+        is_machine_translated=is_machine_translated,
     )
 
 
@@ -124,5 +137,5 @@ def terms():
         data=content,
         footer=footer,
         last_updated=last_updated,
-        is_machine_translated=is_machine_translated
+        is_machine_translated=is_machine_translated,
     )
