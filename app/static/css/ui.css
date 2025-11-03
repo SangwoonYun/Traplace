@@ -159,20 +159,25 @@
 
 .palette-item[data-kind='hq'] .pi-rot,
 .palette-item[data-kind='flag'] .pi-rot {
-  background: #b3e5fc;
-  border-color: #4fc3f7;
+  background: var(--flag-bg, #e3f2fd);
+  border-color: var(--flag-border, #1976d2);
 }
 
 .palette-item[data-kind='trap'] .pi-rot {
-  background: #ccff90;
-  border-color: #9ccc65;
+  background: var(--trap-bg, #e8f5e9);
+  border-color: var(--trap-border, #388e3c);
+}
+
+.palette-item[data-kind='city'] .pi-rot {
+  background: var(--city-bg, #fff9c4);
+  border-color: var(--city-border, #f9a825);
 }
 
 .palette-item[data-kind='block'][data-size='1'] .pi-rot,
 .palette-item[data-kind='block'][data-size='2'] .pi-rot,
 .palette-item[data-kind='block'][data-size='3'] .pi-rot {
-  background: #fff59d;
-  border-color: #fbc02d;
+  background: var(--block123-bg, #fafafa);
+  border-color: var(--block123-border, #555);
 }
 
 /* Palette count badge */

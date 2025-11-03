@@ -25,15 +25,15 @@ function applyBlockStyle(b, invalid) {
   const styles = getComputedStyle(document.documentElement);
 
   if (invalid) {
-    el.style.background = styles.getPropertyValue('--warn-bg)');
-    el.style.borderColor = styles.getPropertyValue('--warn-border)');
+    el.style.background = styles.getPropertyValue('--warn-bg');
+    el.style.borderColor = styles.getPropertyValue('--warn-border');
     return;
   }
 
   switch (b.kind) {
     case 'resource':
-      el.style.background = styles.getPropertyValue('--resource-bg)');
-      el.style.borderColor = styles.getPropertyValue('--resource-border)');
+      el.style.background = styles.getPropertyValue('--resource-bg');
+      el.style.borderColor = styles.getPropertyValue('--resource-border');
       return;
 
     case 'hq':
@@ -45,6 +45,11 @@ function applyBlockStyle(b, invalid) {
     case 'trap':
       el.style.background = styles.getPropertyValue('--trap-bg');
       el.style.borderColor = styles.getPropertyValue('--trap-border');
+      return;
+
+    case 'city':
+      el.style.background = styles.getPropertyValue('--city-bg');
+      el.style.borderColor = styles.getPropertyValue('--city-border');
       return;
 
     case 'block':
@@ -65,20 +70,26 @@ function applyBlockStyle(b, invalid) {
  * ------------------------------------------- */
 /**
  * Validate all blocks against the painted set and apply styles.
+ * Only city and trap blocks need to be within the painted area.
  */
 export function validateAllObjects() {
   for (const b of state.blocks) {
-    const { cx, cy } = posToCell(b.left, b.top);
+    // Only validate city and trap blocks against painted area
+    const needsValidation = b.kind === 'city' || b.kind === 'trap';
     let invalid = false;
 
-    for (let y = cy; y < cy + b.size && !invalid; y++) {
-      for (let x = cx; x < cx + b.size; x++) {
-        if (!state.paintedSet.has(`${x},${y}`)) {
-          invalid = true;
-          break;
+    if (needsValidation) {
+      const { cx, cy } = posToCell(b.left, b.top);
+      for (let y = cy; y < cy + b.size && !invalid; y++) {
+        for (let x = cx; x < cx + b.size; x++) {
+          if (!state.paintedSet.has(`${x},${y}`)) {
+            invalid = true;
+            break;
+          }
         }
       }
     }
+
     applyBlockStyle(b, invalid);
   }
 }

@@ -27,6 +27,11 @@
   border-color: var(--trap-border);
 }
 
+.block[data-kind='city'] {
+  background: var(--city-bg);
+  border-color: var(--city-border);
+}
+
 .block[data-kind='block'][data-size='1'],
 .block[data-kind='block'][data-size='2'],
 .block[data-kind='block'][data-size='3'] {
