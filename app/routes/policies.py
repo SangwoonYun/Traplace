@@ -65,7 +65,7 @@ def load_legal_content(lang, page_type):
         lang = 'en'
 
     try:
-        with open(json_path, 'r', encoding='utf-8') as f:
+        with open(json_path, encoding='utf-8') as f:
             data = json.load(f)
             return data.get(page_type), data.get('footer'), lang
     except (FileNotFoundError, json.JSONDecodeError):

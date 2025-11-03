@@ -1,12 +1,19 @@
 <!doctype html>
-<html lang="{{ lang }}" {% if lang == 'ar' %}dir="rtl"{% endif %}>
+<html lang="{{ lang }}" {% if lang="" ="ar" %}dir="rtl" {% endif %}>
   <head>
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-M2J65D6M');</script>
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', 'GTM-M2J65D6M');
+    </script>
     <!-- End Google Tag Manager -->
 
     <meta charset="utf-8" />
@@ -18,7 +25,14 @@
         box-sizing: border-box;
       }
       body {
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, 'Noto Sans KR', Helvetica, Arial,
+        font-family:
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          'Noto Sans KR',
+          Helvetica,
+          Arial,
           sans-serif;
         line-height: 1.6;
         max-width: 800px;
@@ -126,28 +140,34 @@
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M2J65D6M"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-M2J65D6M"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
     <!-- Language Selector -->
     <div class="lang-selector">
       <select id="langSelect" onchange="changeLang(this.value)">
-        <option value="en" {{ 'selected' if lang == 'en' else '' }}>🇺🇸 English</option>
-        <option value="ko" {{ 'selected' if lang == 'ko' else '' }}>🇰🇷 한국어</option>
-        <option value="zh-CN" {{ 'selected' if lang == 'zh-CN' else '' }}>🇨🇳 简体中文</option>
-        <option value="zh-TW" {{ 'selected' if lang == 'zh-TW' else '' }}>🇹🇼 繁體中文</option>
-        <option value="ja" {{ 'selected' if lang == 'ja' else '' }}>🇯🇵 日本語</option>
-        <option value="fr" {{ 'selected' if lang == 'fr' else '' }}>🇫🇷 Français</option>
-        <option value="de" {{ 'selected' if lang == 'de' else '' }}>🇩🇪 Deutsch</option>
-        <option value="es" {{ 'selected' if lang == 'es' else '' }}>🇪🇸 Español</option>
-        <option value="it" {{ 'selected' if lang == 'it' else '' }}>🇮🇹 Italiano</option>
-        <option value="pl" {{ 'selected' if lang == 'pl' else '' }}>🇵🇱 Polski</option>
-        <option value="pt" {{ 'selected' if lang == 'pt' else '' }}>🇵🇹 Português</option>
-        <option value="tr" {{ 'selected' if lang == 'tr' else '' }}>🇹🇷 Türkçe</option>
-        <!-- <option value="ar" {{ 'selected' if lang == 'ar' else '' }}>🇸🇦 العربية</option> -->
-        <option value="th" {{ 'selected' if lang == 'th' else '' }}>🇹🇭 ไทย</option>
-        <option value="id" {{ 'selected' if lang == 'id' else '' }}>🇮🇩 Indonesia</option>
+        <option value="en" {% if lang="" ="en" %}selected{% endif %}>🇺🇸 English</option>
+        <option value="ko" {% if lang="" ="ko" %}selected{% endif %}>🇰🇷 한국어</option>
+        <option value="zh-CN" {% if lang="" ="zh-CN" %}selected{% endif %}>🇨🇳 简体中文</option>
+        <option value="zh-TW" {% if lang="" ="zh-TW" %}selected{% endif %}>🇹🇼 繁體中文</option>
+        <option value="ja" {% if lang="" ="ja" %}selected{% endif %}>🇯🇵 日本語</option>
+        <option value="fr" {% if lang="" ="fr" %}selected{% endif %}>🇫🇷 Français</option>
+        <option value="de" {% if lang="" ="de" %}selected{% endif %}>🇩🇪 Deutsch</option>
+        <option value="es" {% if lang="" ="es" %}selected{% endif %}>🇪🇸 Español</option>
+        <option value="it" {% if lang="" ="it" %}selected{% endif %}>🇮🇹 Italiano</option>
+        <option value="pl" {% if lang="" ="pl" %}selected{% endif %}>🇵🇱 Polski</option>
+        <option value="pt" {% if lang="" ="pt" %}selected{% endif %}>🇵🇹 Português</option>
+        <option value="tr" {% if lang="" ="tr" %}selected{% endif %}>🇹🇷 Türkçe</option>
+        <!-- <option value="ar" {% if lang == 'ar' %}selected{% endif %}>🇸🇦 العربية</option> -->
+        <option value="th" {% if lang="" ="th" %}selected{% endif %}>🇹🇭 ไทย</option>
+        <option value="id" {% if lang="" ="id" %}selected{% endif %}>🇮🇩 Indonesia</option>
       </select>
     </div>
 
@@ -157,74 +177,67 @@
     <p class="last-updated">{{ data.lastUpdated }}: {{ last_updated }}</p>
 
     {% if is_machine_translated %}
-    <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 12px 16px; margin-bottom: 20px; border-radius: 4px;">
-      <p style="margin: 0; font-size: 14px; color: #856404;">
+    <div
+      style="
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+      "
+    >
+      <p style="margin: 0; font-size: 14px; color: #856404">
         <strong>⚠️ Machine Translation Notice:</strong> This page has been automatically translated.
-        The English and Korean versions are the only official versions.
-        If you find any translation errors, please refer to the
-        <a href="?lang=en" style="color: #856404; text-decoration: underline;">English version</a>.
+        The English and Korean versions are the only official versions. If you find any translation
+        errors, please refer to the
+        <a href="?lang=en" style="color: #856404; text-decoration: underline">English version</a>.
       </p>
     </div>
-    {% endif %}
+    {% endif %} {% for section in data.sections %}
+    <h2>{{ section.title }}</h2>
 
-    {% for section in data.sections %}
-      <h2>{{ section.title }}</h2>
-
-      {% if section.content %}
-        <p>{{ section.content|safe }}</p>
-      {% endif %}
-
-      {% if section.list %}
+    {% if section.content %}
+    <p>{{ section.content|safe }}</p>
+    {% endif %} {% if section.list %}
+    <ul>
+      {% for item in section.list %}
+      <li>{{ item|safe }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% if section.notCollected %}
+    <div class="not-collected">
+      <p><strong>{{ section.notCollected.title }}</strong></p>
+      <ul>
+        {% for item in section.notCollected.list %}
+        <li>{{ item|safe }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %} {% if section.subsections %} {% for subsection in section.subsections %}
+    <div class="subsection">
+      <h3>{{ subsection.title }}</h3>
+      {% if subsection.content %}
+      <p>{{ subsection.content|safe }}</p>
+      {% endif %} {% if subsection.list %}
+      <ul>
+        {% for item in subsection.list %}
+        <li>{{ item|safe }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %} {% if subsection.notCollected %}
+      <div class="not-collected">
+        <p><strong>{{ subsection.notCollected.title }}</strong></p>
         <ul>
-          {% for item in section.list %}
-            <li>{{ item|safe }}</li>
+          {% for item in subsection.notCollected.list %}
+          <li>{{ item|safe }}</li>
           {% endfor %}
         </ul>
+      </div>
       {% endif %}
-
-      {% if section.notCollected %}
-        <div class="not-collected">
-          <p><strong>{{ section.notCollected.title }}</strong></p>
-          <ul>
-            {% for item in section.notCollected.list %}
-              <li>{{ item|safe }}</li>
-            {% endfor %}
-          </ul>
-        </div>
-      {% endif %}
-
-      {% if section.subsections %}
-        {% for subsection in section.subsections %}
-          <div class="subsection">
-            <h3>{{ subsection.title }}</h3>
-            {% if subsection.content %}
-              <p>{{ subsection.content|safe }}</p>
-            {% endif %}
-            {% if subsection.list %}
-              <ul>
-                {% for item in subsection.list %}
-                  <li>{{ item|safe }}</li>
-                {% endfor %}
-              </ul>
-            {% endif %}
-            {% if subsection.notCollected %}
-              <div class="not-collected">
-                <p><strong>{{ subsection.notCollected.title }}</strong></p>
-                <ul>
-                  {% for item in subsection.notCollected.list %}
-                    <li>{{ item|safe }}</li>
-                  {% endfor %}
-                </ul>
-              </div>
-            {% endif %}
-          </div>
-        {% endfor %}
-      {% endif %}
-
-      {% if section.footer %}
-        <p class="section-footer">{{ section.footer|safe }}</p>
-      {% endif %}
-    {% endfor %}
+    </div>
+    {% endfor %} {% endif %} {% if section.footer %}
+    <p class="section-footer">{{ section.footer|safe }}</p>
+    {% endif %} {% endfor %}
 
     <hr style="margin: 40px 0; border: none; border-top: 1px solid #ddd" />
     <p style="text-align: center; color: #666; font-size: 14px">
