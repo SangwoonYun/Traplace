@@ -735,7 +735,8 @@ body.rtl .icon-arrow { transform: scaleX(-1); }
   .sidebar .footer,
   .sidebar .footer-qrs,
   .sidebar .footer-info,
-  .lang-label {
+  .lang-label,
+  [data-mobile-hidden] {
     display: none !important;
   }
 
