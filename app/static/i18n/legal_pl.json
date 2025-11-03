@@ -1,0 +1,228 @@
+{
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated",
+    "backLink": "← Back to Traplace",
+    "sections": [
+      {
+        "title": "1. Introduction",
+        "content": "Welcome to Kingshot Traplace (\"we,\" \"our,\" or \"us\"). We are committed to protecting your privacy and ensuring transparency about how we handle data. This Privacy Policy explains what information we collect, how we use it, and your rights regarding your data."
+      },
+      {
+        "title": "2. Information We Collect",
+        "subsections": [
+          {
+            "title": "2.1 Anonymous Analytics Data",
+            "content": "With your consent, we collect anonymous usage data through Google Analytics 4 to understand how our service is used and improve user experience. This includes:",
+            "list": [
+              "Page views and visit duration",
+              "Referral sources (how you found our site)",
+              "Browser type and device information",
+              "General geographic location (country/city level, not precise)",
+              "Language preference",
+              "Whether you accessed via a shortened URL (pattern only, e.g., <code>/s/*</code>)"
+            ],
+            "notCollected": {
+              "title": "We do NOT collect:",
+              "list": [
+                "Specific shortened URL codes",
+                "Your map data stored in URL hash fragments",
+                "Block configurations or custom labels",
+                "Personal identifying information",
+                "IP addresses (anonymized automatically)"
+              ]
+            }
+          },
+          {
+            "title": "2.2 Local Data Storage",
+            "content": "Your map data is stored locally in your browser via:",
+            "list": [
+              "<strong>URL Hash Fragments:</strong> All block positions, colors, and labels are encoded in the URL after the <code>#</code> symbol. This data never leaves your browser unless you share the URL.",
+              "<strong>Cookies:</strong> Only used to remember your analytics consent preference (<code>traplace_analytics_consent</code>)."
+            ]
+          },
+          {
+            "title": "2.3 Shortened URLs",
+            "content": "When you create a shortened URL (<code>/s/&lt;code&gt;</code>), we temporarily store the mapping between the short code and your original URL path in Redis with a time-to-live (TTL). This data is:",
+            "list": [
+              "Stored for 7 days from last access",
+              "TTL automatically renewed to 7 days when the shortened URL is accessed",
+              "Not linked to any personal information",
+              "Automatically deleted after expiry"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "3. How We Use Your Information",
+        "list": [
+          "<strong>Analytics:</strong> To understand usage patterns, improve features, and fix bugs",
+          "<strong>Service Operation:</strong> To provide shortened URL functionality",
+          "<strong>Legal Compliance:</strong> To comply with applicable laws and regulations"
+        ]
+      },
+      {
+        "title": "4. Data Sharing",
+        "content": "We do not sell, rent, or share your data with third parties, except:",
+        "list": [
+          "<strong>Google Analytics:</strong> Anonymous analytics data is processed by Google according to their privacy policy",
+          "<strong>Legal Requirements:</strong> If required by law or to protect our rights"
+        ]
+      },
+      {
+        "title": "5. Your Rights",
+        "content": "You have the right to:",
+        "list": [
+          "<strong>Opt-out of analytics:</strong> Click \"Reject\" on the cookie consent banner",
+          "<strong>Delete your data:</strong> Clear your browser cookies and URL history. No server-side profile exists.",
+          "<strong>Access your data:</strong> All your map data is visible in the URL hash fragment"
+        ]
+      },
+      {
+        "title": "6. Data Security",
+        "content": "We implement reasonable security measures including:",
+        "list": [
+          "HTTPS encryption for all connections",
+          "Secure cookie flags (<code>SameSite=Lax; Secure</code>)",
+          "IP address anonymization in Google Analytics",
+          "No persistent user profiles or accounts"
+        ]
+      },
+      {
+        "title": "7. International Users",
+        "content": "Our service is accessible worldwide. Analytics data may be processed by Google in various countries. We anonymize data to comply with GDPR and similar privacy regulations."
+      },
+      {
+        "title": "8. Children's Privacy",
+        "content": "Our service does not target children under 13. We do not knowingly collect personal information from children."
+      },
+      {
+        "title": "9. Changes to This Policy",
+        "content": "We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated \"Last updated\" date."
+      },
+      {
+        "title": "10. Contact Us",
+        "content": "If you have questions about this Privacy Policy, please contact us via our <a href=\"https://github.com/SangwoonYun/Traplace\" target=\"_blank\">GitHub repository</a>."
+      }
+    ]
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last updated",
+    "backLink": "← Back to Traplace",
+    "sections": [
+      {
+        "title": "1. Acceptance of Terms",
+        "content": "By accessing or using Kingshot Traplace (\"Service,\" \"we,\" \"us,\" or \"our\"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service."
+      },
+      {
+        "title": "2. Description of Service",
+        "content": "Kingshot Traplace is a free, open-source web-based auxiliary tool for planning and visualizing alliance placements for the mobile game <strong>Kingshot</strong> developed by Century Games Pte. Ltd. The Service allows you to:",
+        "list": [
+          "Place and arrange blocks on a grid-based map",
+          "Create custom blocks with different sizes and colors",
+          "Share your layouts via URL or shortened links",
+          "Export your maps as PNG images"
+        ]
+      },
+      {
+        "title": "3. User Responsibilities",
+        "subsections": [
+          {
+            "title": "3.1 Acceptable Use",
+            "content": "You agree to use the Service only for lawful purposes. You may NOT:",
+            "list": [
+              "Use the Service to harass, abuse, or harm others",
+              "Attempt to gain unauthorized access to the Service or its infrastructure",
+              "Distribute malware, spam, or harmful content",
+              "Violate any applicable laws or regulations",
+              "Use automated systems (bots) to create excessive shortened URLs"
+            ]
+          },
+          {
+            "title": "3.2 Content Ownership",
+            "content": "You retain all rights to the map layouts and configurations you create. By sharing a URL, you grant others permission to view and copy your layout. We do not claim ownership of your content."
+          }
+        ]
+      },
+      {
+        "title": "4. Service Availability",
+        "content": "We provide the Service on an <strong>\"AS IS\" and \"AS AVAILABLE\"</strong> basis. We do not guarantee:",
+        "list": [
+          "Continuous, uninterrupted, or error-free operation",
+          "That your data will be preserved indefinitely",
+          "That shortened URLs will remain active beyond their TTL period"
+        ],
+        "footer": "We reserve the right to modify, suspend, or discontinue the Service at any time without notice."
+      },
+      {
+        "title": "5. Data and Privacy",
+        "list": [
+          "Your map data is stored locally in your browser's URL. We do not store map configurations on our servers.",
+          "Shortened URLs are temporarily cached in Redis for 7 days from last access. Each access renews the TTL for another 7 days. URLs automatically expire if not accessed.",
+          "We collect anonymous analytics data only with your consent. See our Privacy Policy for details."
+        ]
+      },
+      {
+        "title": "6. Intellectual Property",
+        "content": "The Service's source code is open-source and available on <a href=\"https://github.com/SangwoonYun/Traplace\" target=\"_blank\">GitHub</a>. The code is licensed under the terms specified in the repository.",
+        "footer": "\"Kingshot\" and related trademarks are property of Century Games Pte. Ltd. This Service is a fan-made auxiliary tool and is <strong>not officially affiliated with, endorsed by, or associated with Century Games Pte. Ltd.</strong> or the game developers in any way. All game-related trademarks and copyrights belong to their respective owners."
+      },
+      {
+        "title": "7. Disclaimer of Warranties",
+        "content": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO:",
+        "list": [
+          "Warranties of merchantability",
+          "Fitness for a particular purpose",
+          "Non-infringement",
+          "Accuracy or reliability of results"
+        ]
+      },
+      {
+        "title": "8. Limitation of Liability",
+        "content": "TO THE MAXIMUM EXTENT PERMITTED BY LAW, WE SHALL NOT BE LIABLE FOR ANY:",
+        "list": [
+          "Direct, indirect, incidental, or consequential damages",
+          "Loss of data, profits, or business opportunities",
+          "Damages arising from use or inability to use the Service"
+        ],
+        "footer": "This applies even if we have been advised of the possibility of such damages."
+      },
+      {
+        "title": "9. Indemnification",
+        "content": "You agree to indemnify and hold us harmless from any claims, damages, or expenses arising from your use of the Service or violation of these Terms."
+      },
+      {
+        "title": "10. Third-Party Services",
+        "content": "The Service uses third-party services including:",
+        "list": [
+          "<strong>Google Analytics:</strong> Subject to Google's privacy policy and terms",
+          "<strong>CDNs and hosting providers:</strong> Subject to their respective terms"
+        ],
+        "footer": "We are not responsible for third-party services or their policies."
+      },
+      {
+        "title": "11. Modifications to Terms",
+        "content": "We may update these Terms of Service at any time. Changes will be effective immediately upon posting. Your continued use of the Service constitutes acceptance of the modified terms."
+      },
+      {
+        "title": "12. Termination",
+        "content": "We reserve the right to terminate or restrict your access to the Service at any time, without notice, for any reason, including violation of these Terms."
+      },
+      {
+        "title": "13. Governing Law",
+        "content": "These Terms shall be governed by and construed in accordance with the laws of the Republic of Korea, without regard to its conflict of law provisions."
+      },
+      {
+        "title": "14. Contact Information",
+        "content": "For questions or concerns about these Terms, please contact us via our <a href=\"https://github.com/SangwoonYun/Traplace\" target=\"_blank\">GitHub repository</a>."
+      }
+    ]
+  },
+  "footer": {
+    "home": "Home",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "github": "GitHub"
+  }
+}

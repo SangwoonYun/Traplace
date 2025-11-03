@@ -207,6 +207,31 @@
   white-space: nowrap;
 }
 
+.footer-legal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 11px;
+  margin-top: 8px;
+}
+
+.legal-link {
+  color: var(--sidebar-footer-fg);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.legal-link:hover {
+  color: #1976d2;
+  text-decoration: underline;
+}
+
+.legal-sep {
+  color: var(--sidebar-footer-fg);
+  opacity: 0.5;
+}
+
 /* ---------------------------------------------
  * Top Toolbar (and viewport padding for overlap)
  * ------------------------------------------- */

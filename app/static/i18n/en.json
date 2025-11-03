@@ -21,7 +21,9 @@
     "footer": {
       "credit": "Created by #135 [KOR] 방구석개발자",
       "bmc": "Buy me a coffee",
-      "toss": "Toss"
+      "toss": "Toss",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
     }
   },
   "palette": {
@@ -45,5 +47,11 @@
     "copiedFull": "Full URL copied",
     "shortenError": "Failed to create short URL.",
     "copyError": "Failed to copy."
+  },
+  "consent": {
+    "message": "We use anonymous analytics to improve your experience. No personal data is collected.",
+    "accept": "Accept",
+    "reject": "Reject",
+    "learnMore": "Learn More"
   }
 }

@@ -21,7 +21,9 @@
     "footer": {
       "credit": "Created by #135 [KOR] 방구석개발자",
       "bmc": "Buy me a coffee",
-      "toss": "Toss"
+      "toss": "Toss",
+      "privacy": "سياسة الخصوصية",
+      "terms": "شروط الخدمة"
     }
   },
   "palette": {

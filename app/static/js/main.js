@@ -36,6 +36,31 @@ import { initCounters, updateAllCounts } from './counters.js';
 import { enableDragScroll } from './interactions/hscroll.js';
 
 /* ---------------------------------------------
+ * Helper Functions
+ * ------------------------------------------- */
+
+/**
+ * Update legal page links with current language parameter
+ * @param {string} lang - Current language code
+ */
+function updateLegalLinks(lang) {
+  const privacyLink = document.querySelector('a[data-i18n="ui.footer.privacy"]');
+  const termsLink = document.querySelector('a[data-i18n="ui.footer.terms"]');
+
+  if (privacyLink) {
+    const privacyUrl = new URL(privacyLink.href);
+    privacyUrl.searchParams.set('lang', lang);
+    privacyLink.href = privacyUrl.toString();
+  }
+
+  if (termsLink) {
+    const termsUrl = new URL(termsLink.href);
+    termsUrl.searchParams.set('lang', lang);
+    termsLink.href = termsUrl.toString();
+  }
+}
+
+/* ---------------------------------------------
  * Bootstrap
  * ------------------------------------------- */
 
@@ -73,8 +98,12 @@ window.addEventListener('load', async () => {
       await loadLanguageOnline(sel.value);
       updateBlockLabelsForLocale(state);
       setTitles(); // refresh tooltips / shortcut labels
+      updateLegalLinks(currentLang()); // Update footer legal links
     });
   }
+
+  // Initial update of legal links
+  updateLegalLinks(currentLang());
 
   /* ---------------------------------------------
    * Restore from URL (blocks + red tiles)
