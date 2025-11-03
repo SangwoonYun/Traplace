@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Terms of Service - Kingshot Traplace</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          'Noto Sans KR',
+          Helvetica,
+          Arial,
+          sans-serif;
+        line-height: 1.6;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        color: #333;
+      }
+      h1 {
+        color: #1976d2;
+        border-bottom: 3px solid #1976d2;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #1976d2;
+        margin-top: 30px;
+        margin-bottom: 15px;
+      }
+      a {
+        color: #1976d2;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        padding: 8px 16px;
+        background: #1976d2;
+        color: white;
+        border-radius: 4px;
+        text-decoration: none;
+      }
+      .back-link:hover {
+        background: #1565c0;
+        text-decoration: none;
+      }
+      .last-updated {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+      }
+      ul {
+        padding-left: 30px;
+      }
+      li {
+        margin-bottom: 8px;
+      }
+      strong {
+        color: #d32f2f;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="{{ url_for('core.index') }}" class="back-link">← Back to Traplace</a>
+
+    <h1>Terms of Service</h1>
+    <p class="last-updated">Last updated: {{ last_updated }}</p>
+
+    <h2>1. Acceptance of Terms</h2>
+    <p>
+      By accessing or using Kingshot Traplace ("Service," "we," "us," or "our"), you agree to be
+      bound by these Terms of Service. If you do not agree to these terms, please do not use the
+      Service.
+    </p>
+
+    <h2>2. Description of Service</h2>
+    <p>
+      Kingshot Traplace is a free, open-source web-based auxiliary tool for planning and visualizing
+      alliance placements for the mobile game <strong>Kingshot</strong> developed by Century Games
+      Pte. Ltd. The Service allows you to:
+    </p>
+    <ul>
+      <li>Place and arrange blocks on a grid-based map</li>
+      <li>Create custom blocks with different sizes and colors</li>
+      <li>Share your layouts via URL or shortened links</li>
+      <li>Export your maps as PNG images</li>
+    </ul>
+
+    <h2>3. User Responsibilities</h2>
+
+    <h3>3.1 Acceptable Use</h3>
+    <p>You agree to use the Service only for lawful purposes. You may NOT:</p>
+    <ul>
+      <li>Use the Service to harass, abuse, or harm others</li>
+      <li>Attempt to gain unauthorized access to the Service or its infrastructure</li>
+      <li>Distribute malware, spam, or harmful content</li>
+      <li>Violate any applicable laws or regulations</li>
+      <li>Use automated systems (bots) to create excessive shortened URLs</li>
+    </ul>
+
+    <h3>3.2 Content Ownership</h3>
+    <p>
+      You retain all rights to the map layouts and configurations you create. By sharing a URL, you
+      grant others permission to view and copy your layout. We do not claim ownership of your
+      content.
+    </p>
+
+    <h2>4. Service Availability</h2>
+    <p>
+      We provide the Service on an <strong>"AS IS" and "AS AVAILABLE"</strong> basis. We do not
+      guarantee:
+    </p>
+    <ul>
+      <li>Continuous, uninterrupted, or error-free operation</li>
+      <li>That your data will be preserved indefinitely</li>
+      <li>That shortened URLs will remain active beyond their TTL period</li>
+    </ul>
+    <p>
+      We reserve the right to modify, suspend, or discontinue the Service at any time without
+      notice.
+    </p>
+
+    <h2>5. Data and Privacy</h2>
+    <ul>
+      <li>
+        Your map data is stored locally in your browser's URL. We do not store map configurations on
+        our servers.
+      </li>
+      <li>
+        Shortened URLs are temporarily cached in Redis for 7 days from last access. Each access
+        renews the TTL for another 7 days. URLs automatically expire if not accessed.
+      </li>
+      <li>
+        We collect anonymous analytics data only with your consent. See our
+        <a href="{{ url_for('policies.privacy') }}">Privacy Policy</a> for details.
+      </li>
+    </ul>
+
+    <h2>6. Intellectual Property</h2>
+    <p>
+      The Service's source code is open-source and available on
+      <a href="https://github.com/SangwoonYun/Traplace" target="_blank">GitHub</a>. The code is
+      licensed under the terms specified in the repository.
+    </p>
+    <p>
+      "Kingshot" and related trademarks are property of Century Games Pte. Ltd. This Service is a
+      fan-made auxiliary tool and is
+      <strong
+        >not officially affiliated with, endorsed by, or associated with Century Games Pte.
+        Ltd.</strong
+      >
+      or the game developers in any way. All game-related trademarks and copyrights belong to their
+      respective owners.
+    </p>
+
+    <h2>7. Disclaimer of Warranties</h2>
+    <p>
+      THE SERVICE IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+      BUT NOT LIMITED TO:
+    </p>
+    <ul>
+      <li>Warranties of merchantability</li>
+      <li>Fitness for a particular purpose</li>
+      <li>Non-infringement</li>
+      <li>Accuracy or reliability of results</li>
+    </ul>
+
+    <h2>8. Limitation of Liability</h2>
+    <p>TO THE MAXIMUM EXTENT PERMITTED BY LAW, WE SHALL NOT BE LIABLE FOR ANY:</p>
+    <ul>
+      <li>Direct, indirect, incidental, or consequential damages</li>
+      <li>Loss of data, profits, or business opportunities</li>
+      <li>Damages arising from use or inability to use the Service</li>
+    </ul>
+    <p>This applies even if we have been advised of the possibility of such damages.</p>
+
+    <h2>9. Indemnification</h2>
+    <p>
+      You agree to indemnify and hold us harmless from any claims, damages, or expenses arising from
+      your use of the Service or violation of these Terms.
+    </p>
+
+    <h2>10. Third-Party Services</h2>
+    <p>The Service uses third-party services including:</p>
+    <ul>
+      <li><strong>Google Analytics:</strong> Subject to Google's privacy policy and terms</li>
+      <li><strong>CDNs and hosting providers:</strong> Subject to their respective terms</li>
+    </ul>
+    <p>We are not responsible for third-party services or their policies.</p>
+
+    <h2>11. Modifications to Terms</h2>
+    <p>
+      We may update these Terms of Service at any time. Changes will be effective immediately upon
+      posting. Your continued use of the Service constitutes acceptance of the modified terms.
+    </p>
+
+    <h2>12. Termination</h2>
+    <p>
+      We reserve the right to terminate or restrict your access to the Service at any time, without
+      notice, for any reason, including violation of these Terms.
+    </p>
+
+    <h2>13. Governing Law</h2>
+    <p>
+      These Terms shall be governed by and construed in accordance with the laws of the Republic of
+      Korea, without regard to its conflict of law provisions.
+    </p>
+
+    <h2>14. Contact Information</h2>
+    <p>
+      For questions or concerns about these Terms, please contact us via our
+      <a href="https://github.com/SangwoonYun/Traplace" target="_blank">GitHub repository</a>.
+    </p>
+
+    <hr style="margin: 40px 0; border: none; border-top: 1px solid #ddd" />
+    <p style="text-align: center; color: #666; font-size: 14px">
+      <a href="{{ url_for('core.index') }}">Home</a> •
+      <a href="{{ url_for('policies.privacy') }}">Privacy Policy</a> •
+      <a href="https://github.com/SangwoonYun/Traplace" target="_blank">GitHub</a>
+    </p>
+  </body>
+</html>

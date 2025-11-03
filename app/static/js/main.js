@@ -37,6 +37,31 @@ import { enableDragScroll } from './interactions/hscroll.js';
 import { setupColorPicker } from './colorPicker.js';
 
 /* ---------------------------------------------
+ * Helper Functions
+ * ------------------------------------------- */
+
+/**
+ * Update legal page links with current language parameter
+ * @param {string} lang - Current language code
+ */
+function updateLegalLinks(lang) {
+  const privacyLink = document.querySelector('a[data-i18n="ui.footer.privacy"]');
+  const termsLink = document.querySelector('a[data-i18n="ui.footer.terms"]');
+
+  if (privacyLink) {
+    const privacyUrl = new URL(privacyLink.href);
+    privacyUrl.searchParams.set('lang', lang);
+    privacyLink.href = privacyUrl.toString();
+  }
+
+  if (termsLink) {
+    const termsUrl = new URL(termsLink.href);
+    termsUrl.searchParams.set('lang', lang);
+    termsLink.href = termsUrl.toString();
+  }
+}
+
+/* ---------------------------------------------
  * Bootstrap
  * ------------------------------------------- */
 
@@ -74,6 +99,38 @@ window.addEventListener('load', async () => {
       await loadLanguageOnline(sel.value);
       updateBlockLabelsForLocale(state);
       setTitles(); // refresh tooltips / shortcut labels
+      updateLegalLinks(currentLang()); // Update footer legal links
+    });
+  }
+
+  // Initial update of legal links
+  updateLegalLinks(currentLang());
+
+  /* ---------------------------------------------
+   * Setup usage section toggle
+   * ------------------------------------------- */
+  const usageToggle = document.getElementById('usageToggle');
+  const usageContent = document.getElementById('usageContent');
+
+  if (usageToggle && usageContent) {
+    // Load saved state from localStorage (default: collapsed)
+    const savedState = localStorage.getItem('usageExpanded');
+
+    // If user previously expanded it, restore that state
+    if (savedState === 'true') {
+      usageContent.classList.remove('collapsed');
+      usageToggle.setAttribute('aria-expanded', 'true');
+    }
+
+    usageToggle.addEventListener('click', () => {
+      const isExpanded = usageToggle.getAttribute('aria-expanded') === 'true';
+      const newExpandedState = !isExpanded;
+
+      usageToggle.setAttribute('aria-expanded', newExpandedState);
+      usageContent.classList.toggle('collapsed');
+
+      // Save expanded state to localStorage
+      localStorage.setItem('usageExpanded', newExpandedState);
     });
   }
 

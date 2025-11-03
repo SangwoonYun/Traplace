@@ -12,6 +12,7 @@ from flask import Flask
 from .config import get_config
 from .extensions import init_extensions
 from .routes.core import bp as core_bp
+from .routes.policies import bp as policies_bp
 from .routes.shortener import bp as shortener_bp
 
 __all__ = ['create_app']
@@ -38,6 +39,7 @@ def create_app(env: str | None = None) -> Flask:
 
     # Register blueprints
     app.register_blueprint(core_bp)
+    app.register_blueprint(policies_bp)
     app.register_blueprint(shortener_bp)
 
     return app

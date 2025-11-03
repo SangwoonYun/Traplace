@@ -1,0 +1,228 @@
+{
+  "privacy": {
+    "title": "Informativa sulla Privacy",
+    "lastUpdated": "Ultimo aggiornamento",
+    "backLink": "← Torna a Traplace",
+    "sections": [
+      {
+        "title": "1. Introduzione",
+        "content": "Benvenuti su Kingshot Traplace (\"noi\", \"nostro\" o \"ci\"). Ci impegniamo a proteggere la vostra privacy e a garantire trasparenza su come gestiamo i dati. Questa Informativa sulla Privacy spiega quali informazioni raccogliamo, come le utilizziamo e i vostri diritti riguardo ai vostri dati."
+      },
+      {
+        "title": "2. Informazioni che Raccogliamo",
+        "subsections": [
+          {
+            "title": "2.1 Dati di Analisi Anonimi",
+            "content": "Con il vostro consenso, raccogliamo dati di utilizzo anonimi tramite Google Analytics 4 per comprendere come viene utilizzato il nostro servizio e migliorare l'esperienza utente. Questo include:",
+            "list": [
+              "Visualizzazioni di pagina e durata della visita",
+              "Fonti di riferimento (come avete trovato il nostro sito)",
+              "Tipo di browser e informazioni sul dispositivo",
+              "Posizione geografica generale (livello paese/città, non precisa)",
+              "Preferenza linguistica",
+              "Se avete effettuato l'accesso tramite un URL abbreviato (solo pattern, es. <code>/s/*</code>)"
+            ],
+            "notCollected": {
+              "title": "NON raccogliamo:",
+              "list": [
+                "Codici di URL abbreviati specifici",
+                "I vostri dati di mappa memorizzati nei frammenti hash dell'URL",
+                "Configurazioni di blocchi o etichette personalizzate",
+                "Informazioni di identificazione personale",
+                "Indirizzi IP (anonimizzati automaticamente)"
+              ]
+            }
+          },
+          {
+            "title": "2.2 Archiviazione Locale dei Dati",
+            "content": "I vostri dati di mappa sono memorizzati localmente nel vostro browser tramite:",
+            "list": [
+              "<strong>Frammenti Hash dell'URL:</strong> Tutte le posizioni dei blocchi, i colori e le etichette sono codificati nell'URL dopo il simbolo <code>#</code>. Questi dati non lasciano mai il vostro browser a meno che non condividiate l'URL.",
+              "<strong>Cookie:</strong> Utilizzati solo per ricordare la vostra preferenza di consenso alle analisi (<code>traplace_analytics_consent</code>)."
+            ]
+          },
+          {
+            "title": "2.3 URL Abbreviati",
+            "content": "Quando create un URL abbreviato (<code>/s/&lt;code&gt;</code>), memorizziamo temporaneamente la mappatura tra il codice breve e il percorso dell'URL originale in Redis con un tempo di vita (TTL). Questi dati sono:",
+            "list": [
+              "Memorizzati per 7 giorni dall'ultimo accesso",
+              "TTL automaticamente rinnovato a 7 giorni quando si accede all'URL abbreviato",
+              "Non collegati a informazioni personali",
+              "Eliminati automaticamente dopo la scadenza"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "3. Come Utilizziamo le Vostre Informazioni",
+        "list": [
+          "<strong>Analisi:</strong> Per comprendere i modelli di utilizzo, migliorare le funzionalità e correggere bug",
+          "<strong>Funzionamento del Servizio:</strong> Per fornire la funzionalità di URL abbreviato",
+          "<strong>Conformità Legale:</strong> Per conformarci alle leggi e ai regolamenti applicabili"
+        ]
+      },
+      {
+        "title": "4. Condivisione dei Dati",
+        "content": "Non vendiamo, affittiamo né condividiamo i vostri dati con terze parti, tranne:",
+        "list": [
+          "<strong>Google Analytics:</strong> I dati di analisi anonimi sono elaborati da Google secondo la loro informativa sulla privacy",
+          "<strong>Requisiti Legali:</strong> Se richiesto dalla legge o per proteggere i nostri diritti"
+        ]
+      },
+      {
+        "title": "5. I Vostri Diritti",
+        "content": "Avete il diritto di:",
+        "list": [
+          "<strong>Rifiutare le analisi:</strong> Fare clic su \"Rifiuta\" sul banner di consenso ai cookie",
+          "<strong>Eliminare i vostri dati:</strong> Cancellare i cookie del browser e la cronologia degli URL. Non esiste alcun profilo lato server.",
+          "<strong>Accedere ai vostri dati:</strong> Tutti i vostri dati di mappa sono visibili nel frammento hash dell'URL"
+        ]
+      },
+      {
+        "title": "6. Sicurezza dei Dati",
+        "content": "Implementiamo misure di sicurezza ragionevoli tra cui:",
+        "list": [
+          "Crittografia HTTPS per tutte le connessioni",
+          "Flag di cookie sicuri (<code>SameSite=Lax; Secure</code>)",
+          "Anonimizzazione degli indirizzi IP in Google Analytics",
+          "Nessun profilo utente o account persistente"
+        ]
+      },
+      {
+        "title": "7. Utenti Internazionali",
+        "content": "Il nostro servizio è accessibile in tutto il mondo. I dati di analisi possono essere elaborati da Google in vari paesi. Anonimizziamo i dati per conformarci al GDPR e a regolamenti simili sulla privacy."
+      },
+      {
+        "title": "8. Privacy dei Minori",
+        "content": "Il nostro servizio non è rivolto a minori di 13 anni. Non raccogliamo consapevolmente informazioni personali da minori."
+      },
+      {
+        "title": "9. Modifiche a Questa Informativa",
+        "content": "Potremmo aggiornare questa Informativa sulla Privacy di tanto in tanto. Le modifiche saranno pubblicate su questa pagina con una data di \"Ultimo aggiornamento\" aggiornata."
+      },
+      {
+        "title": "10. Contattaci",
+        "content": "Se avete domande su questa Informativa sulla Privacy, contattateci tramite il nostro <a href=\"https://github.com/SangwoonYun/Traplace\" target=\"_blank\">repository GitHub</a>."
+      }
+    ]
+  },
+  "terms": {
+    "title": "Termini di Servizio",
+    "lastUpdated": "Ultimo aggiornamento",
+    "backLink": "← Torna a Traplace",
+    "sections": [
+      {
+        "title": "1. Accettazione dei Termini",
+        "content": "Accedendo o utilizzando Kingshot Traplace (\"Servizio\", \"noi\", \"nostro\" o \"ci\"), accettate di essere vincolati da questi Termini di Servizio. Se non accettate questi termini, non utilizzate il Servizio."
+      },
+      {
+        "title": "2. Descrizione del Servizio",
+        "content": "Kingshot Traplace è uno strumento ausiliario gratuito e open-source basato sul web per pianificare e visualizzare posizionamenti di alleanze per il gioco mobile <strong>Kingshot</strong> sviluppato da Century Games Pte. Ltd. Il Servizio vi consente di:",
+        "list": [
+          "Posizionare e organizzare blocchi su una mappa basata su griglia",
+          "Creare blocchi personalizzati con diverse dimensioni e colori",
+          "Condividere i vostri layout tramite URL o link abbreviati",
+          "Esportare le vostre mappe come immagini PNG"
+        ]
+      },
+      {
+        "title": "3. Responsabilità dell'Utente",
+        "subsections": [
+          {
+            "title": "3.1 Uso Accettabile",
+            "content": "Accettate di utilizzare il Servizio solo per scopi legali. NON potete:",
+            "list": [
+              "Utilizzare il Servizio per molestare, abusare o danneggiare altri",
+              "Tentare di ottenere accesso non autorizzato al Servizio o alla sua infrastruttura",
+              "Distribuire malware, spam o contenuti dannosi",
+              "Violare leggi o regolamenti applicabili",
+              "Utilizzare sistemi automatizzati (bot) per creare URL abbreviati eccessivi"
+            ]
+          },
+          {
+            "title": "3.2 Proprietà dei Contenuti",
+            "content": "Conservate tutti i diritti sui layout di mappa e sulle configurazioni che create. Condividendo un URL, concedete ad altri il permesso di visualizzare e copiare il vostro layout. Non rivendichiamo la proprietà dei vostri contenuti."
+          }
+        ]
+      },
+      {
+        "title": "4. Disponibilità del Servizio",
+        "content": "Forniamo il Servizio <strong>\"COSÌ COM'È\" e \"COME DISPONIBILE\"</strong>. Non garantiamo:",
+        "list": [
+          "Funzionamento continuo, ininterrotto o privo di errori",
+          "Che i vostri dati saranno conservati indefinitamente",
+          "Che gli URL abbreviati rimarranno attivi oltre il loro periodo TTL"
+        ],
+        "footer": "Ci riserviamo il diritto di modificare, sospendere o interrompere il Servizio in qualsiasi momento senza preavviso."
+      },
+      {
+        "title": "5. Dati e Privacy",
+        "list": [
+          "I vostri dati di mappa sono memorizzati localmente nell'URL del vostro browser. Non memorizziamo configurazioni di mappe sui nostri server.",
+          "Gli URL abbreviati sono temporaneamente memorizzati nella cache in Redis per 7 giorni dall'ultimo accesso. Ogni accesso rinnova il TTL per altri 7 giorni. Gli URL scadono automaticamente se non vengono accessi.",
+          "Raccogliamo dati di analisi anonimi solo con il vostro consenso. Consultate la nostra Informativa sulla Privacy per i dettagli."
+        ]
+      },
+      {
+        "title": "6. Proprietà Intellettuale",
+        "content": "Il codice sorgente del Servizio è open-source e disponibile su <a href=\"https://github.com/SangwoonYun/Traplace\" target=\"_blank\">GitHub</a>. Il codice è concesso in licenza secondo i termini specificati nel repository.",
+        "footer": "\"Kingshot\" e i marchi correlati sono proprietà di Century Games Pte. Ltd. Questo Servizio è uno strumento ausiliario creato dai fan e <strong>non è ufficialmente affiliato, approvato o associato a Century Games Pte. Ltd.</strong> o agli sviluppatori del gioco in alcun modo. Tutti i marchi e i diritti d'autore relativi al gioco appartengono ai rispettivi proprietari."
+      },
+      {
+        "title": "7. Esclusione di Garanzie",
+        "content": "IL SERVIZIO È FORNITO \"COSÌ COM'È\" SENZA GARANZIE DI ALCUN TIPO, ESPLICITE O IMPLICITE, INCLUSE MA NON LIMITATE A:",
+        "list": [
+          "Garanzie di commerciabilità",
+          "Idoneità per uno scopo particolare",
+          "Non violazione",
+          "Accuratezza o affidabilità dei risultati"
+        ]
+      },
+      {
+        "title": "8. Limitazione di Responsabilità",
+        "content": "NELLA MISURA MASSIMA CONSENTITA DALLA LEGGE, NON SAREMO RESPONSABILI PER:",
+        "list": [
+          "Danni diretti, indiretti, incidentali o consequenziali",
+          "Perdita di dati, profitti o opportunità commerciali",
+          "Danni derivanti dall'uso o dall'impossibilità di utilizzare il Servizio"
+        ],
+        "footer": "Ciò si applica anche se siamo stati avvisati della possibilità di tali danni."
+      },
+      {
+        "title": "9. Indennizzo",
+        "content": "Accettate di indennizzarci e tenerci indenni da qualsiasi reclamo, danno o spesa derivante dal vostro uso del Servizio o dalla violazione di questi Termini."
+      },
+      {
+        "title": "10. Servizi di Terze Parti",
+        "content": "Il Servizio utilizza servizi di terze parti tra cui:",
+        "list": [
+          "<strong>Google Analytics:</strong> Soggetto all'informativa sulla privacy e ai termini di Google",
+          "<strong>CDN e fornitori di hosting:</strong> Soggetti ai rispettivi termini"
+        ],
+        "footer": "Non siamo responsabili per i servizi di terze parti o le loro politiche."
+      },
+      {
+        "title": "11. Modifiche ai Termini",
+        "content": "Potremmo aggiornare questi Termini di Servizio in qualsiasi momento. Le modifiche saranno effettive immediatamente dopo la pubblicazione. Il vostro uso continuato del Servizio costituisce l'accettazione dei termini modificati."
+      },
+      {
+        "title": "12. Risoluzione",
+        "content": "Ci riserviamo il diritto di terminare o limitare il vostro accesso al Servizio in qualsiasi momento, senza preavviso, per qualsiasi motivo, inclusa la violazione di questi Termini."
+      },
+      {
+        "title": "13. Legge Applicabile",
+        "content": "Questi Termini saranno regolati e interpretati in conformità con le leggi della Repubblica di Corea, senza riguardo alle sue disposizioni sui conflitti di leggi."
+      },
+      {
+        "title": "14. Informazioni di Contatto",
+        "content": "Per domande o dubbi su questi Termini, contattateci tramite il nostro <a href=\"https://github.com/SangwoonYun/Traplace\" target=\"_blank\">repository GitHub</a>."
+      }
+    ]
+  },
+  "footer": {
+    "home": "Home",
+    "privacy": "Informativa sulla Privacy",
+    "terms": "Termini di Servizio",
+    "github": "GitHub"
+  }
+}

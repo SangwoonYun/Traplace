@@ -1,0 +1,228 @@
+{
+  "privacy": {
+    "title": "Kebijakan Privasi",
+    "lastUpdated": "Terakhir diperbarui",
+    "backLink": "← Kembali ke Traplace",
+    "sections": [
+      {
+        "title": "1. Pendahuluan",
+        "content": "Selamat datang di Kingshot Traplace (\"kami\", \"milik kami\", atau \"kepada kami\"). Kami berkomitmen untuk melindungi privasi Anda dan memastikan transparansi tentang bagaimana kami menangani data. Kebijakan Privasi ini menjelaskan informasi apa yang kami kumpulkan, bagaimana kami menggunakannya, dan hak Anda terkait data Anda."
+      },
+      {
+        "title": "2. Informasi yang Kami Kumpulkan",
+        "subsections": [
+          {
+            "title": "2.1 Data Analitik Anonim",
+            "content": "Dengan persetujuan Anda, kami mengumpulkan data penggunaan anonim melalui Google Analytics 4 untuk memahami bagaimana layanan kami digunakan dan meningkatkan pengalaman pengguna. Ini termasuk:",
+            "list": [
+              "Tampilan halaman dan durasi kunjungan",
+              "Sumber rujukan (bagaimana Anda menemukan situs kami)",
+              "Jenis browser dan informasi perangkat",
+              "Lokasi geografis umum (tingkat negara/kota, tidak tepat)",
+              "Preferensi bahasa",
+              "Apakah Anda mengakses melalui URL yang dipersingkat (hanya pola, mis., <code>/s/*</code>)"
+            ],
+            "notCollected": {
+              "title": "Kami TIDAK mengumpulkan:",
+              "list": [
+                "Kode URL yang dipersingkat secara spesifik",
+                "Data peta Anda yang disimpan dalam fragmen hash URL",
+                "Konfigurasi blok atau label khusus",
+                "Informasi identifikasi pribadi",
+                "Alamat IP (dianonimkan secara otomatis)"
+              ]
+            }
+          },
+          {
+            "title": "2.2 Penyimpanan Data Lokal",
+            "content": "Data peta Anda disimpan secara lokal di browser Anda melalui:",
+            "list": [
+              "<strong>Fragmen Hash URL:</strong> Semua posisi blok, warna, dan label dikodekan dalam URL setelah simbol <code>#</code>. Data ini tidak pernah meninggalkan browser Anda kecuali Anda membagikan URL.",
+              "<strong>Cookie:</strong> Hanya digunakan untuk mengingat preferensi persetujuan analitik Anda (<code>traplace_analytics_consent</code>)."
+            ]
+          },
+          {
+            "title": "2.3 URL yang Dipersingkat",
+            "content": "Ketika Anda membuat URL yang dipersingkat (<code>/s/&lt;code&gt;</code>), kami menyimpan sementara pemetaan antara kode pendek dan jalur URL asli Anda di Redis dengan time-to-live (TTL). Data ini adalah:",
+            "list": [
+              "Disimpan selama 7 hari sejak akses terakhir",
+              "TTL secara otomatis diperpanjang menjadi 7 hari ketika URL yang dipersingkat diakses",
+              "Tidak terkait dengan informasi pribadi apa pun",
+              "Dihapus secara otomatis setelah kedaluwarsa"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "3. Bagaimana Kami Menggunakan Informasi Anda",
+        "list": [
+          "<strong>Analitik:</strong> Untuk memahami pola penggunaan, meningkatkan fitur, dan memperbaiki bug",
+          "<strong>Operasi Layanan:</strong> Untuk menyediakan fungsi URL yang dipersingkat",
+          "<strong>Kepatuhan Hukum:</strong> Untuk mematuhi hukum dan peraturan yang berlaku"
+        ]
+      },
+      {
+        "title": "4. Pembagian Data",
+        "content": "Kami tidak menjual, menyewakan, atau membagikan data Anda dengan pihak ketiga, kecuali:",
+        "list": [
+          "<strong>Google Analytics:</strong> Data analitik anonim diproses oleh Google sesuai dengan kebijakan privasi mereka",
+          "<strong>Persyaratan Hukum:</strong> Jika diwajibkan oleh hukum atau untuk melindungi hak kami"
+        ]
+      },
+      {
+        "title": "5. Hak Anda",
+        "content": "Anda memiliki hak untuk:",
+        "list": [
+          "<strong>Menolak analitik:</strong> Klik \"Tolak\" pada spanduk persetujuan cookie",
+          "<strong>Menghapus data Anda:</strong> Hapus cookie browser dan riwayat URL Anda. Tidak ada profil di sisi server.",
+          "<strong>Mengakses data Anda:</strong> Semua data peta Anda terlihat dalam fragmen hash URL"
+        ]
+      },
+      {
+        "title": "6. Keamanan Data",
+        "content": "Kami menerapkan langkah-langkah keamanan yang wajar termasuk:",
+        "list": [
+          "Enkripsi HTTPS untuk semua koneksi",
+          "Flag cookie yang aman (<code>SameSite=Lax; Secure</code>)",
+          "Anonimisasi alamat IP di Google Analytics",
+          "Tidak ada profil pengguna atau akun yang persisten"
+        ]
+      },
+      {
+        "title": "7. Pengguna Internasional",
+        "content": "Layanan kami dapat diakses di seluruh dunia. Data analitik dapat diproses oleh Google di berbagai negara. Kami mengaonimkan data untuk mematuhi GDPR dan peraturan privasi serupa."
+      },
+      {
+        "title": "8. Privasi Anak-anak",
+        "content": "Layanan kami tidak menargetkan anak-anak di bawah 13 tahun. Kami tidak dengan sengaja mengumpulkan informasi pribadi dari anak-anak."
+      },
+      {
+        "title": "9. Perubahan pada Kebijakan Ini",
+        "content": "Kami dapat memperbarui Kebijakan Privasi ini dari waktu ke waktu. Perubahan akan diposting di halaman ini dengan tanggal \"Terakhir diperbarui\" yang diperbarui."
+      },
+      {
+        "title": "10. Hubungi Kami",
+        "content": "Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, silakan hubungi kami melalui <a href=\"https://github.com/SangwoonYun/Traplace\" target=\"_blank\">repositori GitHub kami</a>."
+      }
+    ]
+  },
+  "terms": {
+    "title": "Ketentuan Layanan",
+    "lastUpdated": "Terakhir diperbarui",
+    "backLink": "← Kembali ke Traplace",
+    "sections": [
+      {
+        "title": "1. Penerimaan Ketentuan",
+        "content": "Dengan mengakses atau menggunakan Kingshot Traplace (\"Layanan\", \"kami\", \"milik kami\", atau \"kepada kami\"), Anda setuju untuk terikat oleh Ketentuan Layanan ini. Jika Anda tidak setuju dengan ketentuan ini, jangan gunakan Layanan."
+      },
+      {
+        "title": "2. Deskripsi Layanan",
+        "content": "Kingshot Traplace adalah alat bantu berbasis web gratis dan open-source untuk merencanakan dan memvisualisasikan penempatan aliansi untuk game mobile <strong>Kingshot</strong> yang dikembangkan oleh Century Games Pte. Ltd. Layanan ini memungkinkan Anda untuk:",
+        "list": [
+          "Menempatkan dan mengatur blok pada peta berbasis grid",
+          "Membuat blok khusus dengan ukuran dan warna berbeda",
+          "Membagikan tata letak Anda melalui URL atau tautan yang dipersingkat",
+          "Mengekspor peta Anda sebagai gambar PNG"
+        ]
+      },
+      {
+        "title": "3. Tanggung Jawab Pengguna",
+        "subsections": [
+          {
+            "title": "3.1 Penggunaan yang Dapat Diterima",
+            "content": "Anda setuju untuk menggunakan Layanan hanya untuk tujuan yang sah. Anda TIDAK BOLEH:",
+            "list": [
+              "Menggunakan Layanan untuk melecehkan, menyalahgunakan, atau membahayakan orang lain",
+              "Mencoba mendapatkan akses tidak sah ke Layanan atau infrastrukturnya",
+              "Mendistribusikan malware, spam, atau konten berbahaya",
+              "Melanggar hukum atau peraturan yang berlaku",
+              "Menggunakan sistem otomatis (bot) untuk membuat URL yang dipersingkat secara berlebihan"
+            ]
+          },
+          {
+            "title": "3.2 Kepemilikan Konten",
+            "content": "Anda mempertahankan semua hak atas tata letak peta dan konfigurasi yang Anda buat. Dengan membagikan URL, Anda memberikan izin kepada orang lain untuk melihat dan menyalin tata letak Anda. Kami tidak mengklaim kepemilikan atas konten Anda."
+          }
+        ]
+      },
+      {
+        "title": "4. Ketersediaan Layanan",
+        "content": "Kami menyediakan Layanan berdasarkan <strong>\"SEBAGAIMANA ADANYA\" dan \"SEBAGAIMANA TERSEDIA\"</strong>. Kami tidak menjamin:",
+        "list": [
+          "Operasi yang berkelanjutan, tanpa gangguan, atau bebas kesalahan",
+          "Bahwa data Anda akan disimpan tanpa batas waktu",
+          "Bahwa URL yang dipersingkat akan tetap aktif melampaui periode TTL mereka"
+        ],
+        "footer": "Kami berhak untuk memodifikasi, menangguhkan, atau menghentikan Layanan kapan saja tanpa pemberitahuan."
+      },
+      {
+        "title": "5. Data dan Privasi",
+        "list": [
+          "Data peta Anda disimpan secara lokal di URL browser Anda. Kami tidak menyimpan konfigurasi peta di server kami.",
+          "URL yang dipersingkat di-cache sementara di Redis selama 7 hari sejak akses terakhir. Setiap akses memperpanjang TTL selama 7 hari lagi. URL kedaluwarsa secara otomatis jika tidak diakses.",
+          "Kami mengumpulkan data analitik anonim hanya dengan persetujuan Anda. Lihat Kebijakan Privasi kami untuk detailnya."
+        ]
+      },
+      {
+        "title": "6. Kekayaan Intelektual",
+        "content": "Kode sumber Layanan adalah open-source dan tersedia di <a href=\"https://github.com/SangwoonYun/Traplace\" target=\"_blank\">GitHub</a>. Kode dilisensikan berdasarkan ketentuan yang ditentukan dalam repositori.",
+        "footer": "\"Kingshot\" dan merek dagang terkait adalah properti Century Games Pte. Ltd. Layanan ini adalah alat bantu buatan penggemar dan <strong>tidak secara resmi berafiliasi dengan, didukung oleh, atau terkait dengan Century Games Pte. Ltd.</strong> atau pengembang game dengan cara apa pun. Semua merek dagang dan hak cipta terkait game adalah milik pemiliknya masing-masing."
+      },
+      {
+        "title": "7. Penafian Jaminan",
+        "content": "LAYANAN DISEDIAKAN \"SEBAGAIMANA ADANYA\" TANPA JAMINAN APA PUN, BAIK TERSURAT MAUPUN TERSIRAT, TERMASUK TETAPI TIDAK TERBATAS PADA:",
+        "list": [
+          "Jaminan dapat diperdagangkan",
+          "Kesesuaian untuk tujuan tertentu",
+          "Non-pelanggaran",
+          "Akurasi atau keandalan hasil"
+        ]
+      },
+      {
+        "title": "8. Pembatasan Tanggung Jawab",
+        "content": "SEJAUH MAKSIMUM YANG DIIZINKAN OLEH HUKUM, KAMI TIDAK BERTANGGUNG JAWAB ATAS:",
+        "list": [
+          "Kerusakan langsung, tidak langsung, insidental, atau konsekuensial",
+          "Kehilangan data, keuntungan, atau peluang bisnis",
+          "Kerusakan yang timbul dari penggunaan atau ketidakmampuan menggunakan Layanan"
+        ],
+        "footer": "Ini berlaku bahkan jika kami telah diberitahu tentang kemungkinan kerusakan tersebut."
+      },
+      {
+        "title": "9. Ganti Rugi",
+        "content": "Anda setuju untuk mengganti rugi dan membebaskan kami dari klaim, kerusakan, atau biaya apa pun yang timbul dari penggunaan Layanan Anda atau pelanggaran Ketentuan ini."
+      },
+      {
+        "title": "10. Layanan Pihak Ketiga",
+        "content": "Layanan menggunakan layanan pihak ketiga termasuk:",
+        "list": [
+          "<strong>Google Analytics:</strong> Tunduk pada kebijakan privasi dan ketentuan Google",
+          "<strong>CDN dan penyedia hosting:</strong> Tunduk pada ketentuan masing-masing"
+        ],
+        "footer": "Kami tidak bertanggung jawab atas layanan pihak ketiga atau kebijakan mereka."
+      },
+      {
+        "title": "11. Modifikasi Ketentuan",
+        "content": "Kami dapat memperbarui Ketentuan Layanan ini kapan saja. Perubahan akan berlaku segera setelah diposting. Penggunaan Layanan Anda yang berkelanjutan merupakan penerimaan ketentuan yang dimodifikasi."
+      },
+      {
+        "title": "12. Penghentian",
+        "content": "Kami berhak untuk menghentikan atau membatasi akses Anda ke Layanan kapan saja, tanpa pemberitahuan, untuk alasan apa pun, termasuk pelanggaran Ketentuan ini."
+      },
+      {
+        "title": "13. Hukum yang Mengatur",
+        "content": "Ketentuan ini akan diatur oleh dan ditafsirkan sesuai dengan hukum Republik Korea, tanpa memperhatikan ketentuan konflik hukumnya."
+      },
+      {
+        "title": "14. Informasi Kontak",
+        "content": "Untuk pertanyaan atau kekhawatiran tentang Ketentuan ini, silakan hubungi kami melalui <a href=\"https://github.com/SangwoonYun/Traplace\" target=\"_blank\">repositori GitHub kami</a>."
+      }
+    ]
+  },
+  "footer": {
+    "home": "Beranda",
+    "privacy": "Kebijakan Privasi",
+    "terms": "Ketentuan Layanan",
+    "github": "GitHub"
+  }
+}

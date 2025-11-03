@@ -21,7 +21,9 @@
     "footer": {
       "credit": "Created by #135 [KOR] 방구석개발자",
       "bmc": "Buy me a coffee",
-      "toss": "토스 송금"
+      "toss": "토스 송금",
+      "privacy": "개인정보 처리방침",
+      "terms": "이용 약관"
     }
   },
   "palette": {
@@ -45,5 +47,11 @@
     "copiedFull": "전체 복사됨",
     "shortenError": "단축 URL 생성에 실패했습니다.",
     "copyError": "복사에 실패했습니다."
+  },
+  "consent": {
+    "message": "사용 경험 개선을 위해 익명 분석 데이터를 수집합니다. 개인 정보는 수집되지 않습니다.",
+    "accept": "동의",
+    "reject": "거부",
+    "learnMore": "자세히 보기"
   }
 }
