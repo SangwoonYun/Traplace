@@ -1,0 +1,228 @@
+{
+  "privacy": {
+    "title": "Gizlilik Politikası",
+    "lastUpdated": "Son güncelleme",
+    "backLink": "← Traplace'e Dön",
+    "sections": [
+      {
+        "title": "1. Giriş",
+        "content": "Kingshot Traplace'e (\"biz\", \"bizim\" veya \"bize\") hoş geldiniz. Gizliliğinizi korumaya ve verileri nasıl işlediğimiz konusunda şeffaf olmaya kararlıyız. Bu Gizlilik Politikası, hangi bilgileri topladığımızı, bunları nasıl kullandığımızı ve verilerinizle ilgili haklarınızı açıklar."
+      },
+      {
+        "title": "2. Topladığımız Bilgiler",
+        "subsections": [
+          {
+            "title": "2.1 Anonim Analiz Verileri",
+            "content": "Onayınızla, hizmetimizin nasıl kullanıldığını anlamak ve kullanıcı deneyimini iyileştirmek için Google Analytics 4 aracılığıyla anonim kullanım verileri topluyoruz. Bunlar şunları içerir:",
+            "list": [
+              "Sayfa görüntülemeleri ve ziyaret süresi",
+              "Yönlendirme kaynakları (sitemizi nasıl bulduğunuz)",
+              "Tarayıcı türü ve cihaz bilgileri",
+              "Genel coğrafi konum (ülke/şehir düzeyi, kesin değil)",
+              "Dil tercihi",
+              "Kısaltılmış bir URL aracılığıyla erişip erişmediğiniz (yalnızca desen, örn. <code>/s/*</code>)"
+            ],
+            "notCollected": {
+              "title": "Toplamadığımız bilgiler:",
+              "list": [
+                "Belirli kısaltılmış URL kodları",
+                "URL hash parçalarında depolanan harita verileriniz",
+                "Blok konfigürasyonları veya özel etiketler",
+                "Kişisel tanımlayıcı bilgiler",
+                "IP adresleri (otomatik olarak anonimleştirilir)"
+              ]
+            }
+          },
+          {
+            "title": "2.2 Yerel Veri Depolama",
+            "content": "Harita verileriniz tarayıcınızda yerel olarak şu yollarla saklanır:",
+            "list": [
+              "<strong>URL Hash Parçaları:</strong> Tüm blok konumları, renkler ve etiketler, <code>#</code> sembolünden sonra URL'de kodlanır. Bu veriler, siz URL'yi paylaşmadığınız sürece tarayıcınızdan ayrılmaz.",
+              "<strong>Çerezler:</strong> Yalnızca analiz onayı tercihinizi hatırlamak için kullanılır (<code>traplace_analytics_consent</code>)."
+            ]
+          },
+          {
+            "title": "2.3 Kısaltılmış URL'ler",
+            "content": "Kısaltılmış bir URL (<code>/s/&lt;code&gt;</code>) oluşturduğunuzda, kısa kod ile orijinal URL yolunuz arasındaki eşleşmeyi Redis'te yaşam süresi (TTL) ile geçici olarak saklarız. Bu veriler:",
+            "list": [
+              "Son erişimden itibaren 7 gün saklanır",
+              "Kısaltılmış URL'ye erişildiğinde TTL otomatik olarak 7 güne yenilenir",
+              "Herhangi bir kişisel bilgiyle bağlantılı değildir",
+              "Süre dolduktan sonra otomatik olarak silinir"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "3. Bilgilerinizi Nasıl Kullanıyoruz",
+        "list": [
+          "<strong>Analiz:</strong> Kullanım kalıplarını anlamak, özellikleri iyileştirmek ve hataları düzeltmek için",
+          "<strong>Hizmet İşletimi:</strong> Kısaltılmış URL işlevselliğini sağlamak için",
+          "<strong>Yasal Uyum:</strong> Geçerli yasa ve yönetmeliklere uymak için"
+        ]
+      },
+      {
+        "title": "4. Veri Paylaşımı",
+        "content": "Verilerinizi üçüncü taraflarla satmıyor, kiralamıyor veya paylaşmıyoruz, ancak şu durumlar hariçtir:",
+        "list": [
+          "<strong>Google Analytics:</strong> Anonim analiz verileri, Google tarafından gizlilik politikalarına göre işlenir",
+          "<strong>Yasal Gereklilikler:</strong> Kanun gereği veya haklarımızı korumak için gerekliyse"
+        ]
+      },
+      {
+        "title": "5. Haklarınız",
+        "content": "Şu haklara sahipsiniz:",
+        "list": [
+          "<strong>Analizden çıkma:</strong> Çerez onay bildiriminde \"Reddet\"e tıklayın",
+          "<strong>Verilerinizi silme:</strong> Tarayıcı çerezlerinizi ve URL geçmişinizi temizleyin. Sunucu tarafında hiçbir profil mevcut değildir.",
+          "<strong>Verilerinize erişim:</strong> Tüm harita verileriniz URL hash parçasında görünürdür"
+        ]
+      },
+      {
+        "title": "6. Veri Güvenliği",
+        "content": "Aşağıdakiler dahil olmak üzere makul güvenlik önlemleri uyguluyoruz:",
+        "list": [
+          "Tüm bağlantılar için HTTPS şifrelemesi",
+          "Güvenli çerez bayrakları (<code>SameSite=Lax; Secure</code>)",
+          "Google Analytics'te IP adresi anonimleştirmesi",
+          "Kalıcı kullanıcı profilleri veya hesapları yok"
+        ]
+      },
+      {
+        "title": "7. Uluslararası Kullanıcılar",
+        "content": "Hizmetimize dünya çapında erişilebilir. Analiz verileri Google tarafından çeşitli ülkelerde işlenebilir. GDPR ve benzer gizlilik düzenlemelerine uymak için verileri anonimleştiriyoruz."
+      },
+      {
+        "title": "8. Çocukların Gizliliği",
+        "content": "Hizmetimiz 13 yaşın altındaki çocukları hedeflememektedir. Çocuklardan bilerek kişisel bilgi toplamıyoruz."
+      },
+      {
+        "title": "9. Bu Politikadaki Değişiklikler",
+        "content": "Bu Gizlilik Politikasını zaman zaman güncelleyebiliriz. Değişiklikler, güncellenmiş bir \"Son güncelleme\" tarihi ile bu sayfada yayınlanacaktır."
+      },
+      {
+        "title": "10. Bize Ulaşın",
+        "content": "Bu Gizlilik Politikası hakkında sorularınız varsa, lütfen <a href=\"https://github.com/SangwoonYun/Traplace\" target=\"_blank\">GitHub depomuz</a> aracılığıyla bizimle iletişime geçin."
+      }
+    ]
+  },
+  "terms": {
+    "title": "Hizmet Şartları",
+    "lastUpdated": "Son güncelleme",
+    "backLink": "← Traplace'e Dön",
+    "sections": [
+      {
+        "title": "1. Şartların Kabulü",
+        "content": "Kingshot Traplace'e (\"Hizmet\", \"biz\", \"bizim\" veya \"bize\") erişerek veya kullanarak, bu Hizmet Şartlarına bağlı kalmayı kabul edersiniz. Bu şartları kabul etmiyorsanız, lütfen Hizmeti kullanmayın."
+      },
+      {
+        "title": "2. Hizmet Açıklaması",
+        "content": "Kingshot Traplace, Century Games Pte. Ltd. tarafından geliştirilen <strong>Kingshot</strong> mobil oyunu için ittifak yerleşimlerini planlamak ve görselleştirmek için ücretsiz, açık kaynaklı, web tabanlı bir yardımcı araçtır. Hizmet şunları yapmanıza olanak tanır:",
+        "list": [
+          "Izgara tabanlı bir harita üzerinde blokları yerleştirme ve düzenleme",
+          "Farklı boyut ve renklerde özel bloklar oluşturma",
+          "Düzenlerinizi URL veya kısaltılmış bağlantılar aracılığıyla paylaşma",
+          "Haritalarınızı PNG görüntüleri olarak dışa aktarma"
+        ]
+      },
+      {
+        "title": "3. Kullanıcı Sorumlulukları",
+        "subsections": [
+          {
+            "title": "3.1 Kabul Edilebilir Kullanım",
+            "content": "Hizmeti yalnızca yasal amaçlar için kullanmayı kabul edersiniz. YAPAMAYACAKLARINIZ:",
+            "list": [
+              "Hizmeti başkalarını taciz etmek, kötüye kullanmak veya zarar vermek için kullanmak",
+              "Hizmete veya altyapısına yetkisiz erişim sağlamaya çalışmak",
+              "Kötü amaçlı yazılım, spam veya zararlı içerik dağıtmak",
+              "Herhangi bir geçerli yasa veya yönetmeliği ihlal etmek",
+              "Aşırı kısaltılmış URL oluşturmak için otomatik sistemler (botlar) kullanmak"
+            ]
+          },
+          {
+            "title": "3.2 İçerik Sahipliği",
+            "content": "Oluşturduğunuz harita düzenleri ve konfigürasyonlar üzerindeki tüm hakları elinde tutarsınız. Bir URL'yi paylaşarak, başkalarına düzeninizi görüntüleme ve kopyalama izni verirsiniz. İçeriğinizin sahipliğini talep etmiyoruz."
+          }
+        ]
+      },
+      {
+        "title": "4. Hizmet Kullanılabilirliği",
+        "content": "Hizmeti <strong>\"OLDUĞU GİBİ\" ve \"MEVCUT OLDUĞU ŞEKILDE\"</strong> sunuyoruz. Garanti etmiyoruz:",
+        "list": [
+          "Sürekli, kesintisiz veya hatasız çalışma",
+          "Verilerinizin süresiz olarak korunacağı",
+          "Kısaltılmış URL'lerin TTL süresinin ötesinde aktif kalacağı"
+        ],
+        "footer": "Hizmeti herhangi bir zamanda bildirimde bulunmaksızın değiştirme, askıya alma veya durdurma hakkımızı saklı tutarız."
+      },
+      {
+        "title": "5. Veri ve Gizlilik",
+        "list": [
+          "Harita verileriniz tarayıcınızın URL'sinde yerel olarak saklanır. Harita konfigürasyonlarını sunucularımızda saklamıyoruz.",
+          "Kısaltılmış URL'ler, son erişimden itibaren 7 gün boyunca Redis'te geçici olarak önbelleğe alınır. Her erişim, TTL'yi 7 gün daha yeniler. URL'ler erişilmezse otomatik olarak sona erer.",
+          "Anonim analiz verilerini yalnızca onayınızla topluyoruz. Ayrıntılar için Gizlilik Politikamıza bakın."
+        ]
+      },
+      {
+        "title": "6. Fikri Mülkiyet",
+        "content": "Hizmetin kaynak kodu açık kaynaklıdır ve <a href=\"https://github.com/SangwoonYun/Traplace\" target=\"_blank\">GitHub</a> üzerinde mevcuttur. Kod, depoda belirtilen şartlar altında lisanslanmıştır.",
+        "footer": "\"Kingshot\" ve ilgili ticari markalar Century Games Pte. Ltd.'nin mülkiyetindedir. Bu Hizmet, hayran yapımı bir yardımcı araçtır ve <strong>Century Games Pte. Ltd. veya oyun geliştiricileri tarafından resmi olarak bağlı, onaylanmış veya herhangi bir şekilde ilişkilendirilmiş değildir.</strong> Oyunla ilgili tüm ticari markalar ve telif hakları ilgili sahiplerine aittir."
+      },
+      {
+        "title": "7. Garanti Reddi",
+        "content": "HİZMET, AŞAĞIDAKİLER DAHİL ANCAK BUNLARLA SINIRLI OLMAMAK ÜZERE HER TÜRLÜ AÇIK VEYA ZIMNİ GARANTİ OLMAKSIZIN \"OLDUĞU GİBİ\" SUNULMAKTADIR:",
+        "list": [
+          "Ticarete elverişlilik garantileri",
+          "Belirli bir amaca uygunluk",
+          "İhlal etmeme",
+          "Sonuçların doğruluğu veya güvenilirliği"
+        ]
+      },
+      {
+        "title": "8. Sorumluluk Sınırlaması",
+        "content": "KANUNUN İZİN VERDİĞİ AZAMİ ÖLÇÜDE, ŞUNLARDAN SORUMLU OLMAYACAĞIZ:",
+        "list": [
+          "Doğrudan, dolaylı, arızi veya sonuç olarak ortaya çıkan zararlar",
+          "Veri, kâr veya iş fırsatı kaybı",
+          "Hizmetin kullanımından veya kullanılamamasından kaynaklanan zararlar"
+        ],
+        "footer": "Bu, böyle bir zararın olasılığı konusunda bilgilendirilmiş olsak bile geçerlidir."
+      },
+      {
+        "title": "9. Tazminat",
+        "content": "Hizmeti kullanımınızdan veya bu Şartları ihlal etmenizden kaynaklanan tüm talep, zarar veya masraflardan bizi tazmin etmeyi ve zararsız tutmayı kabul edersiniz."
+      },
+      {
+        "title": "10. Üçüncü Taraf Hizmetleri",
+        "content": "Hizmet, aşağıdakiler dahil olmak üzere üçüncü taraf hizmetlerini kullanır:",
+        "list": [
+          "<strong>Google Analytics:</strong> Google'ın gizlilik politikası ve şartlarına tabidir",
+          "<strong>CDN'ler ve barındırma sağlayıcıları:</strong> İlgili şartlarına tabidir"
+        ],
+        "footer": "Üçüncü taraf hizmetlerinden veya politikalarından sorumlu değiliz."
+      },
+      {
+        "title": "11. Şartlarda Değişiklikler",
+        "content": "Bu Hizmet Şartlarını herhangi bir zamanda güncelleyebiliriz. Değişiklikler yayınlandıktan hemen sonra yürürlüğe girecektir. Hizmeti kullanmaya devam etmeniz, değiştirilmiş şartları kabul ettiğiniz anlamına gelir."
+      },
+      {
+        "title": "12. Fesih",
+        "content": "Bu Şartları ihlal etmek dahil olmak üzere herhangi bir nedenle, bildirimde bulunmaksızın, Hizmete erişiminizi herhangi bir zamanda feshetme veya kısıtlama hakkımızı saklı tutarız."
+      },
+      {
+        "title": "13. Uygulanacak Hukuk",
+        "content": "Bu Şartlar, kanunlar ihtilafı hükümleri dikkate alınmaksızın, Kore Cumhuriyeti yasalarına göre yönetilecek ve yorumlanacaktır."
+      },
+      {
+        "title": "14. İletişim Bilgileri",
+        "content": "Bu Şartlar hakkında sorularınız veya endişeleriniz için, lütfen <a href=\"https://github.com/SangwoonYun/Traplace\" target=\"_blank\">GitHub depomuz</a> aracılığıyla bizimle iletişime geçin."
+      }
+    ]
+  },
+  "footer": {
+    "home": "Ana Sayfa",
+    "privacy": "Gizlilik Politikası",
+    "terms": "Hizmet Şartları",
+    "github": "GitHub"
+  }
+}

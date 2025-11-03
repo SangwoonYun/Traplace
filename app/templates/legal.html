@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="{{ lang }}" {% if lang="" ="ar" %}dir="rtl" {% endif %}>
+  <head>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', 'GTM-M2J65D6M');
+    </script>
+    <!-- End Google Tag Manager -->
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ page_title }} - Kingshot Traplace</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          'Noto Sans KR',
+          Helvetica,
+          Arial,
+          sans-serif;
+        line-height: 1.6;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        color: #333;
+      }
+      h1 {
+        color: #1976d2;
+        border-bottom: 3px solid #1976d2;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #1976d2;
+        margin-top: 30px;
+        margin-bottom: 15px;
+      }
+      h3 {
+        color: #555;
+        margin-top: 20px;
+        margin-bottom: 10px;
+      }
+      a {
+        color: #1976d2;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        padding: 8px 16px;
+        background: #1976d2;
+        color: white;
+        border-radius: 4px;
+        text-decoration: none;
+      }
+      .back-link:hover {
+        background: #1565c0;
+        text-decoration: none;
+      }
+      .last-updated {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 30px;
+      }
+      ul {
+        padding-left: 30px;
+      }
+      li {
+        margin-bottom: 8px;
+      }
+      code {
+        background: #f5f5f5;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Courier New', monospace;
+      }
+      strong {
+        font-weight: 600;
+      }
+      .not-collected {
+        margin-top: 15px;
+      }
+      .subsection {
+        margin-left: 20px;
+      }
+      .section-footer {
+        margin-top: 15px;
+        font-style: italic;
+      }
+      /* Language selector */
+      .lang-selector {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 8px 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .lang-selector select {
+        border: none;
+        background: transparent;
+        font-size: 14px;
+        cursor: pointer;
+        padding: 4px;
+      }
+      .lang-selector select:focus {
+        outline: none;
+      }
+      @media (max-width: 768px) {
+        body {
+          padding: 20px 15px;
+        }
+        .lang-selector {
+          position: static;
+          margin-bottom: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-M2J65D6M"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Language Selector -->
+    <div class="lang-selector">
+      <select id="langSelect" onchange="changeLang(this.value)">
+        <option value="en" {% if lang="" ="en" %}selected{% endif %}>🇺🇸 English</option>
+        <option value="ko" {% if lang="" ="ko" %}selected{% endif %}>🇰🇷 한국어</option>
+        <option value="zh-CN" {% if lang="" ="zh-CN" %}selected{% endif %}>🇨🇳 简体中文</option>
+        <option value="zh-TW" {% if lang="" ="zh-TW" %}selected{% endif %}>🇹🇼 繁體中文</option>
+        <option value="ja" {% if lang="" ="ja" %}selected{% endif %}>🇯🇵 日本語</option>
+        <option value="fr" {% if lang="" ="fr" %}selected{% endif %}>🇫🇷 Français</option>
+        <option value="de" {% if lang="" ="de" %}selected{% endif %}>🇩🇪 Deutsch</option>
+        <option value="es" {% if lang="" ="es" %}selected{% endif %}>🇪🇸 Español</option>
+        <option value="it" {% if lang="" ="it" %}selected{% endif %}>🇮🇹 Italiano</option>
+        <option value="pl" {% if lang="" ="pl" %}selected{% endif %}>🇵🇱 Polski</option>
+        <option value="pt" {% if lang="" ="pt" %}selected{% endif %}>🇵🇹 Português</option>
+        <option value="tr" {% if lang="" ="tr" %}selected{% endif %}>🇹🇷 Türkçe</option>
+        <!-- <option value="ar" {% if lang=='ar' %}selected{% endif %}>🇸🇦 العربية</option> -->
+        <option value="th" {% if lang="" ="th" %}selected{% endif %}>🇹🇭 ไทย</option>
+        <option value="id" {% if lang="" ="id" %}selected{% endif %}>🇮🇩 Indonesia</option>
+      </select>
+    </div>
+
+    <a href="{{ url_for('core.index') }}?lang={{ lang }}" class="back-link">{{ data.backLink }}</a>
+
+    <h1>{{ data.title }}</h1>
+    <p class="last-updated">{{ data.lastUpdated }}: {{ last_updated }}</p>
+
+    {% if is_machine_translated %}
+    <div
+      style="
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+      "
+    >
+      <p style="margin: 0; font-size: 14px; color: #856404">
+        <strong>⚠️ Machine Translation Notice:</strong> This page has been automatically translated.
+        The English and Korean versions are the only official versions. If you find any translation
+        errors, please refer to the
+        <a href="?lang=en" style="color: #856404; text-decoration: underline">English version</a>.
+      </p>
+    </div>
+    {% endif %} {% for section in data.sections %}
+    <h2>{{ section.title }}</h2>
+
+    {% if section.content %}
+    <p>{{ section.content|safe }}</p>
+    {% endif %} {% if section.list %}
+    <ul>
+      {% for item in section.list %}
+      <li>{{ item|safe }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% if section.notCollected %}
+    <div class="not-collected">
+      <p><strong>{{ section.notCollected.title }}</strong></p>
+      <ul>
+        {% for item in section.notCollected.list %}
+        <li>{{ item|safe }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %} {% if section.subsections %} {% for subsection in section.subsections %}
+    <div class="subsection">
+      <h3>{{ subsection.title }}</h3>
+      {% if subsection.content %}
+      <p>{{ subsection.content|safe }}</p>
+      {% endif %} {% if subsection.list %}
+      <ul>
+        {% for item in subsection.list %}
+        <li>{{ item|safe }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %} {% if subsection.notCollected %}
+      <div class="not-collected">
+        <p><strong>{{ subsection.notCollected.title }}</strong></p>
+        <ul>
+          {% for item in subsection.notCollected.list %}
+          <li>{{ item|safe }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %} {% endif %} {% if section.footer %}
+    <p class="section-footer">{{ section.footer|safe }}</p>
+    {% endif %} {% endfor %}
+
+    <hr style="margin: 40px 0; border: none; border-top: 1px solid #ddd" />
+    <p style="text-align: center; color: #666; font-size: 14px">
+      <a href="{{ url_for('core.index') }}?lang={{ lang }}">{{ footer.home }}</a> •
+      <a href="{{ url_for('policies.privacy') }}?lang={{ lang }}">{{ footer.privacy }}</a> •
+      <a href="{{ url_for('policies.terms') }}?lang={{ lang }}">{{ footer.terms }}</a> •
+      <a href="https://github.com/SangwoonYun/Traplace" target="_blank">{{ footer.github }}</a>
+    </p>
+
+    <script>
+      function changeLang(newLang) {
+        const currentPath = window.location.pathname;
+        window.location.href = currentPath + '?lang=' + newLang;
+      }
+    </script>
+  </body>
+</html>
