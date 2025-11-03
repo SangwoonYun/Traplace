@@ -3,3 +3,5 @@ node_modules
 dist
 *.min.js
 static/img
+# Jinja2 templates (Prettier breaks Jinja2 syntax)
+app/templates/**/*.html
