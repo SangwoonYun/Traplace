@@ -71,7 +71,10 @@
 
 .usage-content {
   overflow: hidden;
-  transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.3s ease,
+    margin-top 0.3s ease;
   max-height: 500px;
   opacity: 1;
   margin-top: 8px;
