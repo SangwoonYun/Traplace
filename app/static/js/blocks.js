@@ -13,18 +13,161 @@ import { t } from './i18n.js';
 import { onCreateBlock, onDeleteBlock } from './counters.js';
 
 /* ---------------------------------------------
+ * Map Z-Index Management
+ * ------------------------------------------- */
+
+/**
+ * Update map layers z-index to stay below all blocks
+ */
+export function updateMapZIndex() {
+  // Find the minimum z-index among all blocks
+  const minBlockZIndex = state.blocks.reduce((min, b) => {
+    const z = b.zIndex !== undefined ? b.zIndex : 1;
+    return Math.min(min, z);
+  }, 1);
+
+  // Set map z-index to 1 below the minimum block z-index
+  const mapZIndex = minBlockZIndex - 1;
+
+  // Apply to all map layers including the grid
+  const mapLayers = ['tiles', 'tilesPreview', 'outlines', 'outlinesPreview', 'tilesUser'];
+  mapLayers.forEach(id => {
+    const layer = document.getElementById(id);
+    if (layer) {
+      layer.style.zIndex = String(mapZIndex);
+    }
+  });
+
+  // Also apply to grid element (selected by class)
+  const gridEl = document.querySelector('.grid');
+  if (gridEl) {
+    gridEl.style.zIndex = String(mapZIndex);
+  }
+}
+
+/* ---------------------------------------------
  * Styling
  * ------------------------------------------- */
+
+/**
+ * Check if two blocks overlap
+ * @param {{left:number, top:number, size:number}} b1
+ * @param {{left:number, top:number, size:number}} b2
+ * @returns {boolean}
+ */
+function blocksOverlap(b1, b2) {
+  const cell = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cell')) || 48;
+  
+  const b1Right = b1.left + b1.size * cell;
+  const b1Bottom = b1.top + b1.size * cell;
+  const b2Right = b2.left + b2.size * cell;
+  const b2Bottom = b2.top + b2.size * cell;
+
+  // Check if rectangles overlap
+  return !(b1Right <= b2.left || 
+           b1.left >= b2Right || 
+           b1Bottom <= b2.top || 
+           b1.top >= b2Bottom);
+}
+
+/**
+ * Move block to the front (above all overlapping blocks)
+ * @param {{el:HTMLElement, left:number, top:number, size:number, zIndex:number}} block
+ */
+function bringToFront(block) {
+  // Find all blocks that overlap with this one
+  const overlapping = state.blocks.filter(b => 
+    b !== block && blocksOverlap(block, b)
+  );
+
+  if (overlapping.length === 0) {
+    // No overlapping blocks, just ensure it's at least 1
+    block.zIndex = Math.max(1, block.zIndex !== undefined ? block.zIndex : 1);
+  } else {
+    // Find the max z-index among overlapping blocks
+    const maxZ = Math.max(...overlapping.map(b => b.zIndex !== undefined ? b.zIndex : 1));
+    // Set this block's z-index to be above all overlapping blocks
+    block.zIndex = maxZ + 1;
+  }
+
+  block.el.style.zIndex = String(block.zIndex);
+  block.el.dataset.zIndex = String(block.zIndex);
+  
+  // Visual feedback
+  flashBlock(block.el);
+  
+  // Adjust map z-index to stay below all blocks
+  updateMapZIndex();
+}
+
+/**
+ * Send block to the back (below all overlapping blocks)
+ * @param {{el:HTMLElement, left:number, top:number, size:number, zIndex:number}} block
+ */
+function sendToBack(block) {
+  // Find all blocks that overlap with this one
+  const overlapping = state.blocks.filter(b => 
+    b !== block && blocksOverlap(block, b)
+  );
+
+  if (overlapping.length === 0) {
+    // No overlapping blocks, set to 0
+    block.zIndex = 0;
+  } else {
+    // Find the min z-index among overlapping blocks
+    const minZ = Math.min(...overlapping.map(b => b.zIndex !== undefined ? b.zIndex : 1));
+    // Set this block's z-index to be below all overlapping blocks (allow negative values)
+    block.zIndex = minZ - 1;
+  }
+
+  block.el.style.zIndex = String(block.zIndex);
+  block.el.dataset.zIndex = String(block.zIndex);
+  
+  // Visual feedback
+  flashBlock(block.el);
+  
+  // Adjust map z-index to stay below all blocks
+  updateMapZIndex();
+}
+
+/**
+ * Flash animation to indicate z-index change
+ * @param {HTMLElement} el
+ */
+function flashBlock(el) {
+  el.style.transition = 'opacity 0.2s';
+  el.style.opacity = '0.5';
+  setTimeout(() => {
+    el.style.opacity = '1';
+    setTimeout(() => {
+      el.style.transition = '';
+    }, 200);
+  }, 100);
+}
+
 /**
  * Apply visual style to a block based on validity and kind.
- * @param {{el:HTMLElement, kind:string}} b
+ * @param {{el:HTMLElement, kind:string, customColor?:object}} b
  * @param {boolean} invalid
  */
 function applyBlockStyle(b, invalid) {
   const el = b.el;
+  
+  // If block has custom color, use it
+  if (b.customColor) {
+    el.style.background = b.customColor.bg;
+    el.style.borderColor = b.customColor.border;
+    return;
+  }
+  
   if (b.kind === 'resource') {
     el.style.background = 'var(--resource-bg)';
     el.style.borderColor = 'var(--resource-border)';
+    return;
+  }
+  if (b.kind === 'city') {
+    el.style.background = 'var(--city-bg)';
+    el.style.borderColor = 'var(--city-border)';
     return;
   }
   if (invalid) {
@@ -60,15 +203,15 @@ export function validateAllObjects() {
 }
 
 /* ---------------------------------------------
- * Label Editing (city only)
+ * Label Editing (city and block)
  * ------------------------------------------- */
 /**
- * Start inline editing for a city's label.
+ * Start inline editing for a city's or block's label.
  * @param {HTMLElement} blockEl
  */
 function startEditLabel(blockEl) {
   const b = state.blocks.find((x) => x.el === blockEl);
-  if (!b || b.kind !== 'city') return;
+  if (!b || (b.kind !== 'city' && b.kind !== 'block')) return;
 
   const label = blockEl.querySelector('.label');
   if (!label) return;
@@ -120,16 +263,16 @@ function finishEditLabel(blockEl, cancel) {
   const label = blockEl.querySelector('.label');
   if (!b || !label) return;
 
-  const defaultCity = t('palette.city');
+  const defaultLabel = b.kind === 'city' ? t('palette.city') : `${b.size}×${b.size}`;
 
   if (cancel) {
-    label.textContent = b._labelOriginal ?? defaultCity;
+    label.textContent = b._labelOriginal ?? defaultLabel;
   } else {
     const txt = (label.textContent || '').trim();
     if (!txt) {
-      label.textContent = defaultCity;
+      label.textContent = defaultLabel;
       b.customLabel = false;
-    } else if (txt === defaultCity) {
+    } else if (txt === defaultLabel) {
       b.customLabel = false;
     } else {
       b.customLabel = true;
@@ -196,7 +339,25 @@ export function createBlock(kind, size, left, top) {
               : `${size}×${size}`;
   el.appendChild(label);
 
-  if (kind === 'city') {
+  // Add z-index controls
+  const controls = document.createElement('div');
+  controls.className = 'block-controls';
+  
+  const btnForward = document.createElement('button');
+  btnForward.className = 'z-control z-forward';
+  btnForward.textContent = '▲';
+  btnForward.title = 'Avancer d\'un plan';
+  
+  const btnBackward = document.createElement('button');
+  btnBackward.className = 'z-control z-backward';
+  btnBackward.textContent = '▼';
+  btnBackward.title = 'Reculer d\'un plan';
+  
+  controls.appendChild(btnForward);
+  controls.appendChild(btnBackward);
+  el.appendChild(controls);
+
+  if (kind === 'city' || kind === 'block') {
     el.addEventListener('dblclick', (e) => {
       e.stopPropagation();
       startEditLabel(el);
@@ -205,16 +366,52 @@ export function createBlock(kind, size, left, top) {
 
   rot.appendChild(el);
 
-  /** @type {{el:HTMLElement, kind:string, size:number, left:number, top:number, customLabel:boolean}} */
-  const b = { el, kind, size, left, top, customLabel: false };
+  /** @type {{el:HTMLElement, kind:string, size:number, left:number, top:number, customLabel:boolean, zIndex:number, customColor?:object}} */
+  const b = { el, kind, size, left, top, customLabel: false, zIndex: 1 };
   state.blocks.push(b);
   applyBlockStyle(b, false);
+
+  // Wire up z-index controls
+  btnForward.addEventListener('click', (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    bringToFront(b);
+    queueSaveToURL();
+    saveCheckpoint();
+  });
+
+  btnBackward.addEventListener('click', (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    sendToBack(b);
+    queueSaveToURL();
+    saveCheckpoint();
+  });
+
+  // Prevent all drag-related events on z-control buttons
+  const preventDrag = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+  };
+
+  btnForward.addEventListener('mousedown', preventDrag);
+  btnForward.addEventListener('dragstart', preventDrag);
+  btnForward.addEventListener('drag', preventDrag);
+  
+  btnBackward.addEventListener('mousedown', preventDrag);
+  btnBackward.addEventListener('dragstart', preventDrag);
+  btnBackward.addEventListener('drag', preventDrag);
+
+  // Also prevent on the controls container
+  controls.addEventListener('mousedown', preventDrag);
+  controls.addEventListener('dragstart', preventDrag);
 
   if (!state._restoring) {
     recomputePaint();
     validateAllObjects();
     queueSaveToURL();
     saveCheckpoint();
+    updateMapZIndex();
   }
 
   onCreateBlock(b);
@@ -267,5 +464,6 @@ export function deleteBlock(el) {
     validateAllObjects();
     queueSaveToURL();
     saveCheckpoint();
+    updateMapZIndex();
   }
 }

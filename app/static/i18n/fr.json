@@ -2,8 +2,13 @@
   "app": { "title": "Simulateur de Placement d'Alliance" },
   "ui": {
     "usageTitle": "Comment utiliser",
-    "usage": "• <b>Glisser-déposer</b> : placez des éléments depuis la palette de gauche (alignement sur la grille).<br>• <b>Glisser avec le bouton du milieu</b> : déplacer la vue.<br>• <b>Ctrl/⌘ + Molette</b> : zoom avant/arrière.<br>• <b>Pincement sur le pavé tactile</b> : zoomer/dézoomer.<br>• <b>Cliquez sur une cellule</b> : activer/désactiver la peinture rouge.<br>• Étiquette de <b>ville</b> : double-cliquez → modifier (Entrée pour enregistrer / Échap pour annuler).<br>• Zone inférieure <b>🗑</b> : faites glisser un élément ici pour le supprimer.<br>※ La peinture bleue est générée par les <b>bannières (7×7)</b> et les <b>QG (15×15)</b>.",
+    "usage": "• <b>Glisser-déposer</b> : placez des éléments depuis la palette de gauche (alignement sur la grille).<br>• <b>Glisser avec le bouton du milieu</b> : déplacer la vue.<br>• <b>Ctrl/⌘ + Molette</b> : zoom avant/arrière.<br>• <b>Pincement sur le pavé tactile</b> : zoomer/dézoomer.<br>• <b>Cliquez sur une cellule</b> : activer/désactiver la peinture rouge.<br>• Étiquette de <b>ville/bloc</b> : double-cliquez → modifier (Entrée pour enregistrer / Échap pour annuler).<br>• Zone inférieure <b>🗑</b> : faites glisser un élément ici pour le supprimer.<br>※ La peinture bleue est générée par les <b>bannières (7×7)</b> et les <b>QG (15×15)</b>.",
     "paletteTitle": "Palette",
+    "customBlock": {
+      "size": "Taille personnalisée",
+      "create": "Créer",
+      "color": "Couleur"
+    },
     "toolbar": {
       "undo": "Annuler",
       "redo": "Rétablir",
@@ -34,7 +39,8 @@
     "resource": "Ressource",
     "block1": "1×1",
     "block2": "2×2",
-    "block3": "3×3"
+    "block3": "3×3",
+    "block10": "10×10"
   },
   "alert": {
     "noCities": "Aucune ville.",

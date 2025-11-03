@@ -161,13 +161,26 @@ export function serializeState() {
 
     let token = `${code}${size36}@${cx36},${cy36}`;
 
-    // Persist city label only when truly custom (avoid saving defaults).
-    if (b.kind === 'city') {
+    // Add z-index if explicitly set and different from default (1)
+    const currentZIndex = b.zIndex !== undefined ? b.zIndex : 1;
+    if (currentZIndex !== 1) {
+      token += `^${toB36(currentZIndex)}`;
+    }
+
+    // Add custom color if set
+    if (b.customColor) {
+      const colorStr = `${b.customColor.bg}|${b.customColor.border}`;
+      token += `#${encodeURIComponent(colorStr)}`;
+    }
+
+    // Persist city/block label only when truly custom
+    if (b.kind === 'city' || b.kind === 'block') {
       const labelEl = b.el?.querySelector('.label');
       const label = (labelEl?.textContent || '').trim();
+      const defaultLabel = b.kind === 'city' ? '도시' : `${b.size}×${b.size}`;
 
       // Treat both Korean and English defaults as non-custom
-      if (label && label !== '도시' && label !== 'City') {
+      if (label && label !== defaultLabel && label !== 'City' && label !== 'Town') {
         token += `~${encodeURIComponent(label)}`;
       }
     }
@@ -187,7 +200,7 @@ export function serializeState() {
 /**
  * Parse a querystring (hash payload) back to state fragments.
  * @param {string} qs
- * @returns {{blocks: Array<{kind:string,size:number,cx:number,cy:number,label?:string}>, red: string[], ver: string}}
+ * @returns {{blocks: Array<{kind:string,size:number,cx:number,cy:number,label?:string,zIndex?:number,customColor?:object}>, red: string[], ver: string}}
  */
 export function deserializeState(qs) {
   const params = new URLSearchParams(qs);
@@ -205,12 +218,36 @@ export function deserializeState(qs) {
     const head = token.slice(0, atIdx);
     let tail = token.slice(atIdx + 1);
 
-    // Optional label part split by "~"
+    // Parse optional parts in order: label (~), customColor (#), zIndex (^)
+    // We need to parse in reverse order to avoid conflicts
+    let zIndex;
+    let customColor;
     let label;
+
+    // Extract label first (always at the end after ~)
     const tildeIdx = tail.indexOf('~');
     if (tildeIdx >= 0) {
       label = decodeURIComponent(tail.slice(tildeIdx + 1));
       tail = tail.slice(0, tildeIdx);
+    }
+
+    // Extract custom color (after #, before ~)
+    const hashIdx = tail.indexOf('#');
+    if (hashIdx >= 0) {
+      const colorStr = decodeURIComponent(tail.slice(hashIdx + 1));
+      const [bg, border] = colorStr.split('|');
+      if (bg && border) {
+        customColor = { bg, border };
+      }
+      tail = tail.slice(0, hashIdx);
+    }
+
+    // Extract z-index (after ^, before # and ~)
+    const caretIdx = tail.indexOf('^');
+    if (caretIdx >= 0) {
+      const zIndexStr = tail.slice(caretIdx + 1);
+      zIndex = parseInt(zIndexStr, 36);
+      tail = tail.slice(0, caretIdx);
     }
 
     const code = head[0];
@@ -222,7 +259,7 @@ export function deserializeState(qs) {
     const cy = isV2 ? parseInt(cyStr, 36) : parseInt(cyStr, 10) || 0;
 
     const kind = CODE_TO_KIND[code] || 'block';
-    blocks.push({ kind, size, cx, cy, label });
+    blocks.push({ kind, size, cx, cy, label, zIndex, customColor });
   }
 
   const redParam = params.get('r') || '';

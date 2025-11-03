@@ -220,15 +220,27 @@ function strokeCellPerimeter(ctx, set, x, y, color, lineWidth = 2, dashed = fals
 
 /**
  * Return block fill/stroke styles based on validity against the painted set.
- * @param {{left:number, top:number, size:number, kind:string}} b
+ * Note: Custom colors (b.customColor) are handled separately in the render loop.
+ * @param {{left:number, top:number, size:number, kind:string, customColor?:object}} b
  * @param {Set<string>} paintedSet
  * @returns {{fill:string, stroke:string}}
  */
 function styleForBlock(b, paintedSet) {
+  // If block has custom color, it will be applied in the render loop
+  if (b.customColor) {
+    return { fill: b.customColor.bg, stroke: b.customColor.border };
+  }
+
   if (b.kind === 'resource') {
     return {
       fill: cssVar('--resource-bg', '#ffe5e5'),
       stroke: cssVar('--resource-border', '#d00000'),
+    };
+  }
+  if (b.kind === 'city') {
+    return {
+      fill: cssVar('--city-bg', '#e3f2fd'),
+      stroke: cssVar('--city-border', '#1976d2'),
     };
   }
   const { cx, cy } = posToCell(b.left, b.top);
@@ -447,8 +459,15 @@ export async function exportPNG() {
   }
   ctx.restore();
 
-  /* 5) Blocks + labels (labels localized via i18n) */
-  for (const b of state.blocks) {
+  /* 5) Blocks + labels (sorted by z-index, labels include custom names) */
+  // Sort blocks by z-index to respect layering (back to front)
+  const sortedBlocks = [...state.blocks].sort((a, b) => {
+    const zA = a.zIndex !== undefined ? a.zIndex : 1;
+    const zB = b.zIndex !== undefined ? b.zIndex : 1;
+    return zA - zB;
+  });
+
+  for (const b of sortedBlocks) {
     const st = styleForBlock(b, painted);
     const { cx, cy } = posToCell(b.left, b.top);
     const x = cx * cellSize,
@@ -459,16 +478,21 @@ export async function exportPNG() {
     // Skip outside crop
     if (x > offX + widthPx || x + w < offX || y > offY + heightPx || y + h < offY) continue;
 
-    // Box
+    // Box (with custom color if specified)
     ctx.save();
-    ctx.fillStyle = st.fill;
-    ctx.strokeStyle = st.stroke;
+    if (b.customColor) {
+      ctx.fillStyle = b.customColor.bg;
+      ctx.strokeStyle = b.customColor.border;
+    } else {
+      ctx.fillStyle = st.fill;
+      ctx.strokeStyle = st.stroke;
+    }
     ctx.lineWidth = 1.5;
     ctx.fillRect(x, y, w, h);
     ctx.strokeRect(x, y, w, h);
     ctx.restore();
 
-    // Label text — use i18n defaults; preserve city edits
+    // Label text — use i18n defaults; preserve all custom labels (city or custom blocks)
     const labelEl = b.el?.querySelector('.label');
     let text =
       b.kind === 'flag'
@@ -484,7 +508,8 @@ export async function exportPNG() {
                 : `${b.size}×${b.size}`;
 
     const userText = (labelEl?.textContent || '').trim();
-    if (b.kind === 'city' && userText) text = userText;
+    // Use custom label for cities OR custom blocks (kind === 'block')
+    if ((b.kind === 'city' || b.kind === 'block') && userText) text = userText;
 
     // Label is drawn horizontally in projected coordinates
     const Xc = x + w / 2;
@@ -493,7 +518,7 @@ export async function exportPNG() {
 
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.font = 'bold 14px system-ui, -apple-system, Segoe UI, Roboto, Arial';
+    ctx.font = 'bold 22px system-ui, -apple-system, Segoe UI, Roboto, Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = '#333';

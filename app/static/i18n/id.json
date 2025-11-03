@@ -4,6 +4,11 @@
     "usageTitle": "Cara Menggunakan",
     "usage": "• <b>Seret dan lepas</b>: tempatkan item dari palet di sisi kiri (terkunci ke kisi).<br>• <b>Seret dengan tombol tengah mouse</b>: geser tampilan.<br>• <b>Ctrl/⌘ + Roda mouse</b>: perbesar/perkecil.<br>• <b>Cubit pada touchpad</b>: perbesar atau perkecil.<br>• <b>Klik sel</b>: aktifkan/nonaktifkan cat merah.<br>• <b>Label kota</b>: klik dua kali → edit (Enter untuk menyimpan / Esc untuk membatalkan).<br>• <b>Area bawah 🗑</b>: seret item ke sini untuk menghapusnya.<br>※ Cat biru dihasilkan oleh <b>Bendera (7×7)</b> dan <b>Markas Besar (15×15)</b>.",
     "paletteTitle": "Palet",
+    "customBlock": {
+      "size": "Ukuran khusus",
+      "create": "Buat",
+      "color": "Warna"
+    },
     "toolbar": {
       "undo": "Batalkan",
       "redo": "Ulangi",
@@ -34,7 +39,8 @@
     "resource": "Sumber Daya",
     "block1": "1×1",
     "block2": "2×2",
-    "block3": "3×3"
+    "block3": "3×3",
+    "block10": "10×10"
   },
   "alert": {
     "noCities": "Tidak ada kota.",

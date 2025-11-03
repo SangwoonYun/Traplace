@@ -159,8 +159,19 @@ function updateDragAt(clientX, clientY) {
   const { size, kind } = state.drag;
   const cpx = cellPx();
 
-  const left = x - (size * cpx) / 2;
-  const top = y - (size * cpx) / 2;
+  // Calculate position based on drag mode
+  let left, top;
+  
+  if (state.drag.mode === 'move' && state.drag.offsetX !== undefined && state.drag.offsetY !== undefined) {
+    // For moving existing blocks: use the stored offset to maintain grab point
+    left = x - state.drag.offsetX;
+    top = y - state.drag.offsetY;
+  } else {
+    // For new blocks from palette: center on cursor
+    left = x - (size * cpx) / 2;
+    top = y - (size * cpx) / 2;
+  }
+
   const snapped = snapLocal(left, top, size);
 
   snapEl.style.display = 'block';
@@ -168,6 +179,12 @@ function updateDragAt(clientX, clientY) {
   snapEl.style.top = `${snapped.top}px`;
   snapEl.style.width = `${size * cpx}px`;
   snapEl.style.height = `${size * cpx}px`;
+
+  // If moving an existing block, update its visual position to follow cursor (unsnapped)
+  if (state.drag.mode === 'move' && state.drag.node) {
+    state.drag.node.style.left = `${left}px`;
+    state.drag.node.style.top = `${top}px`;
+  }
 
   if (PAINTER_KINDS.has(kind)) {
     showPreview(kind, snapped.left, snapped.top, size, true);
@@ -177,13 +194,27 @@ function updateDragAt(clientX, clientY) {
   }
 
   if (state.drag.ghost) {
-    updateGhost(clientX, clientY, size * cpx);
+    // For moving existing blocks, calculate ghost position to match the block's visual offset
+    if (state.drag.mode === 'move' && state.drag.node) {
+      // Get the block's current visual position in screen space
+      const blockRect = state.drag.node.getBoundingClientRect();
+      const blockCenterX = blockRect.left + blockRect.width / 2;
+      const blockCenterY = blockRect.top + blockRect.height / 2;
+      
+      // Position ghost centered on the block's visual position
+      updateGhost(blockCenterX, blockCenterY, size * cpx, true);
+    } else {
+      // For new blocks, center on cursor
+      updateGhost(clientX, clientY, size * cpx, false);
+    }
   }
 }
 
 /** Position the floating ghost under the cursor (screen coordinates). */
-function updateGhost(clientX, clientY, px) {
+function updateGhost(clientX, clientY, px, centerOnPosition = false) {
   if (!state.drag?.ghost) return;
+  
+  // Always center the ghost on the given position
   state.drag.ghost.style.left = `${clientX - px / 2}px`;
   state.drag.ghost.style.top = `${clientY - px / 2}px`;
 }
@@ -375,9 +406,19 @@ function onPointerUp(e) {
     } else {
       const { x, y } = clientToLocalRot(e.clientX, e.clientY);
       const size = state.drag.size;
-      const cpx = cellPx();
-      const left = x - (size * cpx) / 2;
-      const top = y - (size * cpx) / 2;
+      
+      // Use the stored offset to calculate final position
+      let left, top;
+      if (state.drag.offsetX !== undefined && state.drag.offsetY !== undefined) {
+        left = x - state.drag.offsetX;
+        top = y - state.drag.offsetY;
+      } else {
+        // Fallback to center (shouldn't happen but just in case)
+        const cpx = cellPx();
+        left = x - (size * cpx) / 2;
+        top = y - (size * cpx) / 2;
+      }
+      
       const snapped = snapLocal(left, top, size);
 
       updateBlockPosition(state.drag.node, snapped.left, snapped.top);
@@ -534,6 +575,12 @@ export function makeMovable(el) {
     if (e.button !== 0) return;
     if (el.dataset.editing === '1') return; // while editing city label
 
+    // Check if click is on z-index controls
+    const target = e.target;
+    if (target.closest('.block-controls') || target.classList.contains('z-control')) {
+      return; // Don't start drag if clicking on z-index controls
+    }
+
     const isTouch = e.pointerType === 'touch';
     const sx = e.clientX;
     const sy = e.clientY;
@@ -553,6 +600,13 @@ export function makeMovable(el) {
       const kind = el.dataset.kind;
       const px = size * cellPx();
 
+      // Calculate the offset between cursor and block's current position
+      const { x, y } = clientToLocalRot(sx, sy);
+      const currentLeft = parseFloat(el.style.left) || 0;
+      const currentTop = parseFloat(el.style.top) || 0;
+      const offsetX = x - currentLeft;
+      const offsetY = y - currentTop;
+
       const ghost = document.createElement('div');
       ghost.className = 'ghost';
       ghost.style.width = `${px}px`;
@@ -569,8 +623,23 @@ export function makeMovable(el) {
       // lifted visual on original
       el.classList.add('is-lifted');
 
-      state.drag = { mode: 'move', size, kind, node: el, ghost, pointerId: e.pointerId };
-      updateGhost(e.clientX, e.clientY, px);
+      state.drag = { 
+        mode: 'move', 
+        size, 
+        kind, 
+        node: el, 
+        ghost, 
+        pointerId: e.pointerId,
+        offsetX,  // Store the offset
+        offsetY   // Store the offset
+      };
+      
+      // Position ghost immediately at the block's visual position (not cursor)
+      const blockRect = el.getBoundingClientRect();
+      const blockCenterX = blockRect.left + blockRect.width / 2;
+      const blockCenterY = blockRect.top + blockRect.height / 2;
+      ghost.style.left = `${blockCenterX - px / 2}px`;
+      ghost.style.top = `${blockCenterY - px / 2}px`;
 
       window.addEventListener('pointermove', onPointerMove);
       window.addEventListener('pointerup', onPointerUp, { once: true });

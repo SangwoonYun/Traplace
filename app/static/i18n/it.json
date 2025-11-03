@@ -4,6 +4,11 @@
     "usageTitle": "Come usare",
     "usage": "• <b>Trascina e rilascia</b>: posiziona gli elementi dalla tavolozza a sinistra (allineamento alla griglia).<br>• <b>Trascina con il pulsante centrale del mouse</b>: sposta la visuale.<br>• <b>Ctrl/⌘ + Rotellina del mouse</b>: ingrandisci/riduci.<br>• <b>Pizzica sul touchpad</b>: ingrandisci o riduci.<br>• <b>Fai clic su una cella</b>: attiva/disattiva la vernice rossa.<br>• Etichetta <b>Città</b>: doppio clic → modifica (Invio per salvare / Esc per annullare).<br>• <b>Area inferiore 🗑</b>: trascina un elemento qui per eliminarlo.<br>※ La vernice blu è generata da <b>Bandiera (7×7)</b> e <b>Quartier Generale (15×15)</b>.",
     "paletteTitle": "Tavolozza",
+    "customBlock": {
+      "size": "Dimensione personalizzata",
+      "create": "Crea",
+      "color": "Colore"
+    },
     "toolbar": {
       "undo": "Annulla",
       "redo": "Ripeti",
@@ -34,7 +39,8 @@
     "resource": "Risorsa",
     "block1": "1×1",
     "block2": "2×2",
-    "block3": "3×3"
+    "block3": "3×3",
+    "block10": "10×10"
   },
   "alert": {
     "noCities": "Nessuna città.",
