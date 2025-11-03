@@ -106,6 +106,34 @@ window.addEventListener('load', async () => {
   updateLegalLinks(currentLang());
 
   /* ---------------------------------------------
+   * Setup usage section toggle
+   * ------------------------------------------- */
+  const usageToggle = document.getElementById('usageToggle');
+  const usageContent = document.getElementById('usageContent');
+
+  if (usageToggle && usageContent) {
+    // Load saved state from localStorage (default: collapsed)
+    const savedState = localStorage.getItem('usageExpanded');
+
+    // If user previously expanded it, restore that state
+    if (savedState === 'true') {
+      usageContent.classList.remove('collapsed');
+      usageToggle.setAttribute('aria-expanded', 'true');
+    }
+
+    usageToggle.addEventListener('click', () => {
+      const isExpanded = usageToggle.getAttribute('aria-expanded') === 'true';
+      const newExpandedState = !isExpanded;
+
+      usageToggle.setAttribute('aria-expanded', newExpandedState);
+      usageContent.classList.toggle('collapsed');
+
+      // Save expanded state to localStorage
+      localStorage.setItem('usageExpanded', newExpandedState);
+    });
+  }
+
+  /* ---------------------------------------------
    * Restore from URL (blocks + red tiles)
    * ------------------------------------------- */
   const parsed = parseFromURL();

@@ -45,8 +45,15 @@
     <!-- Sidebar: palette only (footer removed by convention) -->
     <aside id="sidebar" class="sidebar">
       <!-- Hidden on mobile: usage block -->
-      <h2 data-i18n="ui.usageTitle" data-mobile-hidden>사용 방법</h2>
-      <div class="usage" data-i18n="ui.usage" data-mobile-hidden></div>
+      <div class="usage-section" data-mobile-hidden>
+        <button id="usageToggle" class="usage-toggle" type="button" aria-expanded="false">
+          <h2 data-i18n="ui.usageTitle">사용 방법</h2>
+          <span class="toggle-icon" aria-hidden="true">▼</span>
+        </button>
+        <div id="usageContent" class="usage-content collapsed">
+          <div class="usage" data-i18n="ui.usage"></div>
+        </div>
+      </div>
 
       <!-- Hidden on mobile: palette title -->
       <div class="palette-title" data-i18n="ui.paletteTitle" data-mobile-hidden>객체 팔레트</div>
