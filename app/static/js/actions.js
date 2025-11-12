@@ -20,9 +20,10 @@ import {
   btnUndo,
   btnRedo,
   btnHome,
+  btnTrap,
   btnCityTrapDist,
 } from './dom.js';
-import { recomputePaint, renderUserTiles, centerToWorldCenter } from './render.js';
+import { recomputePaint, renderUserTiles, centerToWorldCenter, centerToCell } from './render.js';
 import { validateAllObjects } from './blocks.js';
 import { updateAllCounts } from './counters.js';
 import { saveToURLImmediate } from './urlState.js';
@@ -154,6 +155,10 @@ async function shortenCurrentUrl() {
   return out;
 }
 
+// Track current HQ and Trap indices for sequential navigation
+let currentHQIndex = -1;
+let currentTrapIndex = -1;
+
 export function setupActions() {
   setTitles();
 
@@ -163,10 +168,50 @@ export function setupActions() {
     if (btnRedo) btnRedo.disabled = !canRedo;
   });
 
-  // Home: center viewport to world center
+  // Home: navigate to HQs sequentially, or world center if no HQs exist
   btnHome?.addEventListener('click', (e) => {
     e.preventDefault();
-    centerToWorldCenter();
+
+    // Find all HQ blocks
+    const hqBlocks = state.blocks.filter((b) => b.kind === 'hq');
+
+    if (hqBlocks.length === 0) {
+      // No HQs, go to world center
+      currentHQIndex = -1;
+      centerToWorldCenter();
+      return;
+    }
+
+    // Move to next HQ (cycle through them)
+    currentHQIndex = (currentHQIndex + 1) % hqBlocks.length;
+    const targetHQ = hqBlocks[currentHQIndex];
+
+    // Calculate center of the HQ block
+    const center = blockCenterInCells(targetHQ);
+    centerToCell(center.x, center.y);
+  });
+
+  // Trap: navigate to Traps sequentially, or world center if no Traps exist
+  btnTrap?.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    // Find all Trap blocks
+    const trapBlocks = state.blocks.filter((b) => b.kind === 'trap');
+
+    if (trapBlocks.length === 0) {
+      // No Traps, go to world center
+      currentTrapIndex = -1;
+      centerToWorldCenter();
+      return;
+    }
+
+    // Move to next Trap (cycle through them)
+    currentTrapIndex = (currentTrapIndex + 1) % trapBlocks.length;
+    const targetTrap = trapBlocks[currentTrapIndex];
+
+    // Calculate center of the Trap block
+    const center = blockCenterInCells(targetTrap);
+    centerToCell(center.x, center.y);
   });
 
   // Undo / Redo
