@@ -531,7 +531,8 @@ body {
   min-width: 0;
 }
 
-.home-btn {
+.home-btn,
+.trap-btn {
   appearance: none;
   border: 0;
   background: transparent;
@@ -543,13 +544,52 @@ body {
   border-radius: 4px;
 }
 
-.home-btn:hover {
+.home-btn:hover,
+.trap-btn:hover {
   background: rgba(255, 255, 255, 0.12);
 }
 
-.home-btn:active {
+.home-btn:active,
+.trap-btn:active {
   background: rgba(255, 255, 255, 0.18);
   transform: translateY(1px);
+}
+
+.badge-coord-text {
+  cursor: pointer;
+  user-select: none;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: background 0.15s;
+}
+
+.badge-coord-text:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.badge-coord-text::after {
+  content: ',';
+  margin-left: 2px;
+}
+
+.badge-coord-input {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-family: inherit;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  outline: none;
+  width: 80px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.badge-coord-input:focus {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 /* ---------------------------------------------
@@ -836,7 +876,8 @@ body.rtl .icon-arrow { transform: scaleX(-1); }
     margin-top: calc(var(--palettebar-h));
   }
 
-  .home-btn {
+  .home-btn,
+  .trap-btn {
     font-size: clamp(13px, 2.2vw, 16px);
     padding: 2px clamp(4px, 1.2vw, 6px);
   }

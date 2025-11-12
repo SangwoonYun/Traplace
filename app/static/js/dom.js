@@ -25,8 +25,12 @@ export const snapEl = document.getElementById('snap');
  * Status & utility UI
  * ------------------------------------------- */
 export const badge = document.getElementById('badge');
-export const badgeText = document.getElementById('badgeText');
+export const badgeText = document.getElementById('badgeText'); // deprecated, for backward compatibility
+export const badgeCoord = document.getElementById('badgeCoord');
+export const badgeZoom = document.getElementById('badgeZoom');
+export const badgeInput = document.getElementById('badgeInput');
 export const btnHome = document.getElementById('btnHome');
+export const btnTrap = document.getElementById('btnTrap');
 export const trash = document.getElementById('trashZone');
 
 /* ---------------------------------------------

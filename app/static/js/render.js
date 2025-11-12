@@ -18,7 +18,8 @@ import {
   outlinesLayer,
   outlinesPreviewLayer,
   previewLayer,
-  badgeText,
+  badgeCoord,
+  badgeZoom,
 } from './dom.js';
 import { PAINTER_KINDS, cellsForKindAt, areaBoundingBox } from './painter.js';
 import { posToCell, keyOf, clamp } from './transform.js';
@@ -231,10 +232,15 @@ export function clearPreview() {
  * ------------------------------------------- */
 /** Update the floating badge with cursor cell and zoom percentage. */
 export function updateBadge() {
-  if (!badgeText) return;
   const { x, y } = state.cursorCell || { x: 599, y: 599 };
   const zoomPct = Math.round((state.zoom || 1) * 100);
-  badgeText.textContent = `x:${x}, y:${y}, ${zoomPct}%`;
+
+  if (badgeCoord) {
+    badgeCoord.textContent = `x:${x}, y:${y}`;
+  }
+  if (badgeZoom) {
+    badgeZoom.textContent = `${zoomPct}%`;
+  }
 }
 
 /* ---------------------------------------------
