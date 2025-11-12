@@ -156,7 +156,7 @@ Traplace/
 
 ## 👤 작성자
 
-**#135 [KOR] 방구석개발자**  
+**#159 [TCB] 방구석개발자**  
 📧 dev.swyun@gmail.com  
 🐙 [@SangwoonYun](https://github.com/SangwoonYun)
 
