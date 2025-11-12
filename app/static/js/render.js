@@ -80,6 +80,29 @@ export function centerToWorldCenter() {
   centerToCell(cx, cy);
 }
 
+/**
+ * Center view with priority: HQ -> Trap -> World Center
+ */
+export function centerToInitialPosition() {
+  const hqBlocks = state.blocks.filter((b) => b.kind === 'hq');
+  const trapBlocks = state.blocks.filter((b) => b.kind === 'trap');
+
+  if (hqBlocks.length > 0) {
+    // Center on first HQ
+    const hq = hqBlocks[0];
+    const { cx, cy } = posToCell(hq.left, hq.top);
+    centerToCell(cx + hq.size / 2, cy + hq.size / 2);
+  } else if (trapBlocks.length > 0) {
+    // Center on first Trap
+    const trap = trapBlocks[0];
+    const { cx, cy } = posToCell(trap.left, trap.top);
+    centerToCell(cx + trap.size / 2, cy + trap.size / 2);
+  } else {
+    // Default: center of the world
+    centerToWorldCenter();
+  }
+}
+
 /* ---------------------------------------------
  * Core painters
  * ------------------------------------------- */

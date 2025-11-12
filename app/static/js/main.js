@@ -14,6 +14,7 @@ import {
   updateBadge,
   centerToCell,
   setWorldSizeCells,
+  centerToInitialPosition,
 } from './render.js';
 import { setupPaletteDrag, makeMovable } from './interactions/drag.js';
 import { setupPan } from './interactions/pan.js';
@@ -165,6 +166,9 @@ window.addEventListener('load', async () => {
   }
 
   updateAllCounts();
+
+  // Center view based on priority: HQ -> Trap -> World Center
+  centerToInitialPosition();
 
   /* ---------------------------------------------
    * Interactions
