@@ -128,6 +128,7 @@ function applyCityLabelsWithTrapDistance() {
 /**
  * Shorten the current relative URL using the backend API.
  * Falls back to absolute if the server responds with a relative short path.
+ * iOS-optimized: handles short timeouts, network sleep, and CORS issues.
  * @returns {Promise<string>}
  */
 async function shortenCurrentUrl() {
@@ -136,23 +137,46 @@ async function shortenCurrentUrl() {
   const u = new URL(location.href);
   const rel = u.pathname + u.search + u.hash;
 
-  const res = await fetch('/api/shorten', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url: rel }),
-  });
+  // iOS WebKit has aggressive timeouts - set explicit timeout
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
 
-  const data = await res.json().catch(() => null);
-  if (!res.ok || !data) throw new Error('shorten-failed');
+  try {
+    // Use form-data instead of JSON to avoid CORS preflight (OPTIONS)
+    const formData = new FormData();
+    formData.append('url', rel);
 
-  const candidate = data.short_url;
-  if (!candidate) throw new Error('shorten-missing');
+    const res = await fetch('/api/shorten', {
+      method: 'POST',
+      body: formData, // FormData avoids preflight for simple CORS
+      signal: controller.signal,
+      // Add cache control to prevent iOS network sleep issues
+      cache: 'no-cache',
+      // Ensure credentials are included for iOS
+      credentials: 'same-origin',
+    });
 
-  const out = candidate.startsWith('http')
-    ? candidate
-    : new URL(candidate, location.origin).toString();
+    clearTimeout(timeoutId);
 
-  return out;
+    const data = await res.json().catch(() => null);
+    if (!res.ok || !data) throw new Error('shorten-failed');
+
+    const candidate = data.short_url;
+    if (!candidate) throw new Error('shorten-missing');
+
+    const out = candidate.startsWith('http')
+      ? candidate
+      : new URL(candidate, location.origin).toString();
+
+    return out;
+  } catch (err) {
+    clearTimeout(timeoutId);
+    // Re-throw with more context for debugging
+    if (err.name === 'AbortError') {
+      throw new Error('shorten-timeout');
+    }
+    throw err;
+  }
 }
 
 // Track current HQ and Trap indices for sequential navigation
