@@ -49,7 +49,7 @@ def api_shorten():
     path = extract_path_preserving_query(raw)
 
     # Check if this path already has a short code (reverse lookup)
-    reverse_key = f"{prefix}path:{path}"
+    reverse_key = f'{prefix}path:{path}'
     existing_code = r.get(reverse_key)
 
     if existing_code:
