@@ -20,7 +20,7 @@ import { state, cellPx } from './state.js';
 /* ---------------------------------------------
  * Kind ↔ code mapping (compact token)
  * ------------------------------------------- */
-const KIND_TO_CODE = { block: 'B', flag: 'F', hq: 'H', city: 'C', resource: 'R', trap: 'T' };
+const KIND_TO_CODE = { block: 'B', flag: 'F', hq: 'H', city: 'C', resource: 'R', trap: 'T', custom: 'X' };
 const CODE_TO_KIND = Object.fromEntries(Object.entries(KIND_TO_CODE).map(([k, v]) => [v, k]));
 
 /* ---------------------------------------------
@@ -155,19 +155,36 @@ export function serializeState() {
     const cx = Math.round(b.left / c);
     const cy = Math.round(b.top / c);
     const code = KIND_TO_CODE[b.kind] ?? 'B';
-    const size36 = toB36(b.size);
     const cx36 = toB36(cx);
     const cy36 = toB36(cy);
 
-    let token = `${code}${size36}@${cx36},${cy36}`;
+    let token;
+    // Custom blocks store width x height separately
+    if (b.kind === 'custom') {
+      const w36 = toB36(b.width || b.size);
+      const h36 = toB36(b.height || b.size);
+      token = `${code}${w36}x${h36}@${cx36},${cy36}`;
+    } else {
+      const size36 = toB36(b.size);
+      token = `${code}${size36}@${cx36},${cy36}`;
+    }
 
-    // Persist city label only when truly custom (avoid saving defaults).
+    // Persist city and custom block labels only when truly custom (avoid saving defaults).
     if (b.kind === 'city') {
       const labelEl = b.el?.querySelector('.label');
       const label = (labelEl?.textContent || '').trim();
 
       // Treat both Korean and English defaults as non-custom
       if (label && label !== '도시' && label !== 'City') {
+        token += `~${encodeURIComponent(label)}`;
+      }
+    } else if (b.kind === 'custom') {
+      const labelEl = b.el?.querySelector('.label');
+      const label = (labelEl?.textContent || '').trim();
+      const defaultLabel = `${b.width || b.size}×${b.height || b.size}`;
+
+      // Only save if label differs from default WxH format
+      if (label && label !== defaultLabel) {
         token += `~${encodeURIComponent(label)}`;
       }
     }
@@ -215,14 +232,23 @@ export function deserializeState(qs) {
 
     const code = head[0];
     const sizeRaw = head.slice(1);
-    const size = isV2 ? parseInt(sizeRaw, 36) : parseInt(sizeRaw || '1', 10) || 1;
 
     const [cxStr, cyStr] = tail.split(',');
     const cx = isV2 ? parseInt(cxStr, 36) : parseInt(cxStr, 10) || 0;
     const cy = isV2 ? parseInt(cyStr, 36) : parseInt(cyStr, 10) || 0;
 
     const kind = CODE_TO_KIND[code] || 'block';
-    blocks.push({ kind, size, cx, cy, label });
+
+    // Custom blocks use WxH format
+    if (kind === 'custom' && sizeRaw.includes('x')) {
+      const [wStr, hStr] = sizeRaw.split('x');
+      const width = isV2 ? parseInt(wStr, 36) : parseInt(wStr, 10) || 1;
+      const height = isV2 ? parseInt(hStr, 36) : parseInt(hStr, 10) || 1;
+      blocks.push({ kind, width, height, size: Math.max(width, height), cx, cy, label });
+    } else {
+      const size = isV2 ? parseInt(sizeRaw, 36) : parseInt(sizeRaw || '1', 10) || 1;
+      blocks.push({ kind, size, cx, cy, label });
+    }
   }
 
   const redParam = params.get('r') || '';

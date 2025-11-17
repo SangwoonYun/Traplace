@@ -175,7 +175,8 @@
 
 .palette-item[data-kind='block'][data-size='1'] .pi-rot,
 .palette-item[data-kind='block'][data-size='2'] .pi-rot,
-.palette-item[data-kind='block'][data-size='3'] .pi-rot {
+.palette-item[data-kind='block'][data-size='3'] .pi-rot,
+.palette-item[data-kind='custom'] .pi-rot {
   background: var(--block123-bg, #fafafa);
   border-color: var(--block123-border, #555);
 }
@@ -988,4 +989,57 @@ body.rtl .icon-arrow { transform: scaleX(-1); }
 #world {
   padding-bottom: 16px;
   box-sizing: content-box;
+}
+
+/* ---------------------------------------------
+ * Custom Block Palette Item
+ * ------------------------------------------- */
+.palette-item-custom {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.palette-item-custom .pi-text {
+  font-size: 11px;
+  margin-top: -2px;
+}
+
+.palette-item-custom .custom-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  margin-top: 2px;
+}
+
+.palette-item-custom input[type='number'] {
+  width: 32px;
+  padding: 3px 2px;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  border: 1px solid #999;
+  border-radius: 3px;
+  background: #fff;
+  color: #333;
+  -moz-appearance: textfield; /* Remove spinner in Firefox */
+}
+
+.palette-item-custom input[type='number']::-webkit-inner-spin-button,
+.palette-item-custom input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.palette-item-custom input[type='number']:focus {
+  outline: 2px solid #1976d2;
+  outline-offset: 1px;
+}
+
+.palette-item-custom .custom-separator {
+  font-size: 13px;
+  font-weight: 700;
+  color: #555;
+  user-select: none;
 }

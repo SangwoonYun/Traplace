@@ -34,7 +34,10 @@
     "resource": "Resource",
     "block1": "1×1",
     "block2": "2×2",
-    "block3": "3×3"
+    "block3": "3×3",
+    "custom": "Custom Block",
+    "customWidthLabel": "Width",
+    "customHeightLabel": "Height"
   },
   "alert": {
     "noCities": "No cities.",

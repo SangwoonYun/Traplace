@@ -34,7 +34,8 @@
 
 .block[data-kind='block'][data-size='1'],
 .block[data-kind='block'][data-size='2'],
-.block[data-kind='block'][data-size='3'] {
+.block[data-kind='block'][data-size='3'],
+.block[data-kind='custom'] {
   background: var(--block123-bg);
   border-color: var(--block123-border);
 }
@@ -128,4 +129,19 @@ html[dir='rtl'] .ghost-label {
   transition: transform 0.08s ease;
   opacity: 0.85;
   outline: 2px solid rgba(21, 87, 255, 0.35);
+}
+
+/* ---------------------------------------------
+ * Custom Block Resize (Edge-based)
+ * ------------------------------------------- */
+.block[data-kind='custom'] {
+  cursor: move;
+}
+
+.block[data-kind='custom']:hover {
+  outline: 1px solid rgba(21, 87, 255, 0.3);
+}
+
+.block.is-resizing {
+  outline: 2px solid rgba(21, 87, 255, 0.5);
 }

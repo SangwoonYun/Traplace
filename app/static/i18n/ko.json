@@ -34,7 +34,10 @@
     "resource": "연맹자원",
     "block1": "1×1",
     "block2": "2×2",
-    "block3": "3×3"
+    "block3": "3×3",
+    "custom": "커스텀 블록",
+    "customWidthLabel": "가로 크기",
+    "customHeightLabel": "세로 크기"
   },
   "alert": {
     "noCities": "도시가 없습니다.",
