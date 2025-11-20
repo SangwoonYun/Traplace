@@ -250,22 +250,30 @@ export function setupActions() {
   // Copy URL (TTL 7 days via shortener) — on failure, fallback to full URL
   btnCopyURL?.addEventListener('click', async () => {
     const restoreIcon = () => setTimeout(() => (btnCopyURL.textContent = '🔗'), 1200);
+
+    // iOS requires clipboard write to happen immediately on user gesture
+    // First, copy the full URL to clipboard synchronously
+    saveToURLImmediate();
+    const fullUrl = location.href;
+
+    try {
+      await navigator.clipboard.writeText(fullUrl);
+    } catch (err) {
+      console.error('Initial clipboard write failed:', err);
+      alert(t('msg.copyError') || 'Failed to copy to clipboard');
+      return;
+    }
+
+    // Now try to get shortened URL and replace clipboard content
     try {
       const shortUrl = await shortenCurrentUrl();
       await navigator.clipboard.writeText(shortUrl);
       btnCopyURL.textContent = t('msg.copiedShort');
       restoreIcon();
     } catch {
-      // Fallback: copy full URL
-      try {
-        saveToURLImmediate();
-        await navigator.clipboard.writeText(location.href);
-        btnCopyURL.textContent = t('msg.copiedFull');
-        restoreIcon();
-      } catch (err) {
-        console.error('Clipboard write failed:', err);
-        alert(t('msg.copyError') || 'Failed to copy to clipboard');
-      }
+      // Shortening failed, but full URL is already in clipboard
+      btnCopyURL.textContent = t('msg.copiedFull');
+      restoreIcon();
     }
   });
 
