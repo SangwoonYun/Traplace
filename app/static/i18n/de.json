@@ -45,7 +45,22 @@
   "msg": {
     "copiedShort": "Kurz-URL kopiert!",
     "copiedFull": "Vollständige URL kopiert",
+    "copied": "Kopiert!",
     "shortenError": "Kurz-URL konnte nicht erstellt werden.",
-    "copyError": "Kopieren fehlgeschlagen."
+    "copyError": "Kopieren fehlgeschlagen.",
+    "copyManual": "Bitte mit Strg+C oder Cmd+C kopieren"
+  },
+  "modal": {
+    "urlCopy": {
+      "title": "URL kopieren",
+      "message": "Bitte kopieren Sie die folgende URL.",
+      "copyBtn": "Kopieren"
+    }
+  },
+  "consent": {
+    "message": "Wir verwenden anonyme Analysen zur Verbesserung Ihrer Erfahrung. Es werden keine persönlichen Daten erfasst.",
+    "accept": "Akzeptieren",
+    "reject": "Ablehnen",
+    "learnMore": "Mehr erfahren"
   }
 }

@@ -45,7 +45,22 @@
   "msg": {
     "copiedShort": "Skrócony URL skopiowany!",
     "copiedFull": "Pełny URL skopiowany",
+    "copied": "Skopiowano!",
     "shortenError": "Nie udało się utworzyć skróconego URL-a.",
-    "copyError": "Nie udało się skopiować."
+    "copyError": "Nie udało się skopiować.",
+    "copyManual": "Proszę skopiować za pomocą Ctrl+C lub Cmd+C"
+  },
+  "modal": {
+    "urlCopy": {
+      "title": "Kopiuj URL",
+      "message": "Proszę skopiować poniższy URL.",
+      "copyBtn": "Kopiuj"
+    }
+  },
+  "consent": {
+    "message": "Używamy anonimowych analiz w celu poprawy Twojego doświadczenia. Nie zbieramy danych osobowych.",
+    "accept": "Akceptuj",
+    "reject": "Odrzuć",
+    "learnMore": "Dowiedz się więcej"
   }
 }

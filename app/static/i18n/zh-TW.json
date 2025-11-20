@@ -45,7 +45,22 @@
   "msg": {
     "copiedShort": "已複製短網址！",
     "copiedFull": "已複製完整網址",
+    "copied": "已複製！",
     "shortenError": "建立短網址失敗。",
-    "copyError": "複製失敗。"
+    "copyError": "複製失敗。",
+    "copyManual": "請使用 Ctrl+C 或 Cmd+C 複製"
+  },
+  "modal": {
+    "urlCopy": {
+      "title": "複製網址",
+      "message": "請複製以下網址。",
+      "copyBtn": "複製"
+    }
+  },
+  "consent": {
+    "message": "為改進使用體驗，我們使用匿名分析資料。不會收集個人資訊。",
+    "accept": "同意",
+    "reject": "拒絕",
+    "learnMore": "瞭解更多"
   }
 }

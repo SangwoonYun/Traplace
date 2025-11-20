@@ -45,7 +45,22 @@
   "msg": {
     "copiedShort": "¡URL corta copiada!",
     "copiedFull": "URL completa copiada",
+    "copied": "¡Copiado!",
     "shortenError": "Error al crear la URL corta.",
-    "copyError": "Error al copiar."
+    "copyError": "Error al copiar.",
+    "copyManual": "Por favor, copie con Ctrl+C o Cmd+C"
+  },
+  "modal": {
+    "urlCopy": {
+      "title": "Copiar URL",
+      "message": "Por favor, copie la siguiente URL.",
+      "copyBtn": "Copiar"
+    }
+  },
+  "consent": {
+    "message": "Usamos análisis anónimos para mejorar tu experiencia. No se recopilan datos personales.",
+    "accept": "Aceptar",
+    "reject": "Rechazar",
+    "learnMore": "Más información"
   }
 }

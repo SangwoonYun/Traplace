@@ -155,6 +155,76 @@ async function shortenCurrentUrl() {
   return out;
 }
 
+/**
+ * Show modal with URL when clipboard copy fails.
+ * @param {string} url - The URL to display in the modal
+ */
+function showUrlModal(url) {
+  const modal = document.getElementById('urlModal');
+  const input = document.getElementById('urlDisplayInput');
+  const closeBtn = document.getElementById('urlModalClose');
+  const copyBtn = document.getElementById('urlModalCopy');
+
+  if (!modal || !input || !closeBtn || !copyBtn) {
+    console.error('Modal elements not found');
+    alert(t('msg.copyError') || 'Failed to copy to clipboard. URL: ' + url);
+    return;
+  }
+
+  // Set URL in input
+  input.value = url;
+
+  // Show modal
+  modal.style.display = 'flex';
+
+  // Auto-select text
+  setTimeout(() => {
+    input.select();
+    input.focus();
+  }, 100);
+
+  // Close button handler
+  const closeModal = () => {
+    modal.style.display = 'none';
+  };
+
+  closeBtn.onclick = closeModal;
+
+  // Copy button handler
+  copyBtn.onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      copyBtn.textContent = t('msg.copied') || '✓ 복사됨';
+      setTimeout(() => {
+        copyBtn.textContent = t('modal.urlCopy.copyBtn') || '복사';
+        closeModal();
+      }, 1000);
+    } catch (err) {
+      console.error('Modal clipboard copy failed:', err);
+      // Fallback: select all text
+      input.select();
+      input.setSelectionRange(0, 99999); // For mobile
+      alert(t('msg.copyManual') || 'Ctrl+C / Cmd+C로 복사해주세요');
+    }
+  };
+
+  // Click outside to close
+  modal.onclick = (e) => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  };
+
+  // ESC key to close
+  const escHandler = (e) => {
+    if (e.key === 'Escape') {
+      closeModal();
+      document.removeEventListener('keydown', escHandler);
+    }
+  };
+  document.addEventListener('keydown', escHandler);
+}
+
 // Track current HQ and Trap indices for sequential navigation
 let currentHQIndex = -1;
 let currentTrapIndex = -1;
@@ -247,32 +317,34 @@ export function setupActions() {
     saveCheckpoint(); // history snapshot
   });
 
-  // Copy URL (TTL 7 days via shortener) — on failure, fallback to full URL
+  // Copy URL (TTL 7 days via shortener) — on failure, show modal
   btnCopyURL?.addEventListener('click', async () => {
     const restoreIcon = () => setTimeout(() => (btnCopyURL.textContent = '🔗'), 1200);
+
+    // iOS requires clipboard write to happen immediately on user gesture
+    // First, copy the full URL to clipboard synchronously
+    saveToURLImmediate();
+    const fullUrl = location.href;
+
+    // Try to get shortened URL
+    let urlToCopy = fullUrl;
+    let isShortened = false;
     try {
-      const shortUrl = await shortenCurrentUrl();
-      await navigator.clipboard.writeText(shortUrl);
-      btnCopyURL.textContent = t('msg.copiedShort');
+      urlToCopy = await shortenCurrentUrl();
+      isShortened = true;
+    } catch (err) {
+      console.warn('Shortening failed, using full URL:', err);
+    }
+
+    // Try to copy to clipboard
+    try {
+      await navigator.clipboard.writeText(urlToCopy);
+      btnCopyURL.textContent = isShortened ? t('msg.copiedShort') : t('msg.copiedFull');
       restoreIcon();
-    } catch {
-      // Fallback: copy full URL
-      try {
-        saveToURLImmediate();
-        await navigator.clipboard.writeText(location.href);
-        btnCopyURL.textContent = t('msg.copiedFull');
-        restoreIcon();
-      } catch {
-        // Legacy fallback using a temporary textarea
-        const ta = document.createElement('textarea');
-        ta.value = location.href;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        btnCopyURL.textContent = t('msg.copiedFull');
-        restoreIcon();
-      }
+    } catch (err) {
+      console.error('Clipboard write failed:', err);
+      // Show modal with URL
+      showUrlModal(urlToCopy);
     }
   });
 
