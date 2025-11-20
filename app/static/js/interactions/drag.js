@@ -570,13 +570,12 @@ export function setupPaletteDrag() {
     }
   };
 
+  // Only validate on blur (when user finishes editing), not on every keystroke
   if (customWidthInput) {
-    customWidthInput.addEventListener('input', () => validateInput(customWidthInput));
     customWidthInput.addEventListener('blur', () => validateInput(customWidthInput));
   }
 
   if (customHeightInput) {
-    customHeightInput.addEventListener('input', () => validateInput(customHeightInput));
     customHeightInput.addEventListener('blur', () => validateInput(customHeightInput));
   }
 }
@@ -785,13 +784,17 @@ function startResize(el, e, edge) {
 
     el.classList.remove('is-resizing');
     delete el.dataset.resizeEdge;
-    delete state._isResizing;
 
     window.removeEventListener('pointermove', onMove);
     window.removeEventListener('pointerup', onEnd);
 
     // Finalize with updateBlockSize
     updateBlockSize(el, block.width, block.height);
+
+    // Keep the flag briefly to prevent tile click events
+    setTimeout(() => {
+      delete state._isResizing;
+    }, 50);
   };
 
   window.addEventListener('pointermove', onMove, { passive: false });
