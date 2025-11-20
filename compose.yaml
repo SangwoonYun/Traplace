@@ -8,7 +8,7 @@ version: '3.9'
 
 services:
   traplace:
-    image: registry.nglinnovation.net/traplace:latest
+    image: private-registry/traplace:latest
     container_name: traplace
     restart: unless-stopped
     pull_policy: always
@@ -40,7 +40,7 @@ services:
     image: redis:7.4-alpine
     container_name: traplace-redis
     restart: unless-stopped
-    command: redis-server --save "" --appendonly no
+    command: redis-server --appendonly yes
     volumes:
       - redis-data:/data
     healthcheck:
