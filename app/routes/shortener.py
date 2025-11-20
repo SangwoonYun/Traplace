@@ -35,12 +35,28 @@ def api_shorten():
 
     path = extract_path_preserving_query(raw)
 
+    # Check if we already have a short code for this URL
+    reverse_key = prefix + 'path:' + path
+    existing_code = r.get(reverse_key)
+
+    if existing_code:
+        # Verify the forward mapping still exists
+        forward_key = prefix + existing_code
+        if r.exists(forward_key):
+            # Renew TTL for both mappings
+            r.expire(forward_key, ttl)
+            r.expire(reverse_key, ttl)
+            short_path = url_for('shortener.redirect_short', code=existing_code)
+            return jsonify(code=existing_code, short_url=short_path, path=path), 200
+
     # Try multiple times to avoid key collisions under high contention
     for _ in range(8):
         code = new_code(code_len)
         key = prefix + code
         ok = r.set(key, path, ex=ttl, nx=True)
         if ok:
+            # Store reverse mapping (path -> code)
+            r.set(reverse_key, code, ex=ttl)
             short_path = url_for('shortener.redirect_short', code=code)
             return jsonify(code=code, short_url=short_path, path=path), 201
 
