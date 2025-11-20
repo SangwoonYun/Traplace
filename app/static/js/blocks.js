@@ -59,6 +59,11 @@ function applyBlockStyle(b, invalid) {
         return;
       }
       break;
+
+    case 'custom':
+      el.style.background = styles.getPropertyValue('--block123-bg');
+      el.style.borderColor = styles.getPropertyValue('--block123-border');
+      return;
   }
 
   el.style.background = styles.getPropertyValue('--ok-bg');
@@ -80,8 +85,11 @@ export function validateAllObjects() {
 
     if (needsValidation) {
       const { cx, cy } = posToCell(b.left, b.top);
-      for (let y = cy; y < cy + b.size && !invalid; y++) {
-        for (let x = cx; x < cx + b.size; x++) {
+      const width = b.kind === 'custom' ? b.width || b.size : b.size;
+      const height = b.kind === 'custom' ? b.height || b.size : b.size;
+
+      for (let y = cy; y < cy + height && !invalid; y++) {
+        for (let x = cx; x < cx + width; x++) {
           if (!state.paintedSet.has(`${x},${y}`)) {
             invalid = true;
             break;
@@ -95,15 +103,15 @@ export function validateAllObjects() {
 }
 
 /* ---------------------------------------------
- * Label Editing (city only)
+ * Label Editing (city and custom blocks)
  * ------------------------------------------- */
 /**
- * Start inline editing for a city's label.
+ * Start inline editing for a city or custom block's label.
  * @param {HTMLElement} blockEl
  */
 function startEditLabel(blockEl) {
   const b = state.blocks.find((x) => x.el === blockEl);
-  if (!b || b.kind !== 'city') return;
+  if (!b || (b.kind !== 'city' && b.kind !== 'custom')) return;
 
   const label = blockEl.querySelector('.label');
   if (!label) return;
@@ -155,16 +163,22 @@ function finishEditLabel(blockEl, cancel) {
   const label = blockEl.querySelector('.label');
   if (!b || !label) return;
 
-  const defaultCity = t('palette.city');
+  // Get default label based on block kind
+  const defaultLabel =
+    b.kind === 'city'
+      ? t('palette.city')
+      : b.kind === 'custom'
+        ? `${b.width || b.size}×${b.height || b.size}`
+        : '';
 
   if (cancel) {
-    label.textContent = b._labelOriginal ?? defaultCity;
+    label.textContent = b._labelOriginal ?? defaultLabel;
   } else {
     const txt = (label.textContent || '').trim();
     if (!txt) {
-      label.textContent = defaultCity;
+      label.textContent = defaultLabel;
       b.customLabel = false;
-    } else if (txt === defaultCity) {
+    } else if (txt === defaultLabel || (b.kind === 'city' && txt === 'City')) {
       b.customLabel = false;
     } else {
       b.customLabel = true;
@@ -196,42 +210,57 @@ function finishEditLabel(blockEl, cancel) {
  * ------------------------------------------- */
 /**
  * Create a new block element and register it in state.
- * @param {'hq'|'flag'|'trap'|'city'|'resource'|'block'} kind
- * @param {number} size
+ * @param {'hq'|'flag'|'trap'|'city'|'resource'|'block'|'custom'} kind
+ * @param {number} size - For square blocks; ignored for custom blocks
  * @param {number} left
  * @param {number} top
+ * @param {number} [width] - For custom blocks only
+ * @param {number} [height] - For custom blocks only
  * @returns {HTMLElement}
  */
-export function createBlock(kind, size, left, top) {
+export function createBlock(kind, size, left, top, width, height) {
   const cell =
     parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cell')) || 48;
 
   const el = document.createElement('div');
   el.className = 'block';
-  el.dataset.size = String(size);
   el.dataset.kind = kind;
-  el.style.width = `${size * cell}px`;
-  el.style.height = `${size * cell}px`;
+
+  // Custom blocks use width x height
+  let blockWidth, blockHeight, displayText;
+  if (kind === 'custom' && width && height) {
+    blockWidth = width;
+    blockHeight = height;
+    el.dataset.size = String(Math.max(width, height));
+    displayText = `${width}×${height}`;
+  } else {
+    blockWidth = blockHeight = size;
+    el.dataset.size = String(size);
+    displayText =
+      kind === 'hq'
+        ? t('palette.hq')
+        : kind === 'flag'
+          ? t('palette.flag')
+          : kind === 'trap'
+            ? t('palette.trap')
+            : kind === 'city'
+              ? t('palette.city')
+              : kind === 'resource'
+                ? t('palette.resource')
+                : `${size}×${size}`;
+  }
+
+  el.style.width = `${blockWidth * cell}px`;
+  el.style.height = `${blockHeight * cell}px`;
   el.style.left = `${left}px`;
   el.style.top = `${top}px`;
 
   const label = document.createElement('div');
   label.className = 'label';
-  label.textContent =
-    kind === 'hq'
-      ? t('palette.hq')
-      : kind === 'flag'
-        ? t('palette.flag')
-        : kind === 'trap'
-          ? t('palette.trap')
-          : kind === 'city'
-            ? t('palette.city')
-            : kind === 'resource'
-              ? t('palette.resource')
-              : `${size}×${size}`;
+  label.textContent = displayText;
   el.appendChild(label);
 
-  if (kind === 'city') {
+  if (kind === 'city' || kind === 'custom') {
     el.addEventListener('dblclick', (e) => {
       e.stopPropagation();
       startEditLabel(el);
@@ -240,8 +269,19 @@ export function createBlock(kind, size, left, top) {
 
   rot.appendChild(el);
 
-  /** @type {{el:HTMLElement, kind:string, size:number, left:number, top:number, customLabel:boolean}} */
-  const b = { el, kind, size, left, top, customLabel: false };
+  /** @type {{el:HTMLElement, kind:string, size:number, left:number, top:number, customLabel:boolean, width?:number, height?:number}} */
+  const b = {
+    el,
+    kind,
+    size: blockWidth === blockHeight ? blockWidth : Math.max(blockWidth, blockHeight),
+    left,
+    top,
+    customLabel: false,
+  };
+  if (kind === 'custom') {
+    b.width = blockWidth;
+    b.height = blockHeight;
+  }
   state.blocks.push(b);
   applyBlockStyle(b, false);
 
@@ -270,6 +310,40 @@ export function updateBlockPosition(el, snappedLeft, snappedTop) {
   if (b) {
     b.left = snappedLeft;
     b.top = snappedTop;
+
+    if (!state._restoring) {
+      recomputePaint();
+      validateAllObjects();
+      queueSaveToURL();
+      saveCheckpoint();
+    }
+  }
+}
+
+/**
+ * Update a custom block's size and propagate validation/serialization.
+ * @param {HTMLElement} el
+ * @param {number} newWidth - new width in cells
+ * @param {number} newHeight - new height in cells
+ */
+export function updateBlockSize(el, newWidth, newHeight) {
+  const cell =
+    parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cell')) || 48;
+
+  el.style.width = `${newWidth * cell}px`;
+  el.style.height = `${newHeight * cell}px`;
+
+  const b = state.blocks.find((x) => x.el === el);
+  if (b && b.kind === 'custom') {
+    b.width = newWidth;
+    b.height = newHeight;
+    b.size = Math.max(newWidth, newHeight);
+
+    // Update label if it's still the default WxH format
+    const labelEl = el.querySelector('.label');
+    if (labelEl && !b.customLabel) {
+      labelEl.textContent = `${newWidth}×${newHeight}`;
+    }
 
     if (!state._restoring) {
       recomputePaint();
