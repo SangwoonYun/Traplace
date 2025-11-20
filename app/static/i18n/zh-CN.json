@@ -19,7 +19,7 @@
       "title": "将方块拖到此区域以删除"
     },
     "footer": {
-      "credit": "制作：#159 [TCB] 방구석개발자",
+      "credit": "制作：#159 [TCA] 방구석개발자",
       "bmc": "请我喝咖啡",
       "toss": "Toss 打赏",
       "privacy": "隐私政策",
@@ -45,7 +45,22 @@
   "msg": {
     "copiedShort": "短链接已复制！",
     "copiedFull": "完整链接已复制",
+    "copied": "已复制！",
     "shortenError": "创建短链接失败。",
-    "copyError": "复制失败。"
+    "copyError": "复制失败。",
+    "copyManual": "请使用 Ctrl+C 或 Cmd+C 复制"
+  },
+  "modal": {
+    "urlCopy": {
+      "title": "复制链接",
+      "message": "请复制以下链接。",
+      "copyBtn": "复制"
+    }
+  },
+  "consent": {
+    "message": "为改进用户体验，我们使用匿名分析数据。不会收集个人信息。",
+    "accept": "同意",
+    "reject": "拒绝",
+    "learnMore": "了解更多"
   }
 }

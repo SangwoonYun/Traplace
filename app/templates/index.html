@@ -248,7 +248,7 @@
               alt="GitHub"
             />
           </a>
-          <span class="credit">Created by #159 [TCB] 방구석개발자</span>
+          <span class="credit">Created by #159 [TCA] 방구석개발자</span>
         </div>
 
         <!-- Legal Links -->
@@ -394,6 +394,25 @@
     >
       <span class="trash-emoji" aria-hidden="true">🗑</span>
       <span class="trash-label" data-i18n="ui.trash.label">여기로 드래그하면 삭제</span>
+    </div>
+
+    <!-- URL Copy Modal -->
+    <div id="urlModal" class="url-modal" style="display: none;">
+      <div class="url-modal-content">
+        <div class="url-modal-header">
+          <h3 data-i18n="modal.urlCopy.title">URL 복사</h3>
+          <button id="urlModalClose" class="url-modal-close" type="button" aria-label="닫기">&times;</button>
+        </div>
+        <div class="url-modal-body">
+          <p data-i18n="modal.urlCopy.message">클립보드 복사에 실패했습니다. 아래 URL을 수동으로 복사해주세요.</p>
+          <div class="url-display-container">
+            <input id="urlDisplayInput" class="url-display-input" type="text" readonly />
+          </div>
+        </div>
+        <div class="url-modal-footer">
+          <button id="urlModalCopy" class="url-modal-copy-btn" type="button" data-i18n="modal.urlCopy.copyBtn">복사</button>
+        </div>
+      </div>
     </div>
 
     <noscript>이 앱을 사용하려면 JavaScript를 활성화하세요.</noscript>

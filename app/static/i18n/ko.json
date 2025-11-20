@@ -19,7 +19,7 @@
       "title": "블록을 이 영역으로 드래그해서 삭제하세요"
     },
     "footer": {
-      "credit": "Created by #159 [TCB] 방구석개발자",
+      "credit": "Created by #159 [TCA] 방구석개발자",
       "bmc": "Buy me a coffee",
       "toss": "토스 송금",
       "privacy": "개인정보 처리방침",
@@ -48,8 +48,17 @@
   "msg": {
     "copiedShort": "단축 복사됨!",
     "copiedFull": "전체 복사됨",
+    "copied": "복사됨!",
     "shortenError": "단축 URL 생성에 실패했습니다.",
-    "copyError": "복사에 실패했습니다."
+    "copyError": "복사에 실패했습니다.",
+    "copyManual": "Ctrl+C 또는 Cmd+C로 복사해주세요"
+  },
+  "modal": {
+    "urlCopy": {
+      "title": "URL 복사",
+      "message": "아래 주소를 복사해주세요.",
+      "copyBtn": "복사"
+    }
   },
   "consent": {
     "message": "사용 경험 개선을 위해 익명 분석 데이터를 수집합니다. 개인 정보는 수집되지 않습니다.",

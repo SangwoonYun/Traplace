@@ -19,7 +19,7 @@
       "title": "Arraste um bloco para esta área para excluí-lo"
     },
     "footer": {
-      "credit": "Created by #159 [TCB] 방구석개발자",
+      "credit": "Created by #159 [TCA] 방구석개발자",
       "bmc": "Buy me a coffee",
       "toss": "Toss",
       "privacy": "Política de Privacidade",
@@ -45,7 +45,22 @@
   "msg": {
     "copiedShort": "URL curta copiada!",
     "copiedFull": "URL completa copiada",
+    "copied": "Copiado!",
     "shortenError": "Falha ao criar URL curta.",
-    "copyError": "Falha ao copiar."
+    "copyError": "Falha ao copiar.",
+    "copyManual": "Por favor, copie com Ctrl+C ou Cmd+C"
+  },
+  "modal": {
+    "urlCopy": {
+      "title": "Copiar URL",
+      "message": "Por favor, copie a URL abaixo.",
+      "copyBtn": "Copiar"
+    }
+  },
+  "consent": {
+    "message": "Usamos análises anônimas para melhorar sua experiência. Nenhum dado pessoal é coletado.",
+    "accept": "Aceitar",
+    "reject": "Rejeitar",
+    "learnMore": "Saiba mais"
   }
 }

@@ -19,7 +19,7 @@
       "title": "Faites glisser un bloc dans cette zone pour le supprimer"
     },
     "footer": {
-      "credit": "Created by #159 [TCB] 방구석개발자",
+      "credit": "Created by #159 [TCA] 방구석개발자",
       "bmc": "Buy me a coffee",
       "toss": "Toss",
       "privacy": "Politique de confidentialité",
@@ -45,7 +45,22 @@
   "msg": {
     "copiedShort": "URL courte copiée !",
     "copiedFull": "URL complète copiée",
-    "shortenError": "Échec de la création de l’URL courte.",
-    "copyError": "Échec de la copie."
+    "copied": "Copié !",
+    "shortenError": "Échec de la création de l'URL courte.",
+    "copyError": "Échec de la copie.",
+    "copyManual": "Veuillez copier avec Ctrl+C ou Cmd+C"
+  },
+  "modal": {
+    "urlCopy": {
+      "title": "Copier l'URL",
+      "message": "Veuillez copier l'URL ci-dessous.",
+      "copyBtn": "Copier"
+    }
+  },
+  "consent": {
+    "message": "Nous utilisons des analyses anonymes pour améliorer votre expérience. Aucune donnée personnelle n'est collectée.",
+    "accept": "Accepter",
+    "reject": "Refuser",
+    "learnMore": "En savoir plus"
   }
 }

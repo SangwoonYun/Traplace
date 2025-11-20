@@ -1042,4 +1042,229 @@ body.rtl .icon-arrow { transform: scaleX(-1); }
   font-weight: 700;
   color: #555;
   user-select: none;
+
+ * URL Copy Modal
+ * ------------------------------------------- */
+.url-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10002;
+  padding: 20px;
+}
+
+.url-modal-content {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 500px;
+  overflow: hidden;
+  animation: modalFadeIn 0.2s ease;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.url-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.url-modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #222;
+}
+
+.url-modal-close {
+  appearance: none;
+  border: none;
+  background: transparent;
+  font-size: 28px;
+  line-height: 1;
+  color: #666;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+}
+
+.url-modal-close:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #222;
+}
+
+.url-modal-body {
+  padding: 20px;
+}
+
+.url-modal-body p {
+  margin: 0 0 16px 0;
+  color: #444;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.url-display-container {
+  position: relative;
+}
+
+.url-display-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  background: #f9f9f9;
+  color: #222;
+  box-sizing: border-box;
+  cursor: text;
+  transition: border-color 0.15s ease;
+}
+
+.url-display-input:focus {
+  outline: none;
+  border-color: #1557ff;
+  background: #fff;
+}
+
+.url-modal-footer {
+  padding: 16px 20px;
+  border-top: 1px solid #e5e5e5;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.url-modal-copy-btn {
+  appearance: none;
+  border: 1px solid #1557ff60;
+  background: #1557ff10;
+  color: #0b3ddc;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.url-modal-copy-btn:hover {
+  background: #1557ff20;
+  transform: translateY(-1px);
+}
+
+.url-modal-copy-btn:active {
+  transform: translateY(0);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .url-modal-content {
+    background: #1a1a1a;
+  }
+
+  .url-modal-header {
+    border-bottom-color: #333;
+  }
+
+  .url-modal-header h3 {
+    color: #e0e0e0;
+  }
+
+  .url-modal-close {
+    color: #aaa;
+  }
+
+  .url-modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+
+  .url-modal-body p {
+    color: #c0c0c0;
+  }
+
+  .url-display-input {
+    background: #2a2a2a;
+    border-color: #444;
+    color: #e0e0e0;
+  }
+
+  .url-display-input:focus {
+    border-color: #5c9cff;
+    background: #333;
+  }
+
+  .url-modal-footer {
+    border-top-color: #333;
+  }
+
+  .url-modal-copy-btn {
+    background: rgba(21, 87, 255, 0.25);
+    border-color: rgba(21, 87, 255, 0.6);
+    color: #5c9cff;
+  }
+
+  .url-modal-copy-btn:hover {
+    background: rgba(21, 87, 255, 0.35);
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .url-modal {
+    padding: 16px;
+  }
+
+  .url-modal-content {
+    max-width: 100%;
+  }
+
+  .url-modal-header h3 {
+    font-size: 16px;
+  }
+
+  .url-modal-body {
+    padding: 16px;
+  }
+
+  .url-display-input {
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  .url-modal-footer {
+    padding: 12px 16px;
+  }
+
+  .url-modal-copy-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
 }

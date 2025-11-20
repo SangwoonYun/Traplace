@@ -19,7 +19,7 @@
       "title": "ブロックをこの領域にドラッグして削除します"
     },
     "footer": {
-      "credit": "Created by #159 [TCB] 방구석개발자",
+      "credit": "Created by #159 [TCA] 방구석개발자",
       "bmc": "Buy me a coffee",
       "toss": "Toss",
       "privacy": "プライバシーポリシー",
@@ -45,7 +45,22 @@
   "msg": {
     "copiedShort": "短縮URLをコピーしました！",
     "copiedFull": "完全なURLをコピーしました",
+    "copied": "コピーしました！",
     "shortenError": "短縮URLの作成に失敗しました。",
-    "copyError": "コピーに失敗しました。"
+    "copyError": "コピーに失敗しました。",
+    "copyManual": "Ctrl+C または Cmd+C でコピーしてください"
+  },
+  "modal": {
+    "urlCopy": {
+      "title": "URLをコピー",
+      "message": "以下のURLをコピーしてください。",
+      "copyBtn": "コピー"
+    }
+  },
+  "consent": {
+    "message": "使用体験の向上のため、匿名の分析データを収集します。個人情報は収集されません。",
+    "accept": "同意する",
+    "reject": "拒否する",
+    "learnMore": "詳細を見る"
   }
 }

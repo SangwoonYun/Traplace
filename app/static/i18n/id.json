@@ -19,7 +19,7 @@
       "title": "Seret blok ke area ini untuk menghapusnya"
     },
     "footer": {
-      "credit": "Created by #159 [TCB] 방구석개발자",
+      "credit": "Created by #159 [TCA] 방구석개발자",
       "bmc": "Buy me a coffee",
       "toss": "Toss",
       "privacy": "Kebijakan Privasi",
@@ -45,7 +45,22 @@
   "msg": {
     "copiedShort": "URL pendek disalin!",
     "copiedFull": "URL lengkap disalin",
+    "copied": "Disalin!",
     "shortenError": "Gagal membuat URL pendek.",
-    "copyError": "Gagal menyalin."
+    "copyError": "Gagal menyalin.",
+    "copyManual": "Silakan salin dengan Ctrl+C atau Cmd+C"
+  },
+  "modal": {
+    "urlCopy": {
+      "title": "Salin URL",
+      "message": "Silakan salin URL di bawah ini.",
+      "copyBtn": "Salin"
+    }
+  },
+  "consent": {
+    "message": "Kami menggunakan analitik anonim untuk meningkatkan pengalaman Anda. Tidak ada data pribadi yang dikumpulkan.",
+    "accept": "Terima",
+    "reject": "Tolak",
+    "learnMore": "Pelajari Lebih Lanjut"
   }
 }

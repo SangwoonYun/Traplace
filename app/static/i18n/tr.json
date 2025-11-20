@@ -19,7 +19,7 @@
       "title": "Bir bloğu bu alana sürükleyerek silin"
     },
     "footer": {
-      "credit": "Created by #159 [TCB] 방구석개발자",
+      "credit": "Created by #159 [TCA] 방구석개발자",
       "bmc": "Buy me a coffee",
       "toss": "Toss",
       "privacy": "Gizlilik Politikası",
@@ -45,7 +45,22 @@
   "msg": {
     "copiedShort": "Kısa URL kopyalandı!",
     "copiedFull": "Tam URL kopyalandı",
+    "copied": "Kopyalandı!",
     "shortenError": "Kısa URL oluşturulamadı.",
-    "copyError": "Kopyalama başarısız oldu."
+    "copyError": "Kopyalama başarısız oldu.",
+    "copyManual": "Lütfen Ctrl+C veya Cmd+C ile kopyalayın"
+  },
+  "modal": {
+    "urlCopy": {
+      "title": "URL'yi kopyala",
+      "message": "Lütfen aşağıdaki URL'yi kopyalayın.",
+      "copyBtn": "Kopyala"
+    }
+  },
+  "consent": {
+    "message": "Deneyiminizi geliştirmek için anonim analizler kullanıyoruz. Kişisel veri toplanmamaktadır.",
+    "accept": "Kabul et",
+    "reject": "Reddet",
+    "learnMore": "Daha fazla bilgi"
   }
 }

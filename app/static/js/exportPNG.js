@@ -220,11 +220,21 @@ function strokeCellPerimeter(ctx, set, x, y, color, lineWidth = 2, dashed = fals
 
 /**
  * Return block fill/stroke styles based on validity against the painted set.
- * @param {{left:number, top:number, size:number, kind:string}} b
+ * @param {{left:number, top:number, size:number, kind:string, el?:HTMLElement}} b
  * @param {Set<string>} paintedSet
  * @returns {{fill:string, stroke:string}}
  */
 function styleForBlock(b, paintedSet) {
+  // If block element exists, read actual computed styles
+  if (b.el) {
+    const computed = getComputedStyle(b.el);
+    return {
+      fill: computed.backgroundColor || cssVar('--ok-bg', '#fafafa'),
+      stroke: computed.borderColor || cssVar('--ok-border', '#555'),
+    };
+  }
+
+  // Fallback: use CSS variables based on kind and validity
   if (b.kind === 'resource') {
     return {
       fill: cssVar('--resource-bg', '#ffe5e5'),

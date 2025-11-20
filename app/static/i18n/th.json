@@ -19,7 +19,7 @@
       "title": "ลากบล็อกมาที่บริเวณนี้เพื่อลบ"
     },
     "footer": {
-      "credit": "Created by #159 [TCB] 방구석개발자",
+      "credit": "Created by #159 [TCA] 방구석개발자",
       "bmc": "Buy me a coffee",
       "toss": "Toss",
       "privacy": "นโยบายความเป็นส่วนตัว",
@@ -45,7 +45,22 @@
   "msg": {
     "copiedShort": "คัดลอก URL แบบย่อแล้ว!",
     "copiedFull": "คัดลอก URL เต็มแล้ว",
+    "copied": "คัดลอกแล้ว!",
     "shortenError": "สร้าง URL แบบย่อไม่สำเร็จ.",
-    "copyError": "คัดลอกไม่สำเร็จ."
+    "copyError": "คัดลอกไม่สำเร็จ.",
+    "copyManual": "กรุณาคัดลอกด้วย Ctrl+C หรือ Cmd+C"
+  },
+  "modal": {
+    "urlCopy": {
+      "title": "คัดลอก URL",
+      "message": "กรุณาคัดลอก URL ด้านล่าง",
+      "copyBtn": "คัดลอก"
+    }
+  },
+  "consent": {
+    "message": "เราใช้การวิเคราะห์แบบไม่ระบุชื่อเพื่อปรับปรุงประสบการณ์ของคุณ ไม่มีการเก็บข้อมูลส่วนบุคคล",
+    "accept": "ยอมรับ",
+    "reject": "ปฏิเสธ",
+    "learnMore": "เรียนรู้เพิ่มเติม"
   }
 }

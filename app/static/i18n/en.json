@@ -19,7 +19,7 @@
       "title": "Drag a block into this area to delete it"
     },
     "footer": {
-      "credit": "Created by #159 [TCB] 방구석개발자",
+      "credit": "Created by #159 [TCA] 방구석개발자",
       "bmc": "Buy me a coffee",
       "toss": "Toss",
       "privacy": "Privacy Policy",
@@ -48,8 +48,17 @@
   "msg": {
     "copiedShort": "Short URL copied!",
     "copiedFull": "Full URL copied",
+    "copied": "Copied!",
     "shortenError": "Failed to create short URL.",
-    "copyError": "Failed to copy."
+    "copyError": "Failed to copy.",
+    "copyManual": "Please copy with Ctrl+C or Cmd+C"
+  },
+  "modal": {
+    "urlCopy": {
+      "title": "Copy URL",
+      "message": "Please copy the URL below.",
+      "copyBtn": "Copy"
+    }
   },
   "consent": {
     "message": "We use anonymous analytics to improve your experience. No personal data is collected.",
