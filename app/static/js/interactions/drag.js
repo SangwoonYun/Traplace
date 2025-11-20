@@ -14,7 +14,6 @@ import { PAINTER_KINDS } from '../painter.js';
 import { showPreview, clearPreview } from '../render.js';
 import { createBlock, updateBlockPosition, deleteBlock, updateBlockSize } from '../blocks.js';
 import { t } from '../i18n.js';
-import { posToCell } from '../transform.js';
 
 /* ---------------------------------------------
  * Constants
@@ -461,7 +460,7 @@ export function setupPaletteDrag() {
         if (palette?.dataset?.scrolling === '1') delete palette.dataset.scrolling;
 
         const kind = item.dataset.kind;
-        let size, width, height, px, ghostText;
+        let size, width, height, ghostText;
 
         // Custom blocks use input values
         if (kind === 'custom') {
@@ -471,11 +470,9 @@ export function setupPaletteDrag() {
           width = Math.min(30, Math.max(1, parseInt(widthInput?.value, 10) || 1));
           height = Math.min(30, Math.max(1, parseInt(heightInput?.value, 10) || 1));
           size = Math.max(width, height);
-          px = size * cellPx();
           ghostText = `${width}×${height}`;
         } else {
           size = parseInt(item.dataset.size, 10);
-          px = size * cellPx();
           ghostText =
             kind === 'hq'
               ? t('palette.hq')
@@ -564,7 +561,7 @@ export function setupPaletteDrag() {
   const validateInput = (input) => {
     const max = 30;
     const min = 1;
-    let value = parseInt(input.value, 10);
+    const value = parseInt(input.value, 10);
 
     if (isNaN(value) || value < min) {
       input.value = min;
@@ -599,7 +596,7 @@ function getResizeEdge(el, e) {
   const threshold = 15; // pixels from edge in local coords
 
   // Get block state to know its actual width/height in cells
-  const block = state.blocks.find(b => b.el === el);
+  const block = state.blocks.find((b) => b.el === el);
   if (!block) return null;
 
   const cpx = cellPx();
@@ -618,7 +615,7 @@ function getResizeEdge(el, e) {
   const afterUnscaleY = -screenY;
 
   // Step 2: Undo rotate(45deg) - apply rotate(-45deg)
-  const angle = -45 * Math.PI / 180;
+  const angle = (-45 * Math.PI) / 180;
   const cos = Math.cos(angle);
   const sin = Math.sin(angle);
   const localX = afterUnscaleX * cos - afterUnscaleY * sin;
@@ -641,10 +638,10 @@ function getResizeEdge(el, e) {
   //   'right' (x = halfW) → 좌상 (top-left visually)
   //   'top' (y = -halfH) → 좌하 (bottom-left visually)
   //   'bottom' (y = halfH) → 우상 (top-right visually)
-  const distLeft = Math.abs(localX + halfW);     // Distance to left edge
-  const distRight = Math.abs(localX - halfW);    // Distance to right edge
-  const distTop = Math.abs(localY + halfH);      // Distance to top edge
-  const distBottom = Math.abs(localY - halfH);   // Distance to bottom edge
+  const distLeft = Math.abs(localX + halfW); // Distance to left edge
+  const distRight = Math.abs(localX - halfW); // Distance to right edge
+  const distTop = Math.abs(localY + halfH); // Distance to top edge
+  const distBottom = Math.abs(localY - halfH); // Distance to bottom edge
 
   // Find minimum distance for width and height edges
   const minWidthDist = Math.min(distLeft, distRight);
@@ -672,7 +669,7 @@ function startResize(el, e, edge) {
   e.preventDefault();
   e.stopPropagation();
 
-  const block = state.blocks.find(b => b.el === el);
+  const block = state.blocks.find((b) => b.el === el);
   if (!block || block.kind !== 'custom') return;
 
   const cpx = cellPx();
@@ -703,7 +700,7 @@ function startResize(el, e, edge) {
     const unscaledDy = -dy;
 
     // Step 2: Undo rotate(45deg) with rotate(-45deg)
-    const angle = -45 * Math.PI / 180;
+    const angle = (-45 * Math.PI) / 180;
     const cos = Math.cos(angle);
     const sin = Math.sin(angle);
     const localDx = unscaledDx * cos - unscaledDy * sin;
@@ -731,14 +728,12 @@ function startResize(el, e, edge) {
       // Adjust position to keep top-right anchor fixed
       const actualChange = newWidth - startWidth;
       newLeft = startLeft - actualChange * cpx;
-
     } else if (edge === 'right') {
       // Resize width: top-left edge
       const widthDelta = localDx / cpx;
       newWidth = Math.round(startWidth + widthDelta);
       newWidth = Math.max(1, Math.min(30, newWidth));
       // No position adjustment needed (anchor naturally stays fixed)
-
     } else if (edge === 'top') {
       // Resize height: bottom-left edge
       const heightDelta = -localDy / cpx;
@@ -748,7 +743,6 @@ function startResize(el, e, edge) {
       // Adjust position to keep top-right anchor fixed
       const actualChange = newHeight - startHeight;
       newTop = startTop - actualChange * cpx;
-
     } else if (edge === 'bottom') {
       // Resize height: top-right edge (anchor point)
       const heightDelta = localDy / cpx;
@@ -773,7 +767,6 @@ function startResize(el, e, edge) {
     block.size = Math.max(newWidth, newHeight);
     block.left = newLeft;
     block.top = newTop;
-
 
     // Update label if not custom
     if (!block.customLabel) {
@@ -813,10 +806,10 @@ function startResize(el, e, edge) {
 function getCursorForEdge(edge) {
   // Block is rotated 45deg, so use diagonal cursors
   const cursorMap = {
-    'top': 'nesw-resize',      // Top edge (visually top-left) → NW-SE diagonal
-    'right': 'nwse-resize',    // Right edge (visually top-right) → NE-SW diagonal
-    'bottom': 'nesw-resize',   // Bottom edge (visually bottom-right) → NW-SE diagonal
-    'left': 'nwse-resize'      // Left edge (visually bottom-left) → NE-SW diagonal
+    top: 'nesw-resize', // Top edge (visually top-left) → NW-SE diagonal
+    right: 'nwse-resize', // Right edge (visually top-right) → NE-SW diagonal
+    bottom: 'nesw-resize', // Bottom edge (visually bottom-right) → NW-SE diagonal
+    left: 'nwse-resize', // Left edge (visually bottom-left) → NE-SW diagonal
   };
   return cursorMap[edge] || 'move';
 }
@@ -827,7 +820,7 @@ function getCursorForEdge(edge) {
  */
 export function makeMovable(el) {
   // Add hover effect for custom blocks to show resize cursor
-  const block = state.blocks.find(b => b.el === el);
+  const block = state.blocks.find((b) => b.el === el);
   if (block && block.kind === 'custom') {
     el.addEventListener('pointermove', (e) => {
       if (el.dataset.editing === '1') return;
@@ -850,7 +843,7 @@ export function makeMovable(el) {
     if (state._isResizing) return; // Don't start anything if already resizing
 
     // Check if clicking on edge for custom blocks
-    const block = state.blocks.find(b => b.el === el);
+    const block = state.blocks.find((b) => b.el === el);
     if (block && block.kind === 'custom') {
       const resizeEdge = getResizeEdge(el, e);
       if (resizeEdge) {
@@ -881,7 +874,7 @@ export function makeMovable(el) {
       const kind = el.dataset.kind;
 
       // Get width and height from state for custom blocks
-      const block = state.blocks.find(b => b.el === el);
+      const block = state.blocks.find((b) => b.el === el);
       const width = block?.width;
       const height = block?.height;
       const w = width || size;
@@ -895,7 +888,9 @@ export function makeMovable(el) {
       const gl = document.createElement('div');
       gl.className = 'ghost-label';
       const labelEl = el.querySelector('.label');
-      gl.textContent = (labelEl?.textContent || '').trim() || (width && height ? `${width}×${height}` : `${size}×${size}`);
+      gl.textContent =
+        (labelEl?.textContent || '').trim() ||
+        (width && height ? `${width}×${height}` : `${size}×${size}`);
       ghost.appendChild(gl);
 
       document.body.appendChild(ghost);
@@ -903,7 +898,16 @@ export function makeMovable(el) {
       // lifted visual on original
       el.classList.add('is-lifted');
 
-      state.drag = { mode: 'move', size, kind, width, height, node: el, ghost, pointerId: e.pointerId };
+      state.drag = {
+        mode: 'move',
+        size,
+        kind,
+        width,
+        height,
+        node: el,
+        ghost,
+        pointerId: e.pointerId,
+      };
       updateGhost(e.clientX, e.clientY, w * cellPx(), h * cellPx());
 
       window.addEventListener('pointermove', onPointerMove);

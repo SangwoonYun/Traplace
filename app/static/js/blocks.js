@@ -85,8 +85,8 @@ export function validateAllObjects() {
 
     if (needsValidation) {
       const { cx, cy } = posToCell(b.left, b.top);
-      const width = b.kind === 'custom' ? (b.width || b.size) : b.size;
-      const height = b.kind === 'custom' ? (b.height || b.size) : b.size;
+      const width = b.kind === 'custom' ? b.width || b.size : b.size;
+      const height = b.kind === 'custom' ? b.height || b.size : b.size;
 
       for (let y = cy; y < cy + height && !invalid; y++) {
         for (let x = cx; x < cx + width; x++) {
@@ -270,7 +270,14 @@ export function createBlock(kind, size, left, top, width, height) {
   rot.appendChild(el);
 
   /** @type {{el:HTMLElement, kind:string, size:number, left:number, top:number, customLabel:boolean, width?:number, height?:number}} */
-  const b = { el, kind, size: blockWidth === blockHeight ? blockWidth : Math.max(blockWidth, blockHeight), left, top, customLabel: false };
+  const b = {
+    el,
+    kind,
+    size: blockWidth === blockHeight ? blockWidth : Math.max(blockWidth, blockHeight),
+    left,
+    top,
+    customLabel: false,
+  };
   if (kind === 'custom') {
     b.width = blockWidth;
     b.height = blockHeight;

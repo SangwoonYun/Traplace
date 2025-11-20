@@ -20,7 +20,15 @@ import { state, cellPx } from './state.js';
 /* ---------------------------------------------
  * Kind ↔ code mapping (compact token)
  * ------------------------------------------- */
-const KIND_TO_CODE = { block: 'B', flag: 'F', hq: 'H', city: 'C', resource: 'R', trap: 'T', custom: 'X' };
+const KIND_TO_CODE = {
+  block: 'B',
+  flag: 'F',
+  hq: 'H',
+  city: 'C',
+  resource: 'R',
+  trap: 'T',
+  custom: 'X',
+};
 const CODE_TO_KIND = Object.fromEntries(Object.entries(KIND_TO_CODE).map(([k, v]) => [v, k]));
 
 /* ---------------------------------------------
