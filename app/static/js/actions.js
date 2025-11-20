@@ -262,16 +262,9 @@ export function setupActions() {
         await navigator.clipboard.writeText(location.href);
         btnCopyURL.textContent = t('msg.copiedFull');
         restoreIcon();
-      } catch {
-        // Legacy fallback using a temporary textarea
-        const ta = document.createElement('textarea');
-        ta.value = location.href;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        btnCopyURL.textContent = t('msg.copiedFull');
-        restoreIcon();
+      } catch (err) {
+        console.error('Clipboard write failed:', err);
+        alert(t('msg.copyError') || 'Failed to copy to clipboard');
       }
     }
   });
