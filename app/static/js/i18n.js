@@ -62,7 +62,7 @@ const BUILTIN_EN = {
       home: 'Go to center',
     },
     footer: {
-      credit: 'Created by #159 [TCB] 방구석개발자',
+      credit: 'Created by #159 [TCA] 방구석개발자',
       bmc: 'Buy me a coffee',
       toss: 'Toss',
     },
