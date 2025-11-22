@@ -11,8 +11,8 @@ import { viewport, world, rot } from '../dom.js';
 import { clamp } from '../transform.js';
 import { updateBadge } from '../render.js';
 
-const ZOOM_MIN = 0.3;
-const ZOOM_MAX = 4;
+const ZOOM_MIN = 0.1;
+const ZOOM_MAX = 3.0;
 
 /**
  * Set zoom while keeping a given client-space pivot fixed on screen.
