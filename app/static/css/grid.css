@@ -29,6 +29,7 @@
  * ------------------------------------------- */
 .tiles,
 .tiles-preview,
+.tiles-base,
 .outlines,
 .outlines-preview,
 .tiles-user {
@@ -51,7 +52,16 @@
 }
 
 /* ---------------------------------------------
- * Red Tiles (alternative highlight)
+ * Base Tiles (light red, default tiles)
+ * ------------------------------------------- */
+.tile-base {
+  position: absolute;
+  border-radius: 0;
+  background: var(--paint-base);
+}
+
+/* ---------------------------------------------
+ * Red Tiles (user toggle)
  * ------------------------------------------- */
 .tile-red {
   position: absolute;

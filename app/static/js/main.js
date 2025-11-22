@@ -10,6 +10,7 @@
 import {
   initialLayout,
   renderUserTiles,
+  renderBaseTiles,
   recomputePaint,
   updateBadge,
   centerToCell,
@@ -137,13 +138,43 @@ window.addEventListener('load', async () => {
   }
 
   /* ---------------------------------------------
-   * Create default castle block (594-605, 594-605)
+   * Create default castle block (594-605, 594-605) and turrets
    * ------------------------------------------- */
   state._restoring = true;
   const c = cellPx();
   const castleLeft = 594 * c;
   const castleTop = 594 * c;
   createBlock('castle', 12, castleLeft, castleTop, undefined, undefined, true);
+
+  // Create turrets at each corner (2x2 blocks)
+  // 12 o'clock (top-left): Turret IV
+  createBlock('turret', 2, 594 * c, 594 * c, undefined, undefined, true, '포탑 IV');
+  // 3 o'clock (top-right): Turret III
+  createBlock('turret', 2, 604 * c, 594 * c, undefined, undefined, true, '포탑 III');
+  // 6 o'clock (bottom-right): Turret I
+  createBlock('turret', 2, 604 * c, 604 * c, undefined, undefined, true, '포탑 I');
+  // 9 o'clock (bottom-left): Turret II
+  createBlock('turret', 2, 594 * c, 604 * c, undefined, undefined, true, '포탑 II');
+
+  // Create base tiles around castle (8 cells from castle edge)
+  // Castle is at 594-605 (12x12), so base tiles are from 586-613 (28x28)
+  const castleMinX = 594;
+  const castleMaxX = 605;
+  const castleMinY = 594;
+  const castleMaxY = 605;
+  const baseRange = 8;
+
+  for (let y = castleMinY - baseRange; y <= castleMaxY + baseRange; y++) {
+    for (let x = castleMinX - baseRange; x <= castleMaxX + baseRange; x++) {
+      // Skip cells that are inside the castle
+      if (x >= castleMinX && x <= castleMaxX && y >= castleMinY && y <= castleMaxY) {
+        continue;
+      }
+      state.baseTiles.add(`${x},${y}`);
+    }
+  }
+
+  renderBaseTiles();
   state._restoring = false;
 
   /* ---------------------------------------------
@@ -196,6 +227,7 @@ window.addEventListener('load', async () => {
    * Initial render & validation
    * ------------------------------------------- */
   recomputePaint();
+  renderBaseTiles();
   renderUserTiles();
   validateAllObjects();
 
@@ -242,6 +274,7 @@ function relayoutForCellChange() {
   // Recompute world px size against the latest cellPx()
   setWorldSizeCells(BASE_CELLS_X, BASE_CELLS_Y);
   // Repaint overlays
+  renderBaseTiles();
   renderUserTiles();
   recomputePaint();
   // Keep badge up to date

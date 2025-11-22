@@ -38,7 +38,8 @@
     "custom": "커스텀 블록",
     "customWidthLabel": "가로 크기",
     "customHeightLabel": "세로 크기",
-    "castle": "캐슬"
+    "castle": "캐슬",
+    "turret": "포탑"
   },
   "alert": {
     "noCities": "도시가 없습니다.",

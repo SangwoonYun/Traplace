@@ -38,7 +38,8 @@
     "custom": "Custom Block",
     "customWidthLabel": "Width",
     "customHeightLabel": "Height",
-    "castle": "Castle"
+    "castle": "Castle",
+    "turret": "Turret"
   },
   "alert": {
     "noCities": "No cities.",

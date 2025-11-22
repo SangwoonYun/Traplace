@@ -16,6 +16,7 @@
   --paint-blue: rgba(66, 133, 244, 0.25);
   --paint-blue-border: rgba(66, 133, 244, 0.9);
   --paint-red: rgba(220, 20, 60, 0.35);
+  --paint-base: rgba(255, 182, 193, 0.4);
 
   /* Trash zone */
   --trash-bg: rgba(220, 20, 60, 0.07);
@@ -41,6 +42,8 @@
   --city-border: #f9a825;
   --castle-bg: #e1bee7;
   --castle-border: #6a1b9a;
+  --turret-bg: #b39ddb;
+  --turret-border: #4a148c;
 
   /* World / Zoom */
   --zoom: 1; /* 1 = 100% */

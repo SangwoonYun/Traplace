@@ -57,6 +57,11 @@ function applyBlockStyle(b, invalid) {
       el.style.borderColor = styles.getPropertyValue('--castle-border');
       return;
 
+    case 'turret':
+      el.style.background = styles.getPropertyValue('--turret-bg');
+      el.style.borderColor = styles.getPropertyValue('--turret-border');
+      return;
+
     case 'block':
       if (b.size === 1 || b.size === 2 || b.size === 3) {
         el.style.background = styles.getPropertyValue('--block123-bg');
@@ -215,16 +220,17 @@ function finishEditLabel(blockEl, cancel) {
  * ------------------------------------------- */
 /**
  * Create a new block element and register it in state.
- * @param {'hq'|'flag'|'trap'|'city'|'resource'|'block'|'custom'|'castle'} kind
+ * @param {'hq'|'flag'|'trap'|'city'|'resource'|'block'|'custom'|'castle'|'turret'} kind
  * @param {number} size - For square blocks; ignored for custom blocks
  * @param {number} left
  * @param {number} top
  * @param {number} [width] - For custom blocks only
  * @param {number} [height] - For custom blocks only
  * @param {boolean} [immutable=false] - If true, block cannot be moved or deleted
+ * @param {string} [customName] - Custom display name for the block
  * @returns {HTMLElement}
  */
-export function createBlock(kind, size, left, top, width, height, immutable = false) {
+export function createBlock(kind, size, left, top, width, height, immutable = false, customName = null) {
   const cell =
     parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cell')) || 48;
 
@@ -247,20 +253,28 @@ export function createBlock(kind, size, left, top, width, height, immutable = fa
   } else {
     blockWidth = blockHeight = size;
     el.dataset.size = String(size);
-    displayText =
-      kind === 'hq'
-        ? t('palette.hq')
-        : kind === 'flag'
-          ? t('palette.flag')
-          : kind === 'trap'
-            ? t('palette.trap')
-            : kind === 'city'
-              ? t('palette.city')
-              : kind === 'resource'
-                ? t('palette.resource')
-                : kind === 'castle'
-                  ? t('palette.castle')
-                  : `${size}×${size}`;
+
+    // Use customName if provided, otherwise use translation or default
+    if (customName) {
+      displayText = customName;
+    } else {
+      displayText =
+        kind === 'hq'
+          ? t('palette.hq')
+          : kind === 'flag'
+            ? t('palette.flag')
+            : kind === 'trap'
+              ? t('palette.trap')
+              : kind === 'city'
+                ? t('palette.city')
+                : kind === 'resource'
+                  ? t('palette.resource')
+                  : kind === 'castle'
+                    ? t('palette.castle')
+                    : kind === 'turret'
+                      ? t('palette.turret')
+                      : `${size}×${size}`;
+    }
   }
 
   el.style.width = `${blockWidth * cell}px`;

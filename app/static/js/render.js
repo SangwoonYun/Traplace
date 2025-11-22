@@ -14,6 +14,7 @@ import {
   world,
   rot,
   tilesLayer,
+  baseLayer,
   userLayer,
   outlinesLayer,
   outlinesPreviewLayer,
@@ -141,6 +142,22 @@ export function renderCells(layer, cellList, opts) {
     t.style.borderLeft = leftMissing ? `${thickness} ${dashed} ${col}` : '0';
 
     layer.appendChild(t);
+  }
+}
+
+/** Render base tiles (light red, around castle). */
+export function renderBaseTiles() {
+  baseLayer.innerHTML = '';
+  for (const k of state.baseTiles) {
+    const [x, y] = k.split(',').map(Number);
+    const d = document.createElement('div');
+    d.className = 'tile-base';
+    const cpx = cellPx();
+    d.style.left = `${x * cpx}px`;
+    d.style.top = `${y * cpx}px`;
+    d.style.width = `${cpx}px`;
+    d.style.height = `${cpx}px`;
+    baseLayer.appendChild(d);
   }
 }
 

@@ -28,7 +28,7 @@ export function cellPx() {
 /**
  * @typedef {Object} Block
  * @property {HTMLElement} el
- * @property {'hq'|'flag'|'trap'|'city'|'resource'|'block'|'castle'} kind
+ * @property {'hq'|'flag'|'trap'|'city'|'resource'|'block'|'castle'|'turret'} kind
  * @property {number} size
  * @property {number} left
  * @property {number} top
@@ -44,6 +44,9 @@ export const state = {
 
   /** Union of blue painter coverage ("x,y" keys). */
   paintedSet: new Set(),
+
+  /** Base tiles (light red, around castle) ("x,y" keys). */
+  baseTiles: new Set(),
 
   /** User red paint toggles ("x,y" keys). */
   userPaint: new Set(),
