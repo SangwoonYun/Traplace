@@ -147,11 +147,11 @@ window.addEventListener('load', async () => {
   createBlock('castle', 12, castleLeft, castleTop, undefined, undefined, true);
 
   // Create turrets at each corner (2x2 blocks)
-  // Note: Labels will be set after i18n loads
-  const turret4 = createBlock('turret', 2, 594 * c, 594 * c, undefined, undefined, true); // 12 o'clock (top-left): Turret IV
-  const turret3 = createBlock('turret', 2, 604 * c, 594 * c, undefined, undefined, true); // 3 o'clock (top-right): Turret III
-  const turret1 = createBlock('turret', 2, 604 * c, 604 * c, undefined, undefined, true); // 6 o'clock (bottom-right): Turret I
-  const turret2 = createBlock('turret', 2, 594 * c, 604 * c, undefined, undefined, true); // 9 o'clock (bottom-left): Turret II
+  // Use placeholder names that will be replaced by i18n
+  const turret4 = createBlock('turret', 2, 594 * c, 594 * c, undefined, undefined, true, '포탑 IV'); // 12 o'clock (top-left): Turret IV
+  const turret3 = createBlock('turret', 2, 604 * c, 594 * c, undefined, undefined, true, '포탑 III'); // 3 o'clock (top-right): Turret III
+  const turret1 = createBlock('turret', 2, 604 * c, 604 * c, undefined, undefined, true, '포탑 I'); // 6 o'clock (bottom-right): Turret I
+  const turret2 = createBlock('turret', 2, 594 * c, 604 * c, undefined, undefined, true, '포탑 II'); // 9 o'clock (bottom-left): Turret II
 
   // Store turret elements for i18n updates
   window.__turrets = { turret1, turret2, turret3, turret4 };

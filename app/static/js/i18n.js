@@ -456,6 +456,9 @@ export function updateBlockLabelsForLocale(state) {
     const labelEl = b.el?.querySelector?.('.label');
     if (!labelEl) continue;
 
+    // Skip turret blocks - they're handled separately above
+    if (b.kind === 'turret') continue;
+
     const next = defaultTextFor(b.kind, b.size);
 
     if (b.kind === 'city') {
