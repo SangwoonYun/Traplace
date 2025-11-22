@@ -39,6 +39,8 @@
   --block123-border: #555;
   --city-bg: #fff9c4;
   --city-border: #f9a825;
+  --castle-bg: #e1bee7;
+  --castle-border: #6a1b9a;
 
   /* World / Zoom */
   --zoom: 1; /* 1 = 100% */

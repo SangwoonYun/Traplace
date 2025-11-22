@@ -137,6 +137,16 @@ window.addEventListener('load', async () => {
   }
 
   /* ---------------------------------------------
+   * Create default castle block (594-605, 594-605)
+   * ------------------------------------------- */
+  state._restoring = true;
+  const c = cellPx();
+  const castleLeft = 594 * c;
+  const castleTop = 594 * c;
+  createBlock('castle', 12, castleLeft, castleTop, undefined, undefined, true);
+  state._restoring = false;
+
+  /* ---------------------------------------------
    * Restore from URL (blocks + red tiles)
    * ------------------------------------------- */
   const parsed = parseFromURL();

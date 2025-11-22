@@ -32,6 +32,13 @@
   border-color: var(--city-border);
 }
 
+.block[data-kind='castle'] {
+  background: var(--castle-bg);
+  border-color: var(--castle-border);
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
 .block[data-kind='block'][data-size='1'],
 .block[data-kind='block'][data-size='2'],
 .block[data-kind='block'][data-size='3'],

@@ -158,7 +158,8 @@ function decodeRed(str, useBase36) {
  * @returns {string}
  */
 export function serializeState() {
-  const bItems = state.blocks.map((b) => {
+  // Filter out immutable blocks from serialization
+  const bItems = state.blocks.filter((b) => !b.immutable).map((b) => {
     const c = cellPx();
     const cx = Math.round(b.left / c);
     const cy = Math.round(b.top / c);

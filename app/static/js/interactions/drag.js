@@ -822,8 +822,13 @@ function getCursorForEdge(edge) {
  * @param {HTMLElement} el
  */
 export function makeMovable(el) {
-  // Add hover effect for custom blocks to show resize cursor
+  // Don't make immutable blocks movable
   const block = state.blocks.find((b) => b.el === el);
+  if (block?.immutable) {
+    return;
+  }
+
+  // Add hover effect for custom blocks to show resize cursor
   if (block && block.kind === 'custom') {
     el.addEventListener('pointermove', (e) => {
       if (el.dataset.editing === '1') return;

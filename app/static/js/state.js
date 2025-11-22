@@ -28,11 +28,12 @@ export function cellPx() {
 /**
  * @typedef {Object} Block
  * @property {HTMLElement} el
- * @property {'hq'|'flag'|'trap'|'city'|'resource'|'block'} kind
+ * @property {'hq'|'flag'|'trap'|'city'|'resource'|'block'|'castle'} kind
  * @property {number} size
  * @property {number} left
  * @property {number} top
  * @property {boolean} [customLabel]
+ * @property {boolean} [immutable]
  */
 
 export const state = {
