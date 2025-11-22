@@ -1,5 +1,7 @@
 {
-  "app": { "title": "Simulador de Colocación de Alianza" },
+  "app": {
+    "title": "Simulador de Colocación de Alianza"
+  },
   "ui": {
     "usageTitle": "Cómo usar",
     "usage": "• <b>Arrastrar y soltar</b>: coloca elementos desde la paleta izquierda (ajuste a la cuadrícula).<br>• <b>Arrastrar con el botón central del ratón</b>: mover la vista.<br>• <b>Ctrl/⌘ + Rueda del ratón</b>: acercar/alejar.<br>• <b>Pellizcar en el panel táctil</b>: acercar o alejar.<br>• <b>Haz clic en una celda</b>: alternar pintura roja.<br>• <b>Etiqueta de ciudad</b>: doble clic → editar (Enter para guardar / Esc para cancelar).<br>• <b>Área inferior 🗑</b>: arrastra un elemento aquí para eliminarlo.<br>※ La pintura azul es generada por <b>la Bandera (7×7)</b> y el <b>Cuartel General (15×15)</b>.",
@@ -34,7 +36,16 @@
     "resource": "Recurso",
     "block1": "1×1",
     "block2": "2×2",
-    "block3": "3×3"
+    "block3": "3×3",
+    "custom": "Bloque personalizado",
+    "customWidthLabel": "Ancho",
+    "customHeightLabel": "Alto",
+    "castle": "Castillo",
+    "turret": "Torreta",
+    "turret1": "Torreta I",
+    "turret2": "Torreta II",
+    "turret3": "Torreta III",
+    "turret4": "Torreta IV"
   },
   "alert": {
     "noCities": "No hay ciudades.",

@@ -1,5 +1,7 @@
 {
-  "app": { "title": "Simulador de Posicionamento da Aliança" },
+  "app": {
+    "title": "Simulador de Posicionamento da Aliança"
+  },
   "ui": {
     "usageTitle": "Como usar",
     "usage": "• <b>Arrastar e soltar</b>: coloque itens da paleta à esquerda (alinhamento com a grade).<br>• <b>Arrastar com o botão do meio do mouse</b>: mover a visualização.<br>• <b>Ctrl/⌘ + Roda do mouse</b>: aumentar/diminuir o zoom.<br>• <b>Pinch no touchpad</b>: ampliar ou reduzir.<br>• <b>Clique em uma célula</b>: alternar a pintura vermelha.<br>• <b>Etiqueta da cidade</b>: clique duas vezes → editar (Enter para salvar / Esc para cancelar).<br>• <b>Área inferior 🗑</b>: arraste um item aqui para excluí-lo.<br>※ A pintura azul é gerada por <b>Bandeira (7×7)</b> e <b>Quartel-General (15×15)</b>.",
@@ -34,7 +36,16 @@
     "resource": "Recurso",
     "block1": "1×1",
     "block2": "2×2",
-    "block3": "3×3"
+    "block3": "3×3",
+    "custom": "Bloco personalizado",
+    "customWidthLabel": "Largura",
+    "customHeightLabel": "Altura",
+    "castle": "Castelo",
+    "turret": "Torre",
+    "turret1": "Torre I",
+    "turret2": "Torre II",
+    "turret3": "Torre III",
+    "turret4": "Torre IV"
   },
   "alert": {
     "noCities": "Nenhuma cidade.",

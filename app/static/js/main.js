@@ -147,14 +147,14 @@ window.addEventListener('load', async () => {
   createBlock('castle', 12, castleLeft, castleTop, undefined, undefined, true);
 
   // Create turrets at each corner (2x2 blocks)
-  // 12 o'clock (top-left): Turret IV
-  createBlock('turret', 2, 594 * c, 594 * c, undefined, undefined, true, '포탑 IV');
-  // 3 o'clock (top-right): Turret III
-  createBlock('turret', 2, 604 * c, 594 * c, undefined, undefined, true, '포탑 III');
-  // 6 o'clock (bottom-right): Turret I
-  createBlock('turret', 2, 604 * c, 604 * c, undefined, undefined, true, '포탑 I');
-  // 9 o'clock (bottom-left): Turret II
-  createBlock('turret', 2, 594 * c, 604 * c, undefined, undefined, true, '포탑 II');
+  // Note: Labels will be set after i18n loads
+  const turret4 = createBlock('turret', 2, 594 * c, 594 * c, undefined, undefined, true); // 12 o'clock (top-left): Turret IV
+  const turret3 = createBlock('turret', 2, 604 * c, 594 * c, undefined, undefined, true); // 3 o'clock (top-right): Turret III
+  const turret1 = createBlock('turret', 2, 604 * c, 604 * c, undefined, undefined, true); // 6 o'clock (bottom-right): Turret I
+  const turret2 = createBlock('turret', 2, 594 * c, 604 * c, undefined, undefined, true); // 9 o'clock (bottom-left): Turret II
+
+  // Store turret elements for i18n updates
+  window.__turrets = { turret1, turret2, turret3, turret4 };
 
   // Create base tiles around castle (8 cells from castle edge)
   // Castle is at 594-605 (12x12), so base tiles are from 586-613 (28x28)
