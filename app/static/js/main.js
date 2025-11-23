@@ -355,11 +355,6 @@ window.addEventListener('load', async () => {
     }
   }
 
-  renderBarren();
-  renderPlain();
-  renderRich();
-  renderRuins();
-  renderRedZone();
   state._restoring = false;
 
   /* ---------------------------------------------
@@ -472,14 +467,11 @@ if (window.visualViewport) {
  *  - Keep world pixel size in sync with dynamic --cell
  *  - Prevent stale scroll clamp after media query changes
  * ------------------------------------------- */
+let resizeTimeout = null;
 function relayoutForCellChange() {
   // Recompute world px size against the latest cellPx()
   setWorldSizeCells(BASE_CELLS_X, BASE_CELLS_Y);
-  // Repaint overlays
-  renderBarren();
-  renderPlain();
-  renderRich();
-  renderRuins();
+  // Repaint overlays (Plain/Rich/Ruins are CSS-only, no need to call)
   renderRedZone();
   renderUserTiles();
   recomputePaint();
@@ -488,14 +480,18 @@ function relayoutForCellChange() {
 }
 
 window.addEventListener('resize', () => {
-  // Debounce-ish via rAF to avoid thrash
-  requestAnimationFrame(relayoutForCellChange);
+  // Debounce to avoid excessive reflows
+  if (resizeTimeout) clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    requestAnimationFrame(relayoutForCellChange);
+  }, 150);
 });
 
 window.addEventListener('orientationchange', () => {
   // Some mobile browsers fire resize later; do one pass immediately
   updateAppVhVar();
-  relayoutForCellChange();
+  if (resizeTimeout) clearTimeout(resizeTimeout);
+  requestAnimationFrame(relayoutForCellChange);
 });
 
 /* ---------------------------------------------

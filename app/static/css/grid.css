@@ -149,6 +149,9 @@
   border-radius: 0;
   background: var(--paint-redzone);
   will-change: transform;
+  /* GPU acceleration optimization */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* ---------------------------------------------
@@ -159,6 +162,9 @@
   border-radius: 0;
   background: var(--paint-red);
   will-change: transform;
+  /* GPU acceleration optimization */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* ---------------------------------------------
