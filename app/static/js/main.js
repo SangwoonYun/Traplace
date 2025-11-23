@@ -153,7 +153,16 @@ window.addEventListener('load', async () => {
   // Create turrets at each corner (2x2 blocks)
   // Use placeholder names that will be replaced by i18n
   const turret4 = createBlock('turret', 2, 594 * c, 594 * c, undefined, undefined, true, '포탑 IV'); // 12 o'clock (top-left): Turret IV
-  const turret3 = createBlock('turret', 2, 604 * c, 594 * c, undefined, undefined, true, '포탑 III'); // 3 o'clock (top-right): Turret III
+  const turret3 = createBlock(
+    'turret',
+    2,
+    604 * c,
+    594 * c,
+    undefined,
+    undefined,
+    true,
+    '포탑 III',
+  ); // 3 o'clock (top-right): Turret III
   const turret1 = createBlock('turret', 2, 604 * c, 604 * c, undefined, undefined, true, '포탑 I'); // 6 o'clock (bottom-right): Turret I
   const turret2 = createBlock('turret', 2, 594 * c, 604 * c, undefined, undefined, true, '포탑 II'); // 9 o'clock (bottom-left): Turret II
 
@@ -220,12 +229,7 @@ window.addEventListener('load', async () => {
   for (let y = plainMinY; y <= plainMaxY; y++) {
     for (let x = plainMinX; x <= plainMaxX; x++) {
       // Skip cells inside rich area
-      if (
-        x >= richMinX &&
-        x <= richMaxX &&
-        y >= richMinY &&
-        y <= richMaxY
-      ) {
+      if (x >= richMinX && x <= richMaxX && y >= richMinY && y <= richMaxY) {
         continue;
       }
       state.plain.add(`${x},${y}`);
@@ -236,12 +240,7 @@ window.addEventListener('load', async () => {
   for (let y = richMinY; y <= richMaxY; y++) {
     for (let x = richMinX; x <= richMaxX; x++) {
       // Skip cells inside ruins area
-      if (
-        x >= ruinsMinX &&
-        x <= ruinsMaxX &&
-        y >= ruinsMinY &&
-        y <= ruinsMaxY
-      ) {
+      if (x >= ruinsMinX && x <= ruinsMaxX && y >= ruinsMinY && y <= ruinsMaxY) {
         continue;
       }
       state.rich.add(`${x},${y}`);

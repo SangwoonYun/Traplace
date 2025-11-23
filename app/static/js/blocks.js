@@ -230,7 +230,16 @@ function finishEditLabel(blockEl, cancel) {
  * @param {string} [customName] - Custom display name for the block
  * @returns {HTMLElement}
  */
-export function createBlock(kind, size, left, top, width, height, immutable = false, customName = null) {
+export function createBlock(
+  kind,
+  size,
+  left,
+  top,
+  width,
+  height,
+  immutable = false,
+  customName = null,
+) {
   const cell =
     parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cell')) || 48;
 

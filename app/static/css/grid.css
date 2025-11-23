@@ -154,8 +154,7 @@
     100% 100%,
     0% 100%,
     0% 0%,
-    /* Inner hole for castle */
-    calc(8 / 28 * 100%) calc(8 / 28 * 100%),
+    /* Inner hole for castle */ calc(8 / 28 * 100%) calc(8 / 28 * 100%),
     calc(8 / 28 * 100%) calc(20 / 28 * 100%),
     calc(20 / 28 * 100%) calc(20 / 28 * 100%),
     calc(20 / 28 * 100%) calc(8 / 28 * 100%),
