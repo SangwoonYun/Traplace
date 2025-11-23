@@ -169,6 +169,189 @@ window.addEventListener('load', async () => {
   // Store turret elements for i18n updates
   window.__turrets = { turret1, turret2, turret3, turret4 };
 
+  // Create fortress blocks (6×6 each)
+  const fortress1 = createBlock(
+    'fortress',
+    6,
+    800 * c,
+    597 * c,
+    undefined,
+    undefined,
+    true,
+    '성채 I',
+  ); // 12 o'clock
+  const fortress2 = createBlock(
+    'fortress',
+    6,
+    597 * c,
+    400 * c,
+    undefined,
+    undefined,
+    true,
+    '성채 II',
+  ); // 3 o'clock
+  const fortress3 = createBlock(
+    'fortress',
+    6,
+    400 * c,
+    597 * c,
+    undefined,
+    undefined,
+    true,
+    '성채 III',
+  ); // 6 o'clock
+  const fortress4 = createBlock(
+    'fortress',
+    6,
+    597 * c,
+    800 * c,
+    undefined,
+    undefined,
+    true,
+    '성채 IV',
+  ); // 9 o'clock
+
+  // Store fortress elements for i18n updates
+  window.__fortresses = { fortress1, fortress2, fortress3, fortress4 };
+
+  // Create sanctuary blocks (6×6 each) with Roman numerals
+  const sanctuary1 = createBlock(
+    'sanctuary',
+    6,
+    828 * c,
+    237 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 I',
+  );
+  const sanctuary2 = createBlock(
+    'sanctuary',
+    6,
+    606 * c,
+    237 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 II',
+  );
+  const sanctuary3 = createBlock(
+    'sanctuary',
+    6,
+    348 * c,
+    237 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 III',
+  );
+  const sanctuary4 = createBlock(
+    'sanctuary',
+    6,
+    237 * c,
+    366 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 IV',
+  );
+  const sanctuary5 = createBlock(
+    'sanctuary',
+    6,
+    237 * c,
+    588 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 V',
+  );
+  const sanctuary6 = createBlock(
+    'sanctuary',
+    6,
+    237 * c,
+    846 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 VI',
+  );
+  const sanctuary7 = createBlock(
+    'sanctuary',
+    6,
+    348 * c,
+    957 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 VII',
+  );
+  const sanctuary8 = createBlock(
+    'sanctuary',
+    6,
+    606 * c,
+    957 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 VIII',
+  );
+  const sanctuary9 = createBlock(
+    'sanctuary',
+    6,
+    828 * c,
+    957 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 IX',
+  );
+  const sanctuary10 = createBlock(
+    'sanctuary',
+    6,
+    957 * c,
+    846 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 X',
+  );
+  const sanctuary11 = createBlock(
+    'sanctuary',
+    6,
+    957 * c,
+    606 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 XI',
+  );
+  const sanctuary12 = createBlock(
+    'sanctuary',
+    6,
+    957 * c,
+    366 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 XII',
+  );
+
+  // Store sanctuary elements for i18n updates
+  window.__sanctuaries = {
+    sanctuary1,
+    sanctuary2,
+    sanctuary3,
+    sanctuary4,
+    sanctuary5,
+    sanctuary6,
+    sanctuary7,
+    sanctuary8,
+    sanctuary9,
+    sanctuary10,
+    sanctuary11,
+    sanctuary12,
+  };
+
   // Create red zone tiles around castle (8 cells from castle edge)
   // Castle is at 594-605 (12x12), so red zone tiles are from 586-613 (28x28)
   const castleMinX = 594;
@@ -273,11 +456,157 @@ window.addEventListener('load', async () => {
     }
   }
 
-  renderBarren();
-  renderPlain();
-  renderRich();
-  renderRuins();
-  renderRedZone();
+  // Create red zone tiles around fortresses
+  // Each fortress has a 6×6 block with red zone around it
+  // Fortress I red zone extends to (570, 774), which is 26 cells from fortress edge
+  const fortressRedZoneRange = 27;
+
+  // Fortress I: (597, 800) to (584, 805) - 6×6 block
+  const fortress1MinX = 800;
+  const fortress1MaxX = 805;
+  const fortress1MinY = 597;
+  const fortress1MaxY = 602;
+
+  // Fortress II: (597, 400) to (602, 405)
+  const fortress2MinX = 597;
+  const fortress2MaxX = 602;
+  const fortress2MinY = 400;
+  const fortress2MaxY = 405;
+
+  // Fortress III: (400, 597) to (405, 602)
+  const fortress3MinX = 400;
+  const fortress3MaxX = 405;
+  const fortress3MinY = 597;
+  const fortress3MaxY = 602;
+
+  // Fortress IV: (800, 597) to (805, 602)
+  const fortress4MinX = 597;
+  const fortress4MaxX = 602;
+  const fortress4MinY = 800;
+  const fortress4MaxY = 805;
+
+  // Add red zone tiles around Fortress I
+  for (
+    let y = fortress1MinY - fortressRedZoneRange;
+    y <= fortress1MaxY + fortressRedZoneRange;
+    y++
+  ) {
+    for (
+      let x = fortress1MinX - fortressRedZoneRange;
+      x <= fortress1MaxX + fortressRedZoneRange;
+      x++
+    ) {
+      // Skip cells that are inside the fortress
+      if (x >= fortress1MinX && x <= fortress1MaxX && y >= fortress1MinY && y <= fortress1MaxY) {
+        continue;
+      }
+      state.redZone.add(`${x},${y}`);
+    }
+  }
+
+  // Add red zone tiles around Fortress II
+  for (
+    let y = fortress2MinY - fortressRedZoneRange;
+    y <= fortress2MaxY + fortressRedZoneRange;
+    y++
+  ) {
+    for (
+      let x = fortress2MinX - fortressRedZoneRange;
+      x <= fortress2MaxX + fortressRedZoneRange;
+      x++
+    ) {
+      // Skip cells that are inside the fortress
+      if (x >= fortress2MinX && x <= fortress2MaxX && y >= fortress2MinY && y <= fortress2MaxY) {
+        continue;
+      }
+      state.redZone.add(`${x},${y}`);
+    }
+  }
+
+  // Add red zone tiles around Fortress III
+  for (
+    let y = fortress3MinY - fortressRedZoneRange;
+    y <= fortress3MaxY + fortressRedZoneRange;
+    y++
+  ) {
+    for (
+      let x = fortress3MinX - fortressRedZoneRange;
+      x <= fortress3MaxX + fortressRedZoneRange;
+      x++
+    ) {
+      // Skip cells that are inside the fortress
+      if (x >= fortress3MinX && x <= fortress3MaxX && y >= fortress3MinY && y <= fortress3MaxY) {
+        continue;
+      }
+      state.redZone.add(`${x},${y}`);
+    }
+  }
+
+  // Add red zone tiles around Fortress IV
+  for (
+    let y = fortress4MinY - fortressRedZoneRange;
+    y <= fortress4MaxY + fortressRedZoneRange;
+    y++
+  ) {
+    for (
+      let x = fortress4MinX - fortressRedZoneRange;
+      x <= fortress4MaxX + fortressRedZoneRange;
+      x++
+    ) {
+      // Skip cells that are inside the fortress
+      if (x >= fortress4MinX && x <= fortress4MaxX && y >= fortress4MinY && y <= fortress4MaxY) {
+        continue;
+      }
+      state.redZone.add(`${x},${y}`);
+    }
+  }
+
+  // Create red zone tiles around sanctuaries
+  // Each sanctuary has a 6×6 block with red zone around it (same range as fortress)
+  const sanctuaryRedZoneRange = 27;
+
+  // Define sanctuary boundaries (6x6 blocks)
+  const sanctuaries = [
+    { minX: 828, maxX: 833, minY: 237, maxY: 242 }, // Sanctuary I
+    { minX: 606, maxX: 611, minY: 237, maxY: 242 }, // Sanctuary II
+    { minX: 348, maxX: 353, minY: 237, maxY: 242 }, // Sanctuary III
+    { minX: 237, maxX: 242, minY: 366, maxY: 371 }, // Sanctuary IV
+    { minX: 237, maxX: 242, minY: 588, maxY: 593 }, // Sanctuary V
+    { minX: 237, maxX: 242, minY: 846, maxY: 851 }, // Sanctuary VI
+    { minX: 348, maxX: 353, minY: 957, maxY: 962 }, // Sanctuary VII
+    { minX: 606, maxX: 611, minY: 957, maxY: 962 }, // Sanctuary VIII
+    { minX: 828, maxX: 833, minY: 957, maxY: 962 }, // Sanctuary IX
+    { minX: 957, maxX: 962, minY: 846, maxY: 851 }, // Sanctuary X
+    { minX: 957, maxX: 962, minY: 606, maxY: 611 }, // Sanctuary XI
+    { minX: 957, maxX: 962, minY: 366, maxY: 371 }, // Sanctuary XII
+  ];
+
+  // Add red zone tiles around each sanctuary
+  for (const sanctuary of sanctuaries) {
+    for (
+      let y = sanctuary.minY - sanctuaryRedZoneRange;
+      y <= sanctuary.maxY + sanctuaryRedZoneRange;
+      y++
+    ) {
+      for (
+        let x = sanctuary.minX - sanctuaryRedZoneRange;
+        x <= sanctuary.maxX + sanctuaryRedZoneRange;
+        x++
+      ) {
+        // Skip cells that are inside the sanctuary
+        if (
+          x >= sanctuary.minX &&
+          x <= sanctuary.maxX &&
+          y >= sanctuary.minY &&
+          y <= sanctuary.maxY
+        ) {
+          continue;
+        }
+        state.redZone.add(`${x},${y}`);
+      }
+    }
+  }
+
   state._restoring = false;
 
   /* ---------------------------------------------
@@ -390,14 +719,11 @@ if (window.visualViewport) {
  *  - Keep world pixel size in sync with dynamic --cell
  *  - Prevent stale scroll clamp after media query changes
  * ------------------------------------------- */
+let resizeTimeout = null;
 function relayoutForCellChange() {
   // Recompute world px size against the latest cellPx()
   setWorldSizeCells(BASE_CELLS_X, BASE_CELLS_Y);
-  // Repaint overlays
-  renderBarren();
-  renderPlain();
-  renderRich();
-  renderRuins();
+  // Repaint overlays (Plain/Rich/Ruins are CSS-only, no need to call)
   renderRedZone();
   renderUserTiles();
   recomputePaint();
@@ -406,14 +732,18 @@ function relayoutForCellChange() {
 }
 
 window.addEventListener('resize', () => {
-  // Debounce-ish via rAF to avoid thrash
-  requestAnimationFrame(relayoutForCellChange);
+  // Debounce to avoid excessive reflows
+  if (resizeTimeout) clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    requestAnimationFrame(relayoutForCellChange);
+  }, 150);
 });
 
 window.addEventListener('orientationchange', () => {
   // Some mobile browsers fire resize later; do one pass immediately
   updateAppVhVar();
-  relayoutForCellChange();
+  if (resizeTimeout) clearTimeout(resizeTimeout);
+  requestAnimationFrame(relayoutForCellChange);
 });
 
 /* ---------------------------------------------

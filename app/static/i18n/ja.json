@@ -40,10 +40,8 @@
     "customHeightLabel": "高さ",
     "castle": "城",
     "turret": "タレット",
-    "turret1": "タレット I",
-    "turret2": "タレット II",
-    "turret3": "タレット III",
-    "turret4": "タレット IV"
+    "fortress": "要塞",
+    "sanctuary": "聖域"
   },
   "alert": {
     "noCities": "都市がありません。",

@@ -40,10 +40,8 @@
     "customHeightLabel": "세로 크기",
     "castle": "캐슬",
     "turret": "포탑",
-    "turret1": "포탑 I",
-    "turret2": "포탑 II",
-    "turret3": "포탑 III",
-    "turret4": "포탑 IV"
+    "fortress": "성채",
+    "sanctuary": "유적"
   },
   "alert": {
     "noCities": "도시가 없습니다.",

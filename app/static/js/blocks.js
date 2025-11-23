@@ -62,6 +62,16 @@ function applyBlockStyle(b, invalid) {
       el.style.borderColor = styles.getPropertyValue('--turret-border');
       return;
 
+    case 'fortress':
+      el.style.background = styles.getPropertyValue('--fortress-bg');
+      el.style.borderColor = styles.getPropertyValue('--fortress-border');
+      return;
+
+    case 'sanctuary':
+      el.style.background = styles.getPropertyValue('--sanctuary-bg');
+      el.style.borderColor = styles.getPropertyValue('--sanctuary-border');
+      return;
+
     case 'block':
       if (b.size === 1 || b.size === 2 || b.size === 3) {
         el.style.background = styles.getPropertyValue('--block123-bg');
@@ -220,7 +230,7 @@ function finishEditLabel(blockEl, cancel) {
  * ------------------------------------------- */
 /**
  * Create a new block element and register it in state.
- * @param {'hq'|'flag'|'trap'|'city'|'resource'|'block'|'custom'|'castle'|'turret'} kind
+ * @param {'hq'|'flag'|'trap'|'city'|'resource'|'block'|'custom'|'castle'|'turret'|'fortress'|'sanctuary'} kind
  * @param {number} size - For square blocks; ignored for custom blocks
  * @param {number} left
  * @param {number} top
@@ -282,7 +292,11 @@ export function createBlock(
                     ? t('palette.castle')
                     : kind === 'turret'
                       ? t('palette.turret')
-                      : `${size}×${size}`;
+                      : kind === 'fortress'
+                        ? t('palette.fortress')
+                        : kind === 'sanctuary'
+                          ? t('palette.sanctuary')
+                          : `${size}×${size}`;
     }
   }
 

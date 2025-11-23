@@ -42,10 +42,8 @@
     "customHeightLabel": "Höhe",
     "castle": "Burg",
     "turret": "Turm",
-    "turret1": "Turm I",
-    "turret2": "Turm II",
-    "turret3": "Turm III",
-    "turret4": "Turm IV"
+    "fortress": "Festung",
+    "sanctuary": "Heiligtum"
   },
   "alert": {
     "noCities": "Keine Städte.",

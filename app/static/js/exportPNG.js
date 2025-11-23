@@ -484,9 +484,9 @@ export async function exportPNG() {
 
     let text;
 
-    // For turret blocks, always use the actual label text (includes I, II, III, IV)
-    if (b.kind === 'turret' && userText) {
-      text = userText;
+    // For turret and fortress blocks, use i18n with Roman numeral from label
+    if ((b.kind === 'turret' || b.kind === 'fortress') && userText) {
+      text = t(`palette.${b.kind}`, userText);
     }
     // For city and custom blocks, preserve user edits
     else if ((b.kind === 'city' || b.kind === 'custom') && userText) {
@@ -508,10 +508,12 @@ export async function exportPNG() {
                   : b.kind === 'castle'
                     ? t('palette.castle')
                     : b.kind === 'turret'
-                      ? t('palette.turret')
-                      : b.kind === 'custom'
-                        ? t('palette.custom')
-                        : `${b.size}×${b.size}`;
+                      ? t('palette.turret', userText)
+                      : b.kind === 'fortress'
+                        ? t('palette.fortress', userText)
+                        : b.kind === 'custom'
+                          ? t('palette.custom')
+                          : `${b.size}×${b.size}`;
     }
 
     // Label is drawn horizontally in projected coordinates

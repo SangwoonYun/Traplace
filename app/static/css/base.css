@@ -48,6 +48,10 @@
   --castle-border: #6a1b9a;
   --turret-bg: #b39ddb;
   --turret-border: #4a148c;
+  --fortress-bg: #e1bee7;
+  --fortress-border: #6a1b9a;
+  --sanctuary-bg: #f3e5f5;
+  --sanctuary-border: #7b1fa2;
 
   /* World / Zoom */
   --zoom: 1; /* 1 = 100% */
@@ -166,6 +170,9 @@
         calc((var(--world-w) + var(--world-h)) * var(--rot-k))
       )
       rotate(45deg) scale(-1) scale(var(--zoom));
+
+    /* GPU acceleration - prevents layer compositing bugs during zoom/scroll */
+    will-change: transform;
   }
 }
 

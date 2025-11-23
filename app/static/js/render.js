@@ -14,10 +14,6 @@ import {
   world,
   rot,
   tilesLayer,
-  barrenLayer,
-  plainLayer,
-  richLayer,
-  ruinsLayer,
   redZoneLayer,
   userLayer,
   outlinesLayer,
@@ -175,29 +171,38 @@ export function renderRuins() {
   // No need to create individual DOM elements
 }
 
-/** Render red zone tiles (light red, around castle). */
+/** Render red zone tiles (light red, around castle and fortresses). */
 export function renderRedZone() {
-  // CSS handles rendering via clip-path
-  // No need to create individual DOM elements
+  redZoneLayer.innerHTML = '';
+  const cpx = cellPx();
+  const fragment = document.createDocumentFragment();
+
+  for (const k of state.redZone) {
+    const [x, y] = k.split(',').map(Number);
+    const d = document.createElement('div');
+    d.className = 'tile-redzone';
+    d.style.cssText = `transform:translate(${x * cpx}px,${y * cpx}px);width:${cpx}px;height:${cpx}px`;
+    fragment.appendChild(d);
+  }
+
+  redZoneLayer.appendChild(fragment);
 }
 
 /** Render user-painted red tiles. */
 export function renderUserTiles() {
-  requestAnimationFrame(() => {
-    userLayer.innerHTML = '';
-    const cpx = cellPx();
-    const fragment = document.createDocumentFragment();
+  userLayer.innerHTML = '';
+  const cpx = cellPx();
+  const fragment = document.createDocumentFragment();
 
-    for (const k of state.userPaint) {
-      const [x, y] = k.split(',').map(Number);
-      const d = document.createElement('div');
-      d.className = 'tile-red';
-      d.style.cssText = `left:${x * cpx}px;top:${y * cpx}px;width:${cpx}px;height:${cpx}px`;
-      fragment.appendChild(d);
-    }
+  for (const k of state.userPaint) {
+    const [x, y] = k.split(',').map(Number);
+    const d = document.createElement('div');
+    d.className = 'tile-red';
+    d.style.cssText = `transform:translate(${x * cpx}px,${y * cpx}px);width:${cpx}px;height:${cpx}px`;
+    fragment.appendChild(d);
+  }
 
-    userLayer.appendChild(fragment);
-  });
+  userLayer.appendChild(fragment);
 }
 
 /** Render dashed bounding boxes for painter areas (HQ/Flag). */

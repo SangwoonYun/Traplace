@@ -40,10 +40,8 @@
     "customHeightLabel": "Height",
     "castle": "Castle",
     "turret": "Turret",
-    "turret1": "Turret I",
-    "turret2": "Turret II",
-    "turret3": "Turret III",
-    "turret4": "Turret IV"
+    "fortress": "Fortress",
+    "sanctuary": "Sanctuary"
   },
   "alert": {
     "noCities": "No cities.",

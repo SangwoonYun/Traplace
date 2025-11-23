@@ -42,10 +42,8 @@
     "customHeightLabel": "Hauteur",
     "castle": "Château",
     "turret": "Tourelle",
-    "turret1": "Tourelle I",
-    "turret2": "Tourelle II",
-    "turret3": "Tourelle III",
-    "turret4": "Tourelle IV"
+    "fortress": "Forteresse",
+    "sanctuary": "Sanctuaire"
   },
   "alert": {
     "noCities": "Aucune ville.",

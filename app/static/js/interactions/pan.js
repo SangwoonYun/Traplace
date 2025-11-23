@@ -101,10 +101,18 @@ export function setupPan(expand) {
     const dx = e.clientX - state.panning.startX;
     const dy = e.clientY - state.panning.startY;
 
-    viewport.scrollLeft = state.panning.startLeft - dx;
-    viewport.scrollTop = state.panning.startTop - dy;
+    // Throttle updates using requestAnimationFrame for smoother performance
+    if (state.panning.rafId) return;
 
-    expand();
+    state.panning.rafId = requestAnimationFrame(() => {
+      if (!state.panning) return; // Safety check
+
+      viewport.scrollLeft = state.panning.startLeft - dx;
+      viewport.scrollTop = state.panning.startTop - dy;
+      state.panning.rafId = null;
+
+      expand();
+    });
   }
 
   /**
@@ -115,6 +123,7 @@ export function setupPan(expand) {
    */
   function onPointerUp(e) {
     if (!state.panning || e.pointerId !== state.panning.pointerId) {
+      if (state.panning?.rafId) cancelAnimationFrame(state.panning.rafId);
       state.panning = null;
       clearPanListeners();
       return;
@@ -122,12 +131,14 @@ export function setupPan(expand) {
 
     if (!state.panning.moved) {
       // Pan not started -> let other gestures (click/long-press) proceed.
+      if (state.panning?.rafId) cancelAnimationFrame(state.panning.rafId);
       state.panning = null;
       clearPanListeners();
       return;
     }
 
     viewport.classList.remove('panning');
+    if (state.panning?.rafId) cancelAnimationFrame(state.panning.rafId);
     state.panning = null;
 
     window.removeEventListener('pointermove', onPanMoveActive);
@@ -140,6 +151,7 @@ export function setupPan(expand) {
    */
   function onPointerCancel(_e) {
     viewport.classList.remove('panning');
+    if (state.panning?.rafId) cancelAnimationFrame(state.panning.rafId);
     state.panning = null;
 
     window.removeEventListener('pointermove', onPanMoveActive);
@@ -185,6 +197,7 @@ export function setupPan(expand) {
   // Global cancel hook
   window.__cancelPan = () => {
     viewport.classList.remove('panning');
+    if (state.panning?.rafId) cancelAnimationFrame(state.panning.rafId);
     state.panning = null;
     window.removeEventListener('pointermove', onPointerMovePassive);
     window.removeEventListener('pointermove', onPanMoveActive);
