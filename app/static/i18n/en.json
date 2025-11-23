@@ -40,7 +40,8 @@
     "customHeightLabel": "Height",
     "castle": "Castle",
     "turret": "Turret",
-    "fortress": "Fortress"
+    "fortress": "Fortress",
+    "sanctuary": "Sanctuary"
   },
   "alert": {
     "noCities": "No cities.",

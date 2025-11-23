@@ -40,7 +40,8 @@
     "customHeightLabel": "세로 크기",
     "castle": "캐슬",
     "turret": "포탑",
-    "fortress": "성채"
+    "fortress": "성채",
+    "sanctuary": "유적"
   },
   "alert": {
     "noCities": "도시가 없습니다.",

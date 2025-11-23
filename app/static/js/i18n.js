@@ -255,8 +255,11 @@ export function t(path, label = null) {
     if (cur == null) return path; // fall back to key path
   }
 
-  // For turret and fortress, append Roman numeral if label contains one
-  if ((path === 'palette.turret' || path === 'palette.fortress') && label) {
+  // For turret, fortress, and sanctuary, append Roman numeral if label contains one
+  if (
+    (path === 'palette.turret' || path === 'palette.fortress' || path === 'palette.sanctuary') &&
+    label
+  ) {
     const roman = extractRomanNumeral(label);
     if (roman) {
       return `${cur} ${roman}`;
@@ -448,6 +451,7 @@ export function updateBlockLabelsForLocale(state) {
     if (kind === 'castle') return t('palette.castle');
     if (kind === 'turret') return t('palette.turret', currentLabel);
     if (kind === 'fortress') return t('palette.fortress', currentLabel);
+    if (kind === 'sanctuary') return t('palette.sanctuary', currentLabel);
     if (kind === 'block') return `${size}×${size}`;
     return '';
   };
@@ -491,12 +495,38 @@ export function updateBlockLabelsForLocale(state) {
     }
   }
 
+  // Update sanctuary labels if they exist
+  if (window.__sanctuaries) {
+    const sanctuaryRomans = {
+      sanctuary1: 'I',
+      sanctuary2: 'II',
+      sanctuary3: 'III',
+      sanctuary4: 'IV',
+      sanctuary5: 'V',
+      sanctuary6: 'VI',
+      sanctuary7: 'VII',
+      sanctuary8: 'VIII',
+      sanctuary9: 'IX',
+      sanctuary10: 'X',
+      sanctuary11: 'XI',
+      sanctuary12: 'XII',
+    };
+
+    for (const [key, el] of Object.entries(window.__sanctuaries)) {
+      const labelEl = el?.querySelector?.('.label');
+      if (labelEl) {
+        const roman = sanctuaryRomans[key];
+        labelEl.textContent = t('palette.sanctuary', `유적 ${roman}`);
+      }
+    }
+  }
+
   for (const b of state.blocks) {
     const labelEl = b.el?.querySelector?.('.label');
     if (!labelEl) continue;
 
-    // Skip turret and fortress blocks - they're handled separately above
-    if (b.kind === 'turret' || b.kind === 'fortress') continue;
+    // Skip turret, fortress, and sanctuary blocks - they're handled separately above
+    if (b.kind === 'turret' || b.kind === 'fortress' || b.kind === 'sanctuary') continue;
 
     const next = defaultTextFor(b.kind, b.size);
 

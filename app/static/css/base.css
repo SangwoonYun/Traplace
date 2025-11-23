@@ -50,6 +50,8 @@
   --turret-border: #4a148c;
   --fortress-bg: #e1bee7;
   --fortress-border: #6a1b9a;
+  --sanctuary-bg: #f3e5f5;
+  --sanctuary-border: #7b1fa2;
 
   /* World / Zoom */
   --zoom: 1; /* 1 = 100% */

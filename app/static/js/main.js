@@ -178,6 +178,36 @@ window.addEventListener('load', async () => {
   // Store fortress elements for i18n updates
   window.__fortresses = { fortress1, fortress2, fortress3, fortress4 };
 
+  // Create sanctuary blocks (6×6 each) with Roman numerals
+  const sanctuary1 = createBlock('sanctuary', 6, 828 * c, 237 * c, undefined, undefined, true, '유적 I');
+  const sanctuary2 = createBlock('sanctuary', 6, 606 * c, 237 * c, undefined, undefined, true, '유적 II');
+  const sanctuary3 = createBlock('sanctuary', 6, 348 * c, 237 * c, undefined, undefined, true, '유적 III');
+  const sanctuary4 = createBlock('sanctuary', 6, 237 * c, 366 * c, undefined, undefined, true, '유적 IV');
+  const sanctuary5 = createBlock('sanctuary', 6, 237 * c, 588 * c, undefined, undefined, true, '유적 V');
+  const sanctuary6 = createBlock('sanctuary', 6, 237 * c, 846 * c, undefined, undefined, true, '유적 VI');
+  const sanctuary7 = createBlock('sanctuary', 6, 348 * c, 957 * c, undefined, undefined, true, '유적 VII');
+  const sanctuary8 = createBlock('sanctuary', 6, 606 * c, 957 * c, undefined, undefined, true, '유적 VIII');
+  const sanctuary9 = createBlock('sanctuary', 6, 828 * c, 957 * c, undefined, undefined, true, '유적 IX');
+  const sanctuary10 = createBlock('sanctuary', 6, 957 * c, 846 * c, undefined, undefined, true, '유적 X');
+  const sanctuary11 = createBlock('sanctuary', 6, 957 * c, 606 * c, undefined, undefined, true, '유적 XI');
+  const sanctuary12 = createBlock('sanctuary', 6, 957 * c, 366 * c, undefined, undefined, true, '유적 XII');
+
+  // Store sanctuary elements for i18n updates
+  window.__sanctuaries = {
+    sanctuary1,
+    sanctuary2,
+    sanctuary3,
+    sanctuary4,
+    sanctuary5,
+    sanctuary6,
+    sanctuary7,
+    sanctuary8,
+    sanctuary9,
+    sanctuary10,
+    sanctuary11,
+    sanctuary12,
+  };
+
   // Create red zone tiles around castle (8 cells from castle edge)
   // Castle is at 594-605 (12x12), so red zone tiles are from 586-613 (28x28)
   const castleMinX = 594;
@@ -352,6 +382,52 @@ window.addEventListener('load', async () => {
         continue;
       }
       state.redZone.add(`${x},${y}`);
+    }
+  }
+
+  // Create red zone tiles around sanctuaries
+  // Each sanctuary has a 6×6 block with red zone around it (same range as fortress)
+  const sanctuaryRedZoneRange = 27;
+
+  // Define sanctuary boundaries (6x6 blocks)
+  const sanctuaries = [
+    { minX: 828, maxX: 833, minY: 237, maxY: 242 }, // Sanctuary I
+    { minX: 606, maxX: 611, minY: 237, maxY: 242 }, // Sanctuary II
+    { minX: 348, maxX: 353, minY: 237, maxY: 242 }, // Sanctuary III
+    { minX: 237, maxX: 242, minY: 366, maxY: 371 }, // Sanctuary IV
+    { minX: 237, maxX: 242, minY: 588, maxY: 593 }, // Sanctuary V
+    { minX: 237, maxX: 242, minY: 846, maxY: 851 }, // Sanctuary VI
+    { minX: 348, maxX: 353, minY: 957, maxY: 962 }, // Sanctuary VII
+    { minX: 606, maxX: 611, minY: 957, maxY: 962 }, // Sanctuary VIII
+    { minX: 828, maxX: 833, minY: 957, maxY: 962 }, // Sanctuary IX
+    { minX: 957, maxX: 962, minY: 846, maxY: 851 }, // Sanctuary X
+    { minX: 957, maxX: 962, minY: 606, maxY: 611 }, // Sanctuary XI
+    { minX: 957, maxX: 962, minY: 366, maxY: 371 }, // Sanctuary XII
+  ];
+
+  // Add red zone tiles around each sanctuary
+  for (const sanctuary of sanctuaries) {
+    for (
+      let y = sanctuary.minY - sanctuaryRedZoneRange;
+      y <= sanctuary.maxY + sanctuaryRedZoneRange;
+      y++
+    ) {
+      for (
+        let x = sanctuary.minX - sanctuaryRedZoneRange;
+        x <= sanctuary.maxX + sanctuaryRedZoneRange;
+        x++
+      ) {
+        // Skip cells that are inside the sanctuary
+        if (
+          x >= sanctuary.minX &&
+          x <= sanctuary.maxX &&
+          y >= sanctuary.minY &&
+          y <= sanctuary.maxY
+        ) {
+          continue;
+        }
+        state.redZone.add(`${x},${y}`);
+      }
     }
   }
 
