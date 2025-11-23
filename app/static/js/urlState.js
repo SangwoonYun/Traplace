@@ -212,6 +212,7 @@ export function serializeState() {
 
 /**
  * Parse a querystring (hash payload) back to state fragments.
+ * Converts legacy 'block' kind to 'custom' kind automatically.
  * @param {string} qs
  * @returns {{blocks: Array<{kind:string,size:number,cx:number,cy:number,label?:string}>, red: string[], ver: string}}
  */
@@ -246,7 +247,12 @@ export function deserializeState(qs) {
     const cx = isV2 ? parseInt(cxStr, 36) : parseInt(cxStr, 10) || 0;
     const cy = isV2 ? parseInt(cyStr, 36) : parseInt(cyStr, 10) || 0;
 
-    const kind = CODE_TO_KIND[code] || 'block';
+    let kind = CODE_TO_KIND[code] || 'block';
+
+    // Legacy conversion: convert 'block' kind to 'custom' kind
+    if (kind === 'block') {
+      kind = 'custom';
+    }
 
     // Custom blocks use WxH format
     if (kind === 'custom' && sizeRaw.includes('x')) {
@@ -256,7 +262,12 @@ export function deserializeState(qs) {
       blocks.push({ kind, width, height, size: Math.max(width, height), cx, cy, label });
     } else {
       const size = isV2 ? parseInt(sizeRaw, 36) : parseInt(sizeRaw || '1', 10) || 1;
-      blocks.push({ kind, size, cx, cy, label });
+      // For legacy 'block' (now 'custom'), convert to width x height format
+      if (kind === 'custom') {
+        blocks.push({ kind, width: size, height: size, size, cx, cy, label });
+      } else {
+        blocks.push({ kind, size, cx, cy, label });
+      }
     }
   }
 
