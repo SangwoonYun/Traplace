@@ -14,7 +14,11 @@ import {
   world,
   rot,
   tilesLayer,
-  baseLayer,
+  barrenLayer,
+  plainLayer,
+  richLayer,
+  ruinsLayer,
+  redZoneLayer,
   userLayer,
   outlinesLayer,
   outlinesPreviewLayer,
@@ -145,36 +149,55 @@ export function renderCells(layer, cellList, opts) {
   }
 }
 
-/** Render base tiles (light red, around castle). */
-export function renderBaseTiles() {
-  baseLayer.innerHTML = '';
-  for (const k of state.baseTiles) {
-    const [x, y] = k.split(',').map(Number);
-    const d = document.createElement('div');
-    d.className = 'tile-base';
-    const cpx = cellPx();
-    d.style.left = `${x * cpx}px`;
-    d.style.top = `${y * cpx}px`;
-    d.style.width = `${cpx}px`;
-    d.style.height = `${cpx}px`;
-    baseLayer.appendChild(d);
-  }
+/** Render barren tiles (light yellow color, outermost area - rest of map).
+ * Optimized: uses CSS background instead of individual tiles.
+ */
+export function renderBarren() {
+  // No need to render individual tiles - CSS background handles it
+  // barrenLayer already has background color via CSS
+}
+
+/** Render plain tiles (yellow-green color, outer area). */
+export function renderPlain() {
+  // CSS handles rendering via clip-path
+  // No need to create individual DOM elements
+}
+
+/** Render rich tiles (green color, outer area). */
+export function renderRich() {
+  // CSS handles rendering via clip-path
+  // No need to create individual DOM elements
+}
+
+/** Render ruins tiles (olive color, outer area). */
+export function renderRuins() {
+  // CSS handles rendering via clip-path
+  // No need to create individual DOM elements
+}
+
+/** Render red zone tiles (light red, around castle). */
+export function renderRedZone() {
+  // CSS handles rendering via clip-path
+  // No need to create individual DOM elements
 }
 
 /** Render user-painted red tiles. */
 export function renderUserTiles() {
-  userLayer.innerHTML = '';
-  for (const k of state.userPaint) {
-    const [x, y] = k.split(',').map(Number);
-    const d = document.createElement('div');
-    d.className = 'tile-red';
+  requestAnimationFrame(() => {
+    userLayer.innerHTML = '';
     const cpx = cellPx();
-    d.style.left = `${x * cpx}px`;
-    d.style.top = `${y * cpx}px`;
-    d.style.width = `${cpx}px`;
-    d.style.height = `${cpx}px`;
-    userLayer.appendChild(d);
-  }
+    const fragment = document.createDocumentFragment();
+
+    for (const k of state.userPaint) {
+      const [x, y] = k.split(',').map(Number);
+      const d = document.createElement('div');
+      d.className = 'tile-red';
+      d.style.cssText = `left:${x * cpx}px;top:${y * cpx}px;width:${cpx}px;height:${cpx}px`;
+      fragment.appendChild(d);
+    }
+
+    userLayer.appendChild(fragment);
+  });
 }
 
 /** Render dashed bounding boxes for painter areas (HQ/Flag). */

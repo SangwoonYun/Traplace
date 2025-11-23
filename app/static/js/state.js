@@ -45,8 +45,20 @@ export const state = {
   /** Union of blue painter coverage ("x,y" keys). */
   paintedSet: new Set(),
 
-  /** Base tiles (light red, around castle) ("x,y" keys). */
-  baseTiles: new Set(),
+  /** Barren tiles (light yellow color, outermost area) ("x,y" keys). */
+  barren: new Set(),
+
+  /** Plain tiles (yellow-green color, outer area) ("x,y" keys). */
+  plain: new Set(),
+
+  /** Rich tiles (green color, middle area) ("x,y" keys). */
+  rich: new Set(),
+
+  /** Ruins tiles (olive color, middle area) ("x,y" keys). */
+  ruins: new Set(),
+
+  /** Red zone tiles (light red, around castle) ("x,y" keys). */
+  redZone: new Set(),
 
   /** User red paint toggles ("x,y" keys). */
   userPaint: new Set(),

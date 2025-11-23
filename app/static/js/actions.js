@@ -297,8 +297,16 @@ export function setupActions() {
   btnReset?.addEventListener('click', () => {
     if (!confirm(t('alert.resetConfirm'))) return;
 
-    rot.querySelectorAll('.block').forEach((el) => el.remove());
-    state.blocks = [];
+    // Remove only non-immutable blocks
+    rot.querySelectorAll('.block').forEach((el) => {
+      const block = state.blocks.find((b) => b.el === el);
+      if (!block || !block.immutable) {
+        el.remove();
+      }
+    });
+
+    // Keep only immutable blocks
+    state.blocks = state.blocks.filter((b) => b.immutable);
     state.paintedSet.clear();
     state.userPaint.clear();
 

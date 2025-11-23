@@ -10,7 +10,11 @@
 import {
   initialLayout,
   renderUserTiles,
-  renderBaseTiles,
+  renderRedZone,
+  renderRuins,
+  renderRich,
+  renderPlain,
+  renderBarren,
   recomputePaint,
   updateBadge,
   centerToCell,
@@ -156,25 +160,125 @@ window.addEventListener('load', async () => {
   // Store turret elements for i18n updates
   window.__turrets = { turret1, turret2, turret3, turret4 };
 
-  // Create base tiles around castle (8 cells from castle edge)
-  // Castle is at 594-605 (12x12), so base tiles are from 586-613 (28x28)
+  // Create red zone tiles around castle (8 cells from castle edge)
+  // Castle is at 594-605 (12x12), so red zone tiles are from 586-613 (28x28)
   const castleMinX = 594;
   const castleMaxX = 605;
   const castleMinY = 594;
   const castleMaxY = 605;
-  const baseRange = 8;
+  const redZoneRange = 8;
 
-  for (let y = castleMinY - baseRange; y <= castleMaxY + baseRange; y++) {
-    for (let x = castleMinX - baseRange; x <= castleMaxX + baseRange; x++) {
+  // Castle center is approximately at (599.5, 599.5)
+  const castleCenterX = 599.5;
+  const castleCenterY = 599.5;
+
+  // Barren tiles cover entire map via CSS background - no need to fill state.barren
+
+  // Create plain tiles in a square centered on castle
+  // One corner of the square is at (899, 899)
+  const plainCornerX = 899;
+  const plainCornerY = 899;
+  const plainDx = plainCornerX - castleCenterX;
+  const plainDy = plainCornerY - castleCenterY;
+  const plainHalfDiagonal = Math.sqrt(plainDx * plainDx + plainDy * plainDy);
+  const plainHalfSide = plainHalfDiagonal / Math.sqrt(2);
+
+  const plainMinX = Math.floor(castleCenterX - plainHalfSide);
+  const plainMaxX = Math.ceil(castleCenterX + plainHalfSide);
+  const plainMinY = Math.floor(castleCenterY - plainHalfSide);
+  const plainMaxY = Math.ceil(castleCenterY + plainHalfSide);
+
+  // Create rich tiles in a square centered on castle
+  // One corner of the square is at (749, 749)
+  const richCornerX = 749;
+  const richCornerY = 749;
+  const richDx = richCornerX - castleCenterX;
+  const richDy = richCornerY - castleCenterY;
+  const richHalfDiagonal = Math.sqrt(richDx * richDx + richDy * richDy);
+  const richHalfSide = richHalfDiagonal / Math.sqrt(2);
+
+  const richMinX = Math.floor(castleCenterX - richHalfSide);
+  const richMaxX = Math.ceil(castleCenterX + richHalfSide);
+  const richMinY = Math.floor(castleCenterY - richHalfSide);
+  const richMaxY = Math.ceil(castleCenterY + richHalfSide);
+
+  // Create ruins tiles in a square centered on castle
+  // One corner of the square is at (647, 552)
+  const ruinsCornerX = 647;
+  const ruinsCornerY = 552;
+  const ruinsDx = ruinsCornerX - castleCenterX;
+  const ruinsDy = ruinsCornerY - castleCenterY;
+  const ruinsHalfDiagonal = Math.sqrt(ruinsDx * ruinsDx + ruinsDy * ruinsDy);
+  const ruinsHalfSide = ruinsHalfDiagonal / Math.sqrt(2);
+
+  const ruinsMinX = Math.floor(castleCenterX - ruinsHalfSide);
+  const ruinsMaxX = Math.ceil(castleCenterX + ruinsHalfSide);
+  const ruinsMinY = Math.floor(castleCenterY - ruinsHalfSide);
+  const ruinsMaxY = Math.ceil(castleCenterY + ruinsHalfSide);
+
+  // Fill the square with plain tiles (excluding rich area)
+  for (let y = plainMinY; y <= plainMaxY; y++) {
+    for (let x = plainMinX; x <= plainMaxX; x++) {
+      // Skip cells inside rich area
+      if (
+        x >= richMinX &&
+        x <= richMaxX &&
+        y >= richMinY &&
+        y <= richMaxY
+      ) {
+        continue;
+      }
+      state.plain.add(`${x},${y}`);
+    }
+  }
+
+  // Fill the square with rich tiles (excluding ruins area)
+  for (let y = richMinY; y <= richMaxY; y++) {
+    for (let x = richMinX; x <= richMaxX; x++) {
+      // Skip cells inside ruins area
+      if (
+        x >= ruinsMinX &&
+        x <= ruinsMaxX &&
+        y >= ruinsMinY &&
+        y <= ruinsMaxY
+      ) {
+        continue;
+      }
+      state.rich.add(`${x},${y}`);
+    }
+  }
+
+  // Fill the square with ruins tiles (excluding red zone area)
+  for (let y = ruinsMinY; y <= ruinsMaxY; y++) {
+    for (let x = ruinsMinX; x <= ruinsMaxX; x++) {
+      // Skip cells inside or near castle (red zone area)
+      if (
+        x >= castleMinX - redZoneRange &&
+        x <= castleMaxX + redZoneRange &&
+        y >= castleMinY - redZoneRange &&
+        y <= castleMaxY + redZoneRange
+      ) {
+        continue;
+      }
+      state.ruins.add(`${x},${y}`);
+    }
+  }
+
+  for (let y = castleMinY - redZoneRange; y <= castleMaxY + redZoneRange; y++) {
+    for (let x = castleMinX - redZoneRange; x <= castleMaxX + redZoneRange; x++) {
       // Skip cells that are inside the castle
       if (x >= castleMinX && x <= castleMaxX && y >= castleMinY && y <= castleMaxY) {
         continue;
       }
-      state.baseTiles.add(`${x},${y}`);
+      state.redZone.add(`${x},${y}`);
     }
   }
 
-  renderBaseTiles();
+  renderBarren();
+  renderPlain();
+  renderRich();
+  renderRuins();
+  renderRedZone();
   state._restoring = false;
 
   /* ---------------------------------------------
@@ -227,7 +331,11 @@ window.addEventListener('load', async () => {
    * Initial render & validation
    * ------------------------------------------- */
   recomputePaint();
-  renderBaseTiles();
+  renderBarren();
+  renderPlain();
+  renderRich();
+  renderRuins();
+  renderRedZone();
   renderUserTiles();
   validateAllObjects();
 
@@ -274,7 +382,11 @@ function relayoutForCellChange() {
   // Recompute world px size against the latest cellPx()
   setWorldSizeCells(BASE_CELLS_X, BASE_CELLS_Y);
   // Repaint overlays
-  renderBaseTiles();
+  renderBarren();
+  renderPlain();
+  renderRich();
+  renderRuins();
+  renderRedZone();
   renderUserTiles();
   recomputePaint();
   // Keep badge up to date

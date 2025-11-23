@@ -16,7 +16,11 @@
   --paint-blue: rgba(66, 133, 244, 0.25);
   --paint-blue-border: rgba(66, 133, 244, 0.9);
   --paint-red: rgba(220, 20, 60, 0.35);
-  --paint-base: rgba(255, 182, 193, 0.4);
+  --paint-redzone: rgba(255, 20, 20, 0.2);
+  --paint-ruins: rgba(128, 128, 0, 0.3);
+  --paint-rich: rgba(34, 139, 34, 0.3);
+  --paint-plain: rgba(154, 205, 50, 0.3);
+  --paint-barren: rgba(255, 250, 205, 0.35);
 
   /* Trash zone */
   --trash-bg: rgba(220, 20, 60, 0.07);
