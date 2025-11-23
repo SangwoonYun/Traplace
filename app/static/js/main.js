@@ -170,27 +170,171 @@ window.addEventListener('load', async () => {
   window.__turrets = { turret1, turret2, turret3, turret4 };
 
   // Create fortress blocks (6×6 each)
-  const fortress1 = createBlock('fortress', 6, 800 * c, 597 * c, undefined, undefined, true, '성채 I'); // 12 o'clock
-  const fortress2 = createBlock('fortress', 6, 597 * c, 400 * c, undefined, undefined, true, '성채 II'); // 3 o'clock
-  const fortress3 = createBlock('fortress', 6, 400 * c, 597 * c, undefined, undefined, true, '성채 III'); // 6 o'clock
-  const fortress4 = createBlock('fortress', 6, 597 * c, 800 * c, undefined, undefined, true, '성채 IV'); // 9 o'clock
+  const fortress1 = createBlock(
+    'fortress',
+    6,
+    800 * c,
+    597 * c,
+    undefined,
+    undefined,
+    true,
+    '성채 I',
+  ); // 12 o'clock
+  const fortress2 = createBlock(
+    'fortress',
+    6,
+    597 * c,
+    400 * c,
+    undefined,
+    undefined,
+    true,
+    '성채 II',
+  ); // 3 o'clock
+  const fortress3 = createBlock(
+    'fortress',
+    6,
+    400 * c,
+    597 * c,
+    undefined,
+    undefined,
+    true,
+    '성채 III',
+  ); // 6 o'clock
+  const fortress4 = createBlock(
+    'fortress',
+    6,
+    597 * c,
+    800 * c,
+    undefined,
+    undefined,
+    true,
+    '성채 IV',
+  ); // 9 o'clock
 
   // Store fortress elements for i18n updates
   window.__fortresses = { fortress1, fortress2, fortress3, fortress4 };
 
   // Create sanctuary blocks (6×6 each) with Roman numerals
-  const sanctuary1 = createBlock('sanctuary', 6, 828 * c, 237 * c, undefined, undefined, true, '유적 I');
-  const sanctuary2 = createBlock('sanctuary', 6, 606 * c, 237 * c, undefined, undefined, true, '유적 II');
-  const sanctuary3 = createBlock('sanctuary', 6, 348 * c, 237 * c, undefined, undefined, true, '유적 III');
-  const sanctuary4 = createBlock('sanctuary', 6, 237 * c, 366 * c, undefined, undefined, true, '유적 IV');
-  const sanctuary5 = createBlock('sanctuary', 6, 237 * c, 588 * c, undefined, undefined, true, '유적 V');
-  const sanctuary6 = createBlock('sanctuary', 6, 237 * c, 846 * c, undefined, undefined, true, '유적 VI');
-  const sanctuary7 = createBlock('sanctuary', 6, 348 * c, 957 * c, undefined, undefined, true, '유적 VII');
-  const sanctuary8 = createBlock('sanctuary', 6, 606 * c, 957 * c, undefined, undefined, true, '유적 VIII');
-  const sanctuary9 = createBlock('sanctuary', 6, 828 * c, 957 * c, undefined, undefined, true, '유적 IX');
-  const sanctuary10 = createBlock('sanctuary', 6, 957 * c, 846 * c, undefined, undefined, true, '유적 X');
-  const sanctuary11 = createBlock('sanctuary', 6, 957 * c, 606 * c, undefined, undefined, true, '유적 XI');
-  const sanctuary12 = createBlock('sanctuary', 6, 957 * c, 366 * c, undefined, undefined, true, '유적 XII');
+  const sanctuary1 = createBlock(
+    'sanctuary',
+    6,
+    828 * c,
+    237 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 I',
+  );
+  const sanctuary2 = createBlock(
+    'sanctuary',
+    6,
+    606 * c,
+    237 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 II',
+  );
+  const sanctuary3 = createBlock(
+    'sanctuary',
+    6,
+    348 * c,
+    237 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 III',
+  );
+  const sanctuary4 = createBlock(
+    'sanctuary',
+    6,
+    237 * c,
+    366 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 IV',
+  );
+  const sanctuary5 = createBlock(
+    'sanctuary',
+    6,
+    237 * c,
+    588 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 V',
+  );
+  const sanctuary6 = createBlock(
+    'sanctuary',
+    6,
+    237 * c,
+    846 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 VI',
+  );
+  const sanctuary7 = createBlock(
+    'sanctuary',
+    6,
+    348 * c,
+    957 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 VII',
+  );
+  const sanctuary8 = createBlock(
+    'sanctuary',
+    6,
+    606 * c,
+    957 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 VIII',
+  );
+  const sanctuary9 = createBlock(
+    'sanctuary',
+    6,
+    828 * c,
+    957 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 IX',
+  );
+  const sanctuary10 = createBlock(
+    'sanctuary',
+    6,
+    957 * c,
+    846 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 X',
+  );
+  const sanctuary11 = createBlock(
+    'sanctuary',
+    6,
+    957 * c,
+    606 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 XI',
+  );
+  const sanctuary12 = createBlock(
+    'sanctuary',
+    6,
+    957 * c,
+    366 * c,
+    undefined,
+    undefined,
+    true,
+    '유적 XII',
+  );
 
   // Store sanctuary elements for i18n updates
   window.__sanctuaries = {
@@ -342,8 +486,16 @@ window.addEventListener('load', async () => {
   const fortress4MaxY = 805;
 
   // Add red zone tiles around Fortress I
-  for (let y = fortress1MinY - fortressRedZoneRange; y <= fortress1MaxY + fortressRedZoneRange; y++) {
-    for (let x = fortress1MinX - fortressRedZoneRange; x <= fortress1MaxX + fortressRedZoneRange; x++) {
+  for (
+    let y = fortress1MinY - fortressRedZoneRange;
+    y <= fortress1MaxY + fortressRedZoneRange;
+    y++
+  ) {
+    for (
+      let x = fortress1MinX - fortressRedZoneRange;
+      x <= fortress1MaxX + fortressRedZoneRange;
+      x++
+    ) {
       // Skip cells that are inside the fortress
       if (x >= fortress1MinX && x <= fortress1MaxX && y >= fortress1MinY && y <= fortress1MaxY) {
         continue;
@@ -353,8 +505,16 @@ window.addEventListener('load', async () => {
   }
 
   // Add red zone tiles around Fortress II
-  for (let y = fortress2MinY - fortressRedZoneRange; y <= fortress2MaxY + fortressRedZoneRange; y++) {
-    for (let x = fortress2MinX - fortressRedZoneRange; x <= fortress2MaxX + fortressRedZoneRange; x++) {
+  for (
+    let y = fortress2MinY - fortressRedZoneRange;
+    y <= fortress2MaxY + fortressRedZoneRange;
+    y++
+  ) {
+    for (
+      let x = fortress2MinX - fortressRedZoneRange;
+      x <= fortress2MaxX + fortressRedZoneRange;
+      x++
+    ) {
       // Skip cells that are inside the fortress
       if (x >= fortress2MinX && x <= fortress2MaxX && y >= fortress2MinY && y <= fortress2MaxY) {
         continue;
@@ -364,8 +524,16 @@ window.addEventListener('load', async () => {
   }
 
   // Add red zone tiles around Fortress III
-  for (let y = fortress3MinY - fortressRedZoneRange; y <= fortress3MaxY + fortressRedZoneRange; y++) {
-    for (let x = fortress3MinX - fortressRedZoneRange; x <= fortress3MaxX + fortressRedZoneRange; x++) {
+  for (
+    let y = fortress3MinY - fortressRedZoneRange;
+    y <= fortress3MaxY + fortressRedZoneRange;
+    y++
+  ) {
+    for (
+      let x = fortress3MinX - fortressRedZoneRange;
+      x <= fortress3MaxX + fortressRedZoneRange;
+      x++
+    ) {
       // Skip cells that are inside the fortress
       if (x >= fortress3MinX && x <= fortress3MaxX && y >= fortress3MinY && y <= fortress3MaxY) {
         continue;
@@ -375,8 +543,16 @@ window.addEventListener('load', async () => {
   }
 
   // Add red zone tiles around Fortress IV
-  for (let y = fortress4MinY - fortressRedZoneRange; y <= fortress4MaxY + fortressRedZoneRange; y++) {
-    for (let x = fortress4MinX - fortressRedZoneRange; x <= fortress4MaxX + fortressRedZoneRange; x++) {
+  for (
+    let y = fortress4MinY - fortressRedZoneRange;
+    y <= fortress4MaxY + fortressRedZoneRange;
+    y++
+  ) {
+    for (
+      let x = fortress4MinX - fortressRedZoneRange;
+      x <= fortress4MaxX + fortressRedZoneRange;
+      x++
+    ) {
       // Skip cells that are inside the fortress
       if (x >= fortress4MinX && x <= fortress4MaxX && y >= fortress4MinY && y <= fortress4MaxY) {
         continue;
