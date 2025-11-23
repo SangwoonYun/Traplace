@@ -42,10 +42,8 @@
     "customHeightLabel": "ความสูง",
     "castle": "ปราสาท",
     "turret": "หอคอย",
-    "turret1": "หอคอย I",
-    "turret2": "หอคอย II",
-    "turret3": "หอคอย III",
-    "turret4": "หอคอย IV"
+    "fortress": "ป้อมปราการ",
+    "sanctuary": "สถานที่ศักดิ์สิทธิ์"
   },
   "alert": {
     "noCities": "ไม่มีเมือง.",

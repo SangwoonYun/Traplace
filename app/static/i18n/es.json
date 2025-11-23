@@ -42,10 +42,8 @@
     "customHeightLabel": "Alto",
     "castle": "Castillo",
     "turret": "Torreta",
-    "turret1": "Torreta I",
-    "turret2": "Torreta II",
-    "turret3": "Torreta III",
-    "turret4": "Torreta IV"
+    "fortress": "Fortaleza",
+    "sanctuary": "Santuario"
   },
   "alert": {
     "noCities": "No hay ciudades.",

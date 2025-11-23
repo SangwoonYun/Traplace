@@ -42,10 +42,8 @@
     "customHeightLabel": "Wysokość",
     "castle": "Zamek",
     "turret": "Wieżyczka",
-    "turret1": "Wieżyczka I",
-    "turret2": "Wieżyczka II",
-    "turret3": "Wieżyczka III",
-    "turret4": "Wieżyczka IV"
+    "fortress": "Forteca",
+    "sanctuary": "Sanktuarium"
   },
   "alert": {
     "noCities": "Brak miast.",

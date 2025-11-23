@@ -40,7 +40,8 @@
     "customHeightLabel": "高度",
     "castle": "城堡",
     "turret": "炮塔",
-    "fortress": "要塞"
+    "fortress": "要塞",
+    "sanctuary": "圣所"
   },
   "alert": {
     "noCities": "没有城市。",

@@ -34,7 +34,14 @@
     "resource": "المورد",
     "block1": "1×1",
     "block2": "2×2",
-    "block3": "3×3"
+    "block3": "3×3",
+    "custom": "كتلة مخصصة",
+    "customWidthLabel": "العرض",
+    "customHeightLabel": "الارتفاع",
+    "castle": "القلعة",
+    "turret": "البرج",
+    "fortress": "الحصن",
+    "sanctuary": "المعبد"
   },
   "alert": {
     "noCities": "لا توجد مدن.",
@@ -45,7 +52,22 @@
   "msg": {
     "copiedShort": "تم نسخ الرابط المختصر!",
     "copiedFull": "تم نسخ الرابط الكامل",
+    "copied": "تم النسخ!",
     "shortenError": "فشل إنشاء الرابط المختصر.",
-    "copyError": "فشل النسخ."
+    "copyError": "فشل النسخ.",
+    "copyManual": "يرجى النسخ باستخدام Ctrl+C أو Cmd+C"
+  },
+  "modal": {
+    "urlCopy": {
+      "title": "نسخ الرابط",
+      "message": "يرجى نسخ الرابط أدناه.",
+      "copyBtn": "نسخ"
+    }
+  },
+  "consent": {
+    "message": "نستخدم تحليلات مجهولة لتحسين تجربتك. لا يتم جمع أي بيانات شخصية.",
+    "accept": "قبول",
+    "reject": "رفض",
+    "learnMore": "معرفة المزيد"
   }
 }

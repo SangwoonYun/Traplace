@@ -42,10 +42,8 @@
     "customHeightLabel": "Tinggi",
     "castle": "Kastil",
     "turret": "Menara",
-    "turret1": "Menara I",
-    "turret2": "Menara II",
-    "turret3": "Menara III",
-    "turret4": "Menara IV"
+    "fortress": "Benteng",
+    "sanctuary": "Tempat Suci"
   },
   "alert": {
     "noCities": "Tidak ada kota.",

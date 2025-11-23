@@ -40,7 +40,8 @@
     "customHeightLabel": "高さ",
     "castle": "城",
     "turret": "タレット",
-    "fortress": "要塞"
+    "fortress": "要塞",
+    "sanctuary": "聖域"
   },
   "alert": {
     "noCities": "都市がありません。",

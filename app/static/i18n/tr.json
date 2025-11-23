@@ -42,10 +42,8 @@
     "customHeightLabel": "Yükseklik",
     "castle": "Kale",
     "turret": "Taret",
-    "turret1": "Taret I",
-    "turret2": "Taret II",
-    "turret3": "Taret III",
-    "turret4": "Taret IV"
+    "fortress": "Kale",
+    "sanctuary": "Mabet"
   },
   "alert": {
     "noCities": "Hiç şehir yok.",
