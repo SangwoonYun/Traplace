@@ -29,7 +29,7 @@ import { setupCursorBadge } from './interactions/cursor.js';
 import { setupCoordJump } from './interactions/coordJump.js';
 import { validateAllObjects, createBlock } from './blocks.js';
 import { expand } from './interactions/expand.js';
-import { parseFromURL } from './urlState.js';
+import { parseFromURL, saveToURLImmediate } from './urlState.js';
 import { state, cellPx, BASE_CELLS_X, BASE_CELLS_Y } from './state.js';
 import { setupActions, setTitles } from './actions.js';
 import { initHistoryWithCurrent, saveCheckpoint } from './history.js';
@@ -285,9 +285,17 @@ window.addEventListener('load', async () => {
    * ------------------------------------------- */
   const parsed = parseFromURL();
 
+  // Track if we converted any legacy blocks
+  let hasLegacyBlocks = false;
+
   if (parsed?.blocks?.length) {
     state._restoring = true;
     for (const it of parsed.blocks) {
+      // Check if this was a legacy block (converted to custom)
+      if (it.kind === 'custom' && it.width === it.height && !it.label) {
+        hasLegacyBlocks = true;
+      }
+
       const c = cellPx();
       const left = it.cx * c;
       const top = it.cy * c;
@@ -310,6 +318,11 @@ window.addEventListener('load', async () => {
   }
 
   updateAllCounts();
+
+  // If we converted legacy blocks, update the URL to reflect the conversion
+  if (hasLegacyBlocks) {
+    saveToURLImmediate();
+  }
 
   // Center view based on priority: HQ -> Trap -> World Center
   centerToInitialPosition();
