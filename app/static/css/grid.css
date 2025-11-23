@@ -137,29 +137,11 @@
 }
 
 /* ---------------------------------------------
- * Red Zone Tiles (light red, around castle)
+ * Red Zone Tiles (light red, around castle and fortresses)
+ * Now rendered dynamically via JavaScript
  * ------------------------------------------- */
 .tiles-redzone {
-  /* Castle is at 594-605, red zone extends 8 cells: 586-613 = 28×28 */
-  left: calc(586 * var(--cell));
-  top: calc(586 * var(--cell));
-  width: calc(28 * var(--cell));
-  height: calc(28 * var(--cell));
-  background: var(--paint-redzone);
-  /* Cut out the castle area in the center (594-605 = 12×12) */
-  /* Offset from red zone origin: 594-586 = 8 */
-  clip-path: polygon(
-    0% 0%,
-    100% 0%,
-    100% 100%,
-    0% 100%,
-    0% 0%,
-    /* Inner hole for castle */ calc(8 / 28 * 100%) calc(8 / 28 * 100%),
-    calc(8 / 28 * 100%) calc(20 / 28 * 100%),
-    calc(20 / 28 * 100%) calc(20 / 28 * 100%),
-    calc(20 / 28 * 100%) calc(8 / 28 * 100%),
-    calc(8 / 28 * 100%) calc(8 / 28 * 100%)
-  );
+  /* Container for dynamically rendered red zone tiles */
 }
 
 .tile-redzone {

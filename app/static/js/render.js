@@ -175,10 +175,23 @@ export function renderRuins() {
   // No need to create individual DOM elements
 }
 
-/** Render red zone tiles (light red, around castle). */
+/** Render red zone tiles (light red, around castle and fortresses). */
 export function renderRedZone() {
-  // CSS handles rendering via clip-path
-  // No need to create individual DOM elements
+  requestAnimationFrame(() => {
+    redZoneLayer.innerHTML = '';
+    const cpx = cellPx();
+    const fragment = document.createDocumentFragment();
+
+    for (const k of state.redZone) {
+      const [x, y] = k.split(',').map(Number);
+      const d = document.createElement('div');
+      d.className = 'tile-redzone';
+      d.style.cssText = `left:${x * cpx}px;top:${y * cpx}px;width:${cpx}px;height:${cpx}px`;
+      fragment.appendChild(d);
+    }
+
+    redZoneLayer.appendChild(fragment);
+  });
 }
 
 /** Render user-painted red tiles. */

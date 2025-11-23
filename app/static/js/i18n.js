@@ -237,13 +237,32 @@ export async function loadLanguageOnline(lang) {
  * @param {string} path
  * @returns {any}
  */
-export function t(path) {
+/**
+ * Extract Roman numeral suffix from a label (e.g., "포탑 IV" -> "IV")
+ * @param {string} label
+ * @returns {string | null}
+ */
+function extractRomanNumeral(label) {
+  const match = label.match(/\b([IVX]+)$/);
+  return match ? match[1] : null;
+}
+
+export function t(path, label = null) {
   const segs = path.split('.');
   let cur = DICT || BUILTIN_EN;
   for (const s of segs) {
     cur = (cur || {})[s];
     if (cur == null) return path; // fall back to key path
   }
+
+  // For turret and fortress, append Roman numeral if label contains one
+  if ((path === 'palette.turret' || path === 'palette.fortress') && label) {
+    const roman = extractRomanNumeral(label);
+    if (roman) {
+      return `${cur} ${roman}`;
+    }
+  }
+
   return cur;
 }
 
@@ -420,14 +439,15 @@ export function applyI18nToDOM() {
 export function updateBlockLabelsForLocale(state) {
   if (!state?.blocks) return;
 
-  const defaultTextFor = (kind, size) => {
+  const defaultTextFor = (kind, size, currentLabel = null) => {
     if (kind === 'hq') return t('palette.hq');
     if (kind === 'flag') return t('palette.flag');
     if (kind === 'trap') return t('palette.trap');
     if (kind === 'city') return t('palette.city');
     if (kind === 'resource') return t('palette.resource');
     if (kind === 'castle') return t('palette.castle');
-    if (kind === 'turret') return t('palette.turret');
+    if (kind === 'turret') return t('palette.turret', currentLabel);
+    if (kind === 'fortress') return t('palette.fortress', currentLabel);
     if (kind === 'block') return `${size}×${size}`;
     return '';
   };
@@ -437,17 +457,36 @@ export function updateBlockLabelsForLocale(state) {
 
   // Update turret labels specifically
   if (window.__turrets) {
-    const turretLabels = {
-      turret1: t('palette.turret1'),
-      turret2: t('palette.turret2'),
-      turret3: t('palette.turret3'),
-      turret4: t('palette.turret4'),
+    const turretRomans = {
+      turret1: 'I',
+      turret2: 'II',
+      turret3: 'III',
+      turret4: 'IV',
     };
 
     for (const [key, el] of Object.entries(window.__turrets)) {
       const labelEl = el?.querySelector?.('.label');
       if (labelEl) {
-        labelEl.textContent = turretLabels[key] || t('palette.turret');
+        const roman = turretRomans[key];
+        labelEl.textContent = t('palette.turret', `포탑 ${roman}`);
+      }
+    }
+  }
+
+  // Update fortress labels if they exist
+  if (window.__fortresses) {
+    const fortressRomans = {
+      fortress1: 'I',
+      fortress2: 'II',
+      fortress3: 'III',
+      fortress4: 'IV',
+    };
+
+    for (const [key, el] of Object.entries(window.__fortresses)) {
+      const labelEl = el?.querySelector?.('.label');
+      if (labelEl) {
+        const roman = fortressRomans[key];
+        labelEl.textContent = t('palette.fortress', `성채 ${roman}`);
       }
     }
   }
@@ -456,8 +495,8 @@ export function updateBlockLabelsForLocale(state) {
     const labelEl = b.el?.querySelector?.('.label');
     if (!labelEl) continue;
 
-    // Skip turret blocks - they're handled separately above
-    if (b.kind === 'turret') continue;
+    // Skip turret and fortress blocks - they're handled separately above
+    if (b.kind === 'turret' || b.kind === 'fortress') continue;
 
     const next = defaultTextFor(b.kind, b.size);
 

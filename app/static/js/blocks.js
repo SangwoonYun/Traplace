@@ -62,6 +62,11 @@ function applyBlockStyle(b, invalid) {
       el.style.borderColor = styles.getPropertyValue('--turret-border');
       return;
 
+    case 'fortress':
+      el.style.background = styles.getPropertyValue('--fortress-bg');
+      el.style.borderColor = styles.getPropertyValue('--fortress-border');
+      return;
+
     case 'block':
       if (b.size === 1 || b.size === 2 || b.size === 3) {
         el.style.background = styles.getPropertyValue('--block123-bg');

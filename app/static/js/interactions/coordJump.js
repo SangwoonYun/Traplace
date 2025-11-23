@@ -42,8 +42,9 @@ export function setupCoordJump() {
       const cx = parseInt(x, 10);
       const cy = parseInt(y, 10);
 
-      // Jump to the specified coordinates
-      centerToCell(cx, cy);
+      // NOTE: Swap x and y to align with the 45° rotated world (same as cursor.js)
+      // User inputs "x, y" but we need to pass (y, x) to centerToCell
+      centerToCell(cy, cx);
     }
 
     // Return to display mode

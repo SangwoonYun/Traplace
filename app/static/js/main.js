@@ -169,6 +169,15 @@ window.addEventListener('load', async () => {
   // Store turret elements for i18n updates
   window.__turrets = { turret1, turret2, turret3, turret4 };
 
+  // Create fortress blocks (6×6 each)
+  const fortress1 = createBlock('fortress', 6, 800 * c, 597 * c, undefined, undefined, true, '성채 I'); // 12 o'clock
+  const fortress2 = createBlock('fortress', 6, 597 * c, 400 * c, undefined, undefined, true, '성채 II'); // 3 o'clock
+  const fortress3 = createBlock('fortress', 6, 400 * c, 597 * c, undefined, undefined, true, '성채 III'); // 6 o'clock
+  const fortress4 = createBlock('fortress', 6, 597 * c, 800 * c, undefined, undefined, true, '성채 IV'); // 9 o'clock
+
+  // Store fortress elements for i18n updates
+  window.__fortresses = { fortress1, fortress2, fortress3, fortress4 };
+
   // Create red zone tiles around castle (8 cells from castle edge)
   // Castle is at 594-605 (12x12), so red zone tiles are from 586-613 (28x28)
   const castleMinX = 594;
@@ -267,6 +276,79 @@ window.addEventListener('load', async () => {
     for (let x = castleMinX - redZoneRange; x <= castleMaxX + redZoneRange; x++) {
       // Skip cells that are inside the castle
       if (x >= castleMinX && x <= castleMaxX && y >= castleMinY && y <= castleMaxY) {
+        continue;
+      }
+      state.redZone.add(`${x},${y}`);
+    }
+  }
+
+  // Create red zone tiles around fortresses
+  // Each fortress has a 6×6 block with red zone around it
+  // Fortress I red zone extends to (570, 774), which is 26 cells from fortress edge
+  const fortressRedZoneRange = 27;
+
+  // Fortress I: (597, 800) to (584, 805) - 6×6 block
+  const fortress1MinX = 800;
+  const fortress1MaxX = 805;
+  const fortress1MinY = 597;
+  const fortress1MaxY = 602;
+
+  // Fortress II: (597, 400) to (602, 405)
+  const fortress2MinX = 597;
+  const fortress2MaxX = 602;
+  const fortress2MinY = 400;
+  const fortress2MaxY = 405;
+
+  // Fortress III: (400, 597) to (405, 602)
+  const fortress3MinX = 400;
+  const fortress3MaxX = 405;
+  const fortress3MinY = 597;
+  const fortress3MaxY = 602;
+
+  // Fortress IV: (800, 597) to (805, 602)
+  const fortress4MinX = 597;
+  const fortress4MaxX = 602;
+  const fortress4MinY = 800;
+  const fortress4MaxY = 805;
+
+  // Add red zone tiles around Fortress I
+  for (let y = fortress1MinY - fortressRedZoneRange; y <= fortress1MaxY + fortressRedZoneRange; y++) {
+    for (let x = fortress1MinX - fortressRedZoneRange; x <= fortress1MaxX + fortressRedZoneRange; x++) {
+      // Skip cells that are inside the fortress
+      if (x >= fortress1MinX && x <= fortress1MaxX && y >= fortress1MinY && y <= fortress1MaxY) {
+        continue;
+      }
+      state.redZone.add(`${x},${y}`);
+    }
+  }
+
+  // Add red zone tiles around Fortress II
+  for (let y = fortress2MinY - fortressRedZoneRange; y <= fortress2MaxY + fortressRedZoneRange; y++) {
+    for (let x = fortress2MinX - fortressRedZoneRange; x <= fortress2MaxX + fortressRedZoneRange; x++) {
+      // Skip cells that are inside the fortress
+      if (x >= fortress2MinX && x <= fortress2MaxX && y >= fortress2MinY && y <= fortress2MaxY) {
+        continue;
+      }
+      state.redZone.add(`${x},${y}`);
+    }
+  }
+
+  // Add red zone tiles around Fortress III
+  for (let y = fortress3MinY - fortressRedZoneRange; y <= fortress3MaxY + fortressRedZoneRange; y++) {
+    for (let x = fortress3MinX - fortressRedZoneRange; x <= fortress3MaxX + fortressRedZoneRange; x++) {
+      // Skip cells that are inside the fortress
+      if (x >= fortress3MinX && x <= fortress3MaxX && y >= fortress3MinY && y <= fortress3MaxY) {
+        continue;
+      }
+      state.redZone.add(`${x},${y}`);
+    }
+  }
+
+  // Add red zone tiles around Fortress IV
+  for (let y = fortress4MinY - fortressRedZoneRange; y <= fortress4MaxY + fortressRedZoneRange; y++) {
+    for (let x = fortress4MinX - fortressRedZoneRange; x <= fortress4MaxX + fortressRedZoneRange; x++) {
+      // Skip cells that are inside the fortress
+      if (x >= fortress4MinX && x <= fortress4MaxX && y >= fortress4MinY && y <= fortress4MaxY) {
         continue;
       }
       state.redZone.add(`${x},${y}`);

@@ -48,6 +48,8 @@
   --castle-border: #6a1b9a;
   --turret-bg: #b39ddb;
   --turret-border: #4a148c;
+  --fortress-bg: #e1bee7;
+  --fortress-border: #6a1b9a;
 
   /* World / Zoom */
   --zoom: 1; /* 1 = 100% */
