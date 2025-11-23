@@ -11,7 +11,7 @@ import { viewport, world, rot } from '../dom.js';
 import { clamp } from '../transform.js';
 import { updateBadge } from '../render.js';
 
-const ZOOM_MIN = 0.1;
+const ZOOM_MIN = 0.2;
 const ZOOM_MAX = 3.0;
 
 /**

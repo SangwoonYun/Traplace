@@ -42,6 +42,8 @@
   pointer-events: none;
   will-change: transform;
   transform: translateZ(0);
+  /* Containment: isolate layout and paint calculations within each layer */
+  contain: layout paint;
 }
 
 /* ---------------------------------------------

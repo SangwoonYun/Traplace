@@ -45,9 +45,9 @@ function applySerialized(qs) {
   const parsed = deserializeState(qs);
   const c = cellPx();
 
-  // Clear existing
-  rot.querySelectorAll('.block').forEach((el) => el.remove());
-  state.blocks = [];
+  // Clear existing non-immutable blocks only (preserve castle, turrets, fortresses)
+  rot.querySelectorAll('.block:not([data-immutable])').forEach((el) => el.remove());
+  state.blocks = state.blocks.filter((b) => b.immutable);
   state.paintedSet.clear();
   state.userPaint = new Set(parsed.red || []);
   renderUserTiles();

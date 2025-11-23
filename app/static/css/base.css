@@ -168,6 +168,9 @@
         calc((var(--world-w) + var(--world-h)) * var(--rot-k))
       )
       rotate(45deg) scale(-1) scale(var(--zoom));
+
+    /* GPU acceleration - prevents layer compositing bugs during zoom/scroll */
+    will-change: transform;
   }
 }
 
