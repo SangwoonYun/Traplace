@@ -1,5 +1,7 @@
 {
-  "app": { "title": "Allianz-Platzierungssimulator" },
+  "app": {
+    "title": "Allianz-Platzierungssimulator"
+  },
   "ui": {
     "usageTitle": "Anleitung",
     "usage": "• <b>Drag & Drop</b>: Platziere Elemente aus der linken Palette (am Raster ausgerichtet).<br>• <b>Mittlere Maustaste ziehen</b>: Ansicht verschieben.<br>• <b>Ctrl/⌘ + Mausrad</b>: Hinein-/Herauszoomen.<br>• <b>Trackpad-Pinch</b>: Zoomen.<br>• <b>Zelle anklicken</b>: Rote Markierung umschalten.<br>• <b>Stadt</b>-Label: Doppelklick → Bearbeiten (Enter = Speichern / Esc = Abbrechen).<br>• Unterer Bereich <b>🗑</b>: Ziehe ein Objekt hierher, um es zu löschen.<br>※ Blaue Markierungen werden durch <b>Banner (7×7)</b> und <b>Hauptquartier (15×15)</b> erzeugt.",
@@ -34,7 +36,16 @@
     "resource": "Ressource",
     "block1": "1×1",
     "block2": "2×2",
-    "block3": "3×3"
+    "block3": "3×3",
+    "custom": "Benutzerdefinierter Block",
+    "customWidthLabel": "Breite",
+    "customHeightLabel": "Höhe",
+    "castle": "Burg",
+    "turret": "Turm",
+    "turret1": "Turm I",
+    "turret2": "Turm II",
+    "turret3": "Turm III",
+    "turret4": "Turm IV"
   },
   "alert": {
     "noCities": "Keine Städte.",

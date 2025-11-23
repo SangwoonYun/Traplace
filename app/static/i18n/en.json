@@ -37,7 +37,13 @@
     "block3": "3×3",
     "custom": "Custom Block",
     "customWidthLabel": "Width",
-    "customHeightLabel": "Height"
+    "customHeightLabel": "Height",
+    "castle": "Castle",
+    "turret": "Turret",
+    "turret1": "Turret I",
+    "turret2": "Turret II",
+    "turret3": "Turret III",
+    "turret4": "Turret IV"
   },
   "alert": {
     "noCities": "No cities.",

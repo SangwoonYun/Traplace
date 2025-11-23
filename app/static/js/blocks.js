@@ -52,6 +52,16 @@ function applyBlockStyle(b, invalid) {
       el.style.borderColor = styles.getPropertyValue('--city-border');
       return;
 
+    case 'castle':
+      el.style.background = styles.getPropertyValue('--castle-bg');
+      el.style.borderColor = styles.getPropertyValue('--castle-border');
+      return;
+
+    case 'turret':
+      el.style.background = styles.getPropertyValue('--turret-bg');
+      el.style.borderColor = styles.getPropertyValue('--turret-border');
+      return;
+
     case 'block':
       if (b.size === 1 || b.size === 2 || b.size === 3) {
         el.style.background = styles.getPropertyValue('--block123-bg');
@@ -210,21 +220,37 @@ function finishEditLabel(blockEl, cancel) {
  * ------------------------------------------- */
 /**
  * Create a new block element and register it in state.
- * @param {'hq'|'flag'|'trap'|'city'|'resource'|'block'|'custom'} kind
+ * @param {'hq'|'flag'|'trap'|'city'|'resource'|'block'|'custom'|'castle'|'turret'} kind
  * @param {number} size - For square blocks; ignored for custom blocks
  * @param {number} left
  * @param {number} top
  * @param {number} [width] - For custom blocks only
  * @param {number} [height] - For custom blocks only
+ * @param {boolean} [immutable=false] - If true, block cannot be moved or deleted
+ * @param {string} [customName] - Custom display name for the block
  * @returns {HTMLElement}
  */
-export function createBlock(kind, size, left, top, width, height) {
+export function createBlock(
+  kind,
+  size,
+  left,
+  top,
+  width,
+  height,
+  immutable = false,
+  customName = null,
+) {
   const cell =
     parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cell')) || 48;
 
   const el = document.createElement('div');
   el.className = 'block';
   el.dataset.kind = kind;
+
+  // Mark immutable blocks
+  if (immutable) {
+    el.dataset.immutable = 'true';
+  }
 
   // Custom blocks use width x height
   let blockWidth, blockHeight, displayText;
@@ -236,18 +262,28 @@ export function createBlock(kind, size, left, top, width, height) {
   } else {
     blockWidth = blockHeight = size;
     el.dataset.size = String(size);
-    displayText =
-      kind === 'hq'
-        ? t('palette.hq')
-        : kind === 'flag'
-          ? t('palette.flag')
-          : kind === 'trap'
-            ? t('palette.trap')
-            : kind === 'city'
-              ? t('palette.city')
-              : kind === 'resource'
-                ? t('palette.resource')
-                : `${size}×${size}`;
+
+    // Use customName if provided, otherwise use translation or default
+    if (customName) {
+      displayText = customName;
+    } else {
+      displayText =
+        kind === 'hq'
+          ? t('palette.hq')
+          : kind === 'flag'
+            ? t('palette.flag')
+            : kind === 'trap'
+              ? t('palette.trap')
+              : kind === 'city'
+                ? t('palette.city')
+                : kind === 'resource'
+                  ? t('palette.resource')
+                  : kind === 'castle'
+                    ? t('palette.castle')
+                    : kind === 'turret'
+                      ? t('palette.turret')
+                      : `${size}×${size}`;
+    }
   }
 
   el.style.width = `${blockWidth * cell}px`;
@@ -269,7 +305,7 @@ export function createBlock(kind, size, left, top, width, height) {
 
   rot.appendChild(el);
 
-  /** @type {{el:HTMLElement, kind:string, size:number, left:number, top:number, customLabel:boolean, width?:number, height?:number}} */
+  /** @type {{el:HTMLElement, kind:string, size:number, left:number, top:number, customLabel:boolean, immutable?:boolean, width?:number, height?:number}} */
   const b = {
     el,
     kind,
@@ -281,6 +317,9 @@ export function createBlock(kind, size, left, top, width, height) {
   if (kind === 'custom') {
     b.width = blockWidth;
     b.height = blockHeight;
+  }
+  if (immutable) {
+    b.immutable = true;
   }
   state.blocks.push(b);
   applyBlockStyle(b, false);

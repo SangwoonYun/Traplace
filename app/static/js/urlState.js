@@ -158,46 +158,49 @@ function decodeRed(str, useBase36) {
  * @returns {string}
  */
 export function serializeState() {
-  const bItems = state.blocks.map((b) => {
-    const c = cellPx();
-    const cx = Math.round(b.left / c);
-    const cy = Math.round(b.top / c);
-    const code = KIND_TO_CODE[b.kind] ?? 'B';
-    const cx36 = toB36(cx);
-    const cy36 = toB36(cy);
+  // Filter out immutable blocks from serialization
+  const bItems = state.blocks
+    .filter((b) => !b.immutable)
+    .map((b) => {
+      const c = cellPx();
+      const cx = Math.round(b.left / c);
+      const cy = Math.round(b.top / c);
+      const code = KIND_TO_CODE[b.kind] ?? 'B';
+      const cx36 = toB36(cx);
+      const cy36 = toB36(cy);
 
-    let token;
-    // Custom blocks store width x height separately
-    if (b.kind === 'custom') {
-      const w36 = toB36(b.width || b.size);
-      const h36 = toB36(b.height || b.size);
-      token = `${code}${w36}x${h36}@${cx36},${cy36}`;
-    } else {
-      const size36 = toB36(b.size);
-      token = `${code}${size36}@${cx36},${cy36}`;
-    }
-
-    // Persist city and custom block labels only when truly custom (avoid saving defaults).
-    if (b.kind === 'city') {
-      const labelEl = b.el?.querySelector('.label');
-      const label = (labelEl?.textContent || '').trim();
-
-      // Treat both Korean and English defaults as non-custom
-      if (label && label !== '도시' && label !== 'City') {
-        token += `~${encodeURIComponent(label)}`;
+      let token;
+      // Custom blocks store width x height separately
+      if (b.kind === 'custom') {
+        const w36 = toB36(b.width || b.size);
+        const h36 = toB36(b.height || b.size);
+        token = `${code}${w36}x${h36}@${cx36},${cy36}`;
+      } else {
+        const size36 = toB36(b.size);
+        token = `${code}${size36}@${cx36},${cy36}`;
       }
-    } else if (b.kind === 'custom') {
-      const labelEl = b.el?.querySelector('.label');
-      const label = (labelEl?.textContent || '').trim();
-      const defaultLabel = `${b.width || b.size}×${b.height || b.size}`;
 
-      // Only save if label differs from default WxH format
-      if (label && label !== defaultLabel) {
-        token += `~${encodeURIComponent(label)}`;
+      // Persist city and custom block labels only when truly custom (avoid saving defaults).
+      if (b.kind === 'city') {
+        const labelEl = b.el?.querySelector('.label');
+        const label = (labelEl?.textContent || '').trim();
+
+        // Treat both Korean and English defaults as non-custom
+        if (label && label !== '도시' && label !== 'City') {
+          token += `~${encodeURIComponent(label)}`;
+        }
+      } else if (b.kind === 'custom') {
+        const labelEl = b.el?.querySelector('.label');
+        const label = (labelEl?.textContent || '').trim();
+        const defaultLabel = `${b.width || b.size}×${b.height || b.size}`;
+
+        // Only save if label differs from default WxH format
+        if (label && label !== defaultLabel) {
+          token += `~${encodeURIComponent(label)}`;
+        }
       }
-    }
-    return token;
-  });
+      return token;
+    });
 
   const rRLE = encodeRedRLE(state.userPaint, true);
 

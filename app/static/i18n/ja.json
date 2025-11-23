@@ -34,7 +34,16 @@
     "resource": "資源",
     "block1": "1×1",
     "block2": "2×2",
-    "block3": "3×3"
+    "block3": "3×3",
+    "custom": "カスタムブロック",
+    "customWidthLabel": "幅",
+    "customHeightLabel": "高さ",
+    "castle": "城",
+    "turret": "タレット",
+    "turret1": "タレット I",
+    "turret2": "タレット II",
+    "turret3": "タレット III",
+    "turret4": "タレット IV"
   },
   "alert": {
     "noCities": "都市がありません。",

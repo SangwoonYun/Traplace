@@ -1,5 +1,7 @@
 {
-  "app": { "title": "Symulator Rozmieszczenia Sojuszu" },
+  "app": {
+    "title": "Symulator Rozmieszczenia Sojuszu"
+  },
   "ui": {
     "usageTitle": "Jak używać",
     "usage": "• <b>Przeciągnij i upuść</b>: umieść elementy z palety po lewej stronie (wyrównanie do siatki).<br>• <b>Przeciąganie środkowym przyciskiem myszy</b>: przesuwanie widoku.<br>• <b>Ctrl/⌘ + Kółko myszy</b>: przybliżanie/oddalanie.<br>• <b>Uszczypnięcie na touchpadzie</b>: przybliż lub oddal.<br>• <b>Kliknij komórkę</b>: włącz/wyłącz czerwone zaznaczenie.<br>• <b>Etykieta miasta</b>: kliknij dwukrotnie → edytuj (Enter, aby zapisać / Esc, aby anulować).<br>• <b>Dolny obszar 🗑</b>: przeciągnij element tutaj, aby go usunąć.<br>※ Niebieskie pola są generowane przez <b>Flagę (7×7)</b> i <b>Kwaterę Główną (15×15)</b>.",
@@ -34,7 +36,16 @@
     "resource": "Zasób",
     "block1": "1×1",
     "block2": "2×2",
-    "block3": "3×3"
+    "block3": "3×3",
+    "custom": "Niestandardowy blok",
+    "customWidthLabel": "Szerokość",
+    "customHeightLabel": "Wysokość",
+    "castle": "Zamek",
+    "turret": "Wieżyczka",
+    "turret1": "Wieżyczka I",
+    "turret2": "Wieżyczka II",
+    "turret3": "Wieżyczka III",
+    "turret4": "Wieżyczka IV"
   },
   "alert": {
     "noCities": "Brak miast.",

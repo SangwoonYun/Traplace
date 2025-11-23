@@ -478,23 +478,41 @@ export async function exportPNG() {
     ctx.strokeRect(x, y, w, h);
     ctx.restore();
 
-    // Label text — use i18n defaults; preserve city edits
+    // Label text — use i18n defaults; preserve city/custom/turret edits
     const labelEl = b.el?.querySelector('.label');
-    let text =
-      b.kind === 'flag'
-        ? t('palette.flag')
-        : b.kind === 'hq'
-          ? t('palette.hq')
-          : b.kind === 'city'
-            ? t('palette.city')
-            : b.kind === 'resource'
-              ? t('palette.resource')
-              : b.kind === 'trap'
-                ? t('palette.trap')
-                : `${b.size}×${b.size}`;
-
     const userText = (labelEl?.textContent || '').trim();
-    if (b.kind === 'city' && userText) text = userText;
+
+    let text;
+
+    // For turret blocks, always use the actual label text (includes I, II, III, IV)
+    if (b.kind === 'turret' && userText) {
+      text = userText;
+    }
+    // For city and custom blocks, preserve user edits
+    else if ((b.kind === 'city' || b.kind === 'custom') && userText) {
+      text = userText;
+    }
+    // Otherwise use i18n defaults
+    else {
+      text =
+        b.kind === 'flag'
+          ? t('palette.flag')
+          : b.kind === 'hq'
+            ? t('palette.hq')
+            : b.kind === 'city'
+              ? t('palette.city')
+              : b.kind === 'resource'
+                ? t('palette.resource')
+                : b.kind === 'trap'
+                  ? t('palette.trap')
+                  : b.kind === 'castle'
+                    ? t('palette.castle')
+                    : b.kind === 'turret'
+                      ? t('palette.turret')
+                      : b.kind === 'custom'
+                        ? t('palette.custom')
+                        : `${b.size}×${b.size}`;
+    }
 
     // Label is drawn horizontally in projected coordinates
     const Xc = x + w / 2;

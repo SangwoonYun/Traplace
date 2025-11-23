@@ -15,6 +15,11 @@ export const rot = document.getElementById('rot');
  * Tile and overlay layers
  * ------------------------------------------- */
 export const tilesLayer = document.getElementById('tiles');
+export const barrenLayer = document.getElementById('tilesBarren');
+export const plainLayer = document.getElementById('tilesPlain');
+export const richLayer = document.getElementById('tilesRich');
+export const ruinsLayer = document.getElementById('tilesRuins');
+export const redZoneLayer = document.getElementById('tilesRedZone');
 export const previewLayer = document.getElementById('tilesPreview');
 export const outlinesLayer = document.getElementById('outlines');
 export const outlinesPreviewLayer = document.getElementById('outlinesPreview');

@@ -426,6 +426,8 @@ export function updateBlockLabelsForLocale(state) {
     if (kind === 'trap') return t('palette.trap');
     if (kind === 'city') return t('palette.city');
     if (kind === 'resource') return t('palette.resource');
+    if (kind === 'castle') return t('palette.castle');
+    if (kind === 'turret') return t('palette.turret');
     if (kind === 'block') return `${size}×${size}`;
     return '';
   };
@@ -433,9 +435,29 @@ export function updateBlockLabelsForLocale(state) {
   // Defaults we want to auto-replace on locale switch
   const PREV_DEFAULTS = new Set(['도시', 'City']);
 
+  // Update turret labels specifically
+  if (window.__turrets) {
+    const turretLabels = {
+      turret1: t('palette.turret1'),
+      turret2: t('palette.turret2'),
+      turret3: t('palette.turret3'),
+      turret4: t('palette.turret4'),
+    };
+
+    for (const [key, el] of Object.entries(window.__turrets)) {
+      const labelEl = el?.querySelector?.('.label');
+      if (labelEl) {
+        labelEl.textContent = turretLabels[key] || t('palette.turret');
+      }
+    }
+  }
+
   for (const b of state.blocks) {
     const labelEl = b.el?.querySelector?.('.label');
     if (!labelEl) continue;
+
+    // Skip turret blocks - they're handled separately above
+    if (b.kind === 'turret') continue;
 
     const next = defaultTextFor(b.kind, b.size);
 

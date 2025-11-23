@@ -34,7 +34,16 @@
     "resource": "资源",
     "block1": "1×1",
     "block2": "2×2",
-    "block3": "3×3"
+    "block3": "3×3",
+    "custom": "自定义方块",
+    "customWidthLabel": "宽度",
+    "customHeightLabel": "高度",
+    "castle": "城堡",
+    "turret": "炮塔",
+    "turret1": "炮塔 I",
+    "turret2": "炮塔 II",
+    "turret3": "炮塔 III",
+    "turret4": "炮塔 IV"
   },
   "alert": {
     "noCities": "没有城市。",

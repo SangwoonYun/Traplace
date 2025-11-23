@@ -29,12 +29,19 @@
  * ------------------------------------------- */
 .tiles,
 .tiles-preview,
+.tiles-barren,
+.tiles-plain,
+.tiles-rich,
+.tiles-ruins,
+.tiles-redzone,
 .outlines,
 .outlines-preview,
 .tiles-user {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 /* ---------------------------------------------
@@ -51,12 +58,125 @@
 }
 
 /* ---------------------------------------------
- * Red Tiles (alternative highlight)
+ * Barren Tiles (light yellow color, outermost area)
+ * ------------------------------------------- */
+.tiles-barren {
+  background: var(--paint-barren);
+}
+
+.tile-barren {
+  position: absolute;
+  border-radius: 0;
+  background: var(--paint-barren);
+}
+
+/* ---------------------------------------------
+ * Plain Tiles (yellow-green color, outer area)
+ * ------------------------------------------- */
+.tiles-plain {
+  /* Square centered on castle (599.5, 599.5) with corner at (899, 899) */
+  /* Half-diagonal = sqrt((899-599.5)^2 + (899-599.5)^2) = sqrt(179400.5) ≈ 423.56 */
+  /* Half-side = 423.56 / sqrt(2) ≈ 299.5 */
+  /* Area: from (300, 300) to (899, 899) = 600×600 */
+  left: calc(300 * var(--cell));
+  top: calc(300 * var(--cell));
+  width: calc(600 * var(--cell));
+  height: calc(600 * var(--cell));
+  background: var(--paint-plain);
+}
+
+.tile-plain {
+  position: absolute;
+  border-radius: 0;
+  background: var(--paint-plain);
+  will-change: transform;
+}
+
+/* ---------------------------------------------
+ * Rich Tiles (green color, outer area)
+ * ------------------------------------------- */
+.tiles-rich {
+  /* Square centered on castle with corner at (749, 749) */
+  /* Half-diagonal = sqrt((749-599.5)^2 + (749-599.5)^2) = sqrt(44700.5) ≈ 211.43 */
+  /* Half-side = 211.43 / sqrt(2) ≈ 149.5 */
+  /* Area: from (450, 450) to (749, 749) = 300×300 */
+  left: calc(450 * var(--cell));
+  top: calc(450 * var(--cell));
+  width: calc(300 * var(--cell));
+  height: calc(300 * var(--cell));
+  background: var(--paint-rich);
+}
+
+.tile-rich {
+  position: absolute;
+  border-radius: 0;
+  background: var(--paint-rich);
+  will-change: transform;
+}
+
+/* ---------------------------------------------
+ * Ruins Tiles (olive color, outer area)
+ * ------------------------------------------- */
+.tiles-ruins {
+  /* Square centered on castle with corner at (647, 552) */
+  /* Half-diagonal = sqrt((647-599.5)^2 + (552-599.5)^2) = sqrt(4512.5) ≈ 67.17 */
+  /* Half-side = 67.17 / sqrt(2) ≈ 47.5 */
+  /* Area: from (552, 552) to (647, 647) = 96×96 */
+  left: calc(552 * var(--cell));
+  top: calc(552 * var(--cell));
+  width: calc(96 * var(--cell));
+  height: calc(96 * var(--cell));
+  background: var(--paint-ruins);
+}
+
+.tile-ruins {
+  position: absolute;
+  border-radius: 0;
+  background: var(--paint-ruins);
+  will-change: transform;
+}
+
+/* ---------------------------------------------
+ * Red Zone Tiles (light red, around castle)
+ * ------------------------------------------- */
+.tiles-redzone {
+  /* Castle is at 594-605, red zone extends 8 cells: 586-613 = 28×28 */
+  left: calc(586 * var(--cell));
+  top: calc(586 * var(--cell));
+  width: calc(28 * var(--cell));
+  height: calc(28 * var(--cell));
+  background: var(--paint-redzone);
+  /* Cut out the castle area in the center (594-605 = 12×12) */
+  /* Offset from red zone origin: 594-586 = 8 */
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    100% 100%,
+    0% 100%,
+    0% 0%,
+    /* Inner hole for castle */ calc(8 / 28 * 100%) calc(8 / 28 * 100%),
+    calc(8 / 28 * 100%) calc(20 / 28 * 100%),
+    calc(20 / 28 * 100%) calc(20 / 28 * 100%),
+    calc(20 / 28 * 100%) calc(8 / 28 * 100%),
+    calc(8 / 28 * 100%) calc(8 / 28 * 100%)
+  );
+}
+
+.tile-redzone {
+  position: absolute;
+  border-radius: 0;
+  background: var(--paint-redzone);
+  will-change: transform;
+}
+
+/* ---------------------------------------------
+ * Red Tiles (user toggle)
  * ------------------------------------------- */
 .tile-red {
   position: absolute;
   border-radius: 0;
   background: var(--paint-red);
+  will-change: transform;
 }
 
 /* ---------------------------------------------
