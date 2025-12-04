@@ -19,6 +19,9 @@ bp = Blueprint('shortener', __name__)
 def api_shorten():
     """Create and persist a short code for a same-origin URL."""
     r = get_redis()
+    if r is None:
+        return jsonify(error='URL shortening service is unavailable'), 503
+    
     data = request.get_json(silent=True) or {}
     raw = (data.get('url') or '').strip()
 
@@ -51,6 +54,9 @@ def api_shorten():
 def redirect_short(code: str):
     """Resolve a short code and redirect to the original path."""
     r = get_redis()
+    if r is None:
+        abort(503)  # Service unavailable
+    
     cfg = current_app.config
     ttl = cfg['SHORT_TTL_SECONDS']
     prefix = cfg['SHORT_KEY_PREFIX']

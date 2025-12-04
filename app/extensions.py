@@ -18,13 +18,23 @@ def init_extensions(app: Flask) -> None:
     Called once at app startup. Registers shared service clients
     (e.g., Redis) into the Flask app.extensions namespace.
     """
-    client = redis.Redis.from_url(app.config['REDIS_URL'], decode_responses=True)
-
     # Ensure extensions dict exists
     if not hasattr(app, 'extensions') or app.extensions is None:
         app.extensions = {}
 
-    app.extensions[_EXT_KEY] = client
+    # Try to connect to Redis if URL is provided
+    redis_url = app.config.get('REDIS_URL', '').strip()
+    if redis_url:
+        try:
+            client = redis.Redis.from_url(redis_url, decode_responses=True)
+            client.ping()  # Test connection
+            app.extensions[_EXT_KEY] = client
+        except Exception as e:
+            print(f"Warning: Redis connection failed: {e}. Continuing without Redis.")
+            app.extensions[_EXT_KEY] = None
+    else:
+        print("Warning: REDIS_URL not set. Running without Redis support.")
+        app.extensions[_EXT_KEY] = None
 
 
 def get_redis() -> redis.Redis:
@@ -41,11 +51,18 @@ def get_redis() -> redis.Redis:
 
     if client is None:
         # Lazy initialization (useful during early import or test contexts)
-        client = redis.Redis.from_url(current_app.config['REDIS_URL'], decode_responses=True)
-
-        if not hasattr(current_app, 'extensions') or current_app.extensions is None:
-            current_app.extensions = {}
-
-        current_app.extensions[_EXT_KEY] = client
+        redis_url = current_app.config.get('REDIS_URL', '').strip()
+        if redis_url:
+            try:
+                client = redis.Redis.from_url(redis_url, decode_responses=True)
+                client.ping()
+                if not hasattr(current_app, 'extensions') or current_app.extensions is None:
+                    current_app.extensions = {}
+                current_app.extensions[_EXT_KEY] = client
+            except Exception as e:
+                print(f"Warning: Redis connection failed in lazy init: {e}")
+                return None
+        else:
+            return None
 
     return client
