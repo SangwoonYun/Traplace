@@ -25,7 +25,6 @@ import { expand } from './interactions/expand.js';
 import { parseFromURL } from './urlState.js';
 import { state, cellPx, BASE_CELLS_X, BASE_CELLS_Y } from './state.js';
 import { setupActions, setTitles } from './actions.js';
-import { initHistoryWithCurrent, saveCheckpoint } from './history.js';
 import {
   detectPreferredLang,
   loadLanguageOnline,
@@ -35,6 +34,7 @@ import {
 import { initCounters, updateAllCounts } from './counters.js';
 import { enableDragScroll } from './interactions/hscroll.js';
 import { setupCustomBlocks } from './customBlocks.js';
+import { initHintsToggle } from './hints-toggle.js';
 
 /* ---------------------------------------------
  * Bootstrap
@@ -168,6 +168,7 @@ window.addEventListener('load', async () => {
   setupCursorBadge();
   setupActions();
   setupCustomBlocks();
+  initHintsToggle();
 
   /* ---------------------------------------------
    * Initial render & validation
@@ -241,3 +242,34 @@ window.addEventListener('orientationchange', () => {
  * ------------------------------------------- */
 
 Object.assign(window, { state, centerToCell, updateBadge, saveCheckpoint });
+
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+ * Mobile Sidebar Info Toggle
+ * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+function setupSidebarToggle() {
+  const toggleBtn = document.getElementById('btnToggleSidebar');
+  const sidebar = document.getElementById('sidebar');
+
+  if (!toggleBtn || !sidebar) return;
+
+  // Toggle sidebar info visibility
+  toggleBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    sidebar.classList.toggle('active');
+  });
+
+  // Close sidebar info on window resize if going back to desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 991.98) {
+      sidebar.classList.remove('active');
+    }
+  });
+}
+
+// Initialize sidebar toggle when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupSidebarToggle);
+} else {
+  setupSidebarToggle();
+}

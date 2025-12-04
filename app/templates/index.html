@@ -33,6 +33,10 @@
         tabindex="0"
         aria-label="Palette"
       >
+        <!-- Mobile: toggle for usage hints -->
+        <button id="toggleHints" class="toggle-hints-btn" type="button" title="Afficher les conseils" aria-label="Afficher/masquer les conseils" data-mobile-only>
+          💡
+        </button>
         <div
           class="palette-item"
           data-kind="hq"
@@ -292,6 +296,16 @@
     </div>
 
     <noscript>Veuillez activer JavaScript pour utiliser cette application.</noscript>
+    
+    <!-- Hints Modal (Mobile) -->
+    <div id="hintsModal" class="hints-modal">
+      <div class="hints-modal-content">
+        <button class="hints-modal-close" type="button" aria-label="Fermer">×</button>
+        <h2 data-i18n="ui.usageTitle">Mode d'emploi</h2>
+        <div data-i18n="ui.usage"></div>
+      </div>
+    </div>
+
     <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
   </body>
 </html>
