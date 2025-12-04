@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: traplace
+    runtime: python
+    runtimeVersion: 3.11
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:8000 --workers 4 --threads 2 wsgi:app
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: FLASK_DEBUG
+        value: "false"
+      - key: REDIS_URL
+        fromDatabase:
+          name: redis
+          property: connectionString
+
+databases:
+  - name: redis
+    version: 7
