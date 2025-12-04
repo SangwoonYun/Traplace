@@ -526,7 +526,7 @@ body.rtl .icon-arrow { transform: scaleX(-1); }
   :root {
     --sidebar-w: 0px;
     --toolbar-h: 52px; /* 높이 여유 */
-    --palettebar-h: 112px;
+    --palettebar-h: 142px;
   }
   body {
     display: block;
