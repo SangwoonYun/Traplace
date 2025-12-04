@@ -362,6 +362,22 @@ export function createBlock(kind, size, left, top) {
       e.stopPropagation();
       startEditLabel(el);
     });
+    
+    // Mobile: double-tap to edit
+    let lastTap = 0;
+    el.addEventListener('touchend', (e) => {
+      const now = Date.now();
+      const DOUBLE_TAP_DELAY = 300; // ms
+      
+      if (now - lastTap < DOUBLE_TAP_DELAY) {
+        e.preventDefault();
+        e.stopPropagation();
+        startEditLabel(el);
+        lastTap = 0;
+      } else {
+        lastTap = now;
+      }
+    });
   }
 
   rot.appendChild(el);

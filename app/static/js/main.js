@@ -16,6 +16,7 @@ import {
   setWorldSizeCells,
 } from './render.js';
 import { setupPaletteDrag, makeMovable } from './interactions/drag.js';
+import { setupPaletteScrollButtons } from './interactions/paletteScroll.js';
 import { setupPan } from './interactions/pan.js';
 import { setupZoom } from './interactions/zoom.js';
 import { setupTileToggle } from './interactions/tileToggle.js';
@@ -35,6 +36,8 @@ import { initCounters, updateAllCounts } from './counters.js';
 import { enableDragScroll } from './interactions/hscroll.js';
 import { setupCustomBlocks } from './customBlocks.js';
 import { initHintsToggle } from './hints-toggle.js';
+import { saveCheckpoint, initHistoryWithCurrent } from './history.js';
+import { setupSidebarToggle } from './sidebarToggle.js';
 
 /* ---------------------------------------------
  * Bootstrap
@@ -161,7 +164,9 @@ window.addEventListener('load', async () => {
   /* ---------------------------------------------
    * Interactions
    * ------------------------------------------- */
+  setupSidebarToggle();
   setupPaletteDrag();
+  setupPaletteScrollButtons();
   setupPan(expand);
   setupZoom(expand);
   setupTileToggle();
@@ -243,33 +248,3 @@ window.addEventListener('orientationchange', () => {
 
 Object.assign(window, { state, centerToCell, updateBadge, saveCheckpoint });
 
-/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
- * Mobile Sidebar Info Toggle
- * =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-function setupSidebarToggle() {
-  const toggleBtn = document.getElementById('btnToggleSidebar');
-  const sidebar = document.getElementById('sidebar');
-
-  if (!toggleBtn || !sidebar) return;
-
-  // Toggle sidebar info visibility
-  toggleBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    sidebar.classList.toggle('active');
-  });
-
-  // Close sidebar info on window resize if going back to desktop
-  window.addEventListener('resize', () => {
-    if (window.innerWidth > 991.98) {
-      sidebar.classList.remove('active');
-    }
-  });
-}
-
-// Initialize sidebar toggle when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', setupSidebarToggle);
-} else {
-  setupSidebarToggle();
-}

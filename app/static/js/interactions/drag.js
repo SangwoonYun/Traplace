@@ -544,9 +544,22 @@ export function setupPaletteDrag() {
         const onMoveCheck = (ev) => {
           const dx = Math.abs(ev.clientX - startX);
           const dy = Math.abs(ev.clientY - startY);
-          if (dx > MOVE_TOL_CREATE || dy > MOVE_TOL_CREATE) {
+          
+          // If user is clearly scrolling horizontally, cancel long-press
+          if (dx > dy && dx > MOVE_TOL_CREATE) {
             if (timer) clearTimeout(timer);
-            item.releasePointerCapture(e.pointerId);
+            if (item.hasPointerCapture?.(e.pointerId)) {
+              item.releasePointerCapture(e.pointerId);
+            }
+            item.removeEventListener('pointermove', onMoveCheck);
+            window.__suppressContextMenu = false;
+          }
+          // If moving vertically or diagonally, also cancel
+          else if (dy > MOVE_TOL_CREATE || dx > MOVE_TOL_CREATE) {
+            if (timer) clearTimeout(timer);
+            if (item.hasPointerCapture?.(e.pointerId)) {
+              item.releasePointerCapture(e.pointerId);
+            }
             item.removeEventListener('pointermove', onMoveCheck);
             window.__suppressContextMenu = false;
           }
@@ -556,7 +569,7 @@ export function setupPaletteDrag() {
           startDrag();
         }, LONG_PRESS_MS);
 
-        item.addEventListener('pointermove', onMoveCheck);
+        item.addEventListener('pointermove', onMoveCheck, { passive: true });
         item.addEventListener(
           'pointerup',
           () => {

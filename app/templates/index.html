@@ -17,13 +17,17 @@
 
   <body>
     <!-- Sidebar: palette only (footer removed by convention) -->
-    <aside id="sidebar" class="sidebar">
+    <div id="sidebar" class="sidebar">
       <!-- Hidden on mobile: usage block -->
       <h2 data-i18n="ui.usageTitle" data-mobile-hidden></h2>
       <div class="usage" data-i18n="ui.usage" data-mobile-hidden></div>
 
       <!-- Hidden on mobile: palette title -->
       <div class="palette-title" data-i18n="ui.paletteTitle" data-mobile-hidden></div>
+
+      <!-- Mobile scroll buttons (outside palette) -->
+      <button id="paletteScrollLeft" class="palette-scroll-btn palette-scroll-left mobile-only" aria-label="Défiler à gauche">◀</button>
+      <button id="paletteScrollRight" class="palette-scroll-btn palette-scroll-right mobile-only" aria-label="Défiler à droite">▶</button>
 
       <!-- Palette -->
       <div
@@ -140,38 +144,51 @@
                     <div class="pi-rot"></div>
           <span class="pi-text">10×10</span>
         </div>
-      </div>
-      
-      <!-- Custom Block Controls -->
-      <div class="custom-block-controls">
-        <div class="control-group">
-          <label for="customSize" data-i18n="ui.customBlock.size">Taille personnalisée</label>
-          <div class="size-input-group">
-            <input type="number" id="customSize" min="1" max="50" value="5" />
-            <button id="createCustomBlock" class="btn-create" data-i18n="ui.customBlock.create">Créer</button>
+                <div></div>
+        <!-- Custom Block Controls (inside palette for mobile scroll) -->
+        <div class="custom-block-controls">
+          <div class="control-group">
+            <label for="customSize" data-i18n="ui.customBlock.size">Taille personnalisée</label>
+            <div class="size-input-group">
+              <input type="number" id="customSize" min="1" max="50" value="5" />
+              <button id="createCustomBlock" class="btn-create" data-i18n="ui.customBlock.create">Créer</button>
+            </div>
+          </div>
+          
+          <div class="control-group">
+            <label data-i18n="ui.customBlock.color">Couleur</label>
+            <div class="color-picker">
+              <button class="color-btn" data-color="#e3f2fd" data-border="#1976d2" style="background: #e3f2fd; border-color: #1976d2;" title="Bleu"></button>
+              <button class="color-btn" data-color="#e8f5e9" data-border="#388e3c" style="background: #e8f5e9; border-color: #388e3c;" title="Vert"></button>
+              <button class="color-btn" data-color="#fff3e0" data-border="#f57c00" style="background: #fff3e0; border-color: #f57c00;" title="Orange"></button>
+              <button class="color-btn" data-color="#f3e5f5" data-border="#7b1fa2" style="background: #f3e5f5; border-color: #7b1fa2;" title="Violet"></button>
+              <button class="color-btn" data-color="#fce4ec" data-border="#c2185b" style="background: #fce4ec; border-color: #c2185b;" title="Rose"></button>
+              <button class="color-btn" data-color="#e0f2f1" data-border="#00796b" style="background: #e0f2f1; border-color: #00796b;" title="Turquoise"></button>
+              <button class="color-btn" data-color="#fff9c4" data-border="#f9a825" style="background: #fff9c4; border-color: #f9a825;" title="Jaune"></button>
+              <button class="color-btn active" data-color="#fafafa" data-border="#555" style="background: #fafafa; border-color: #555;" title="Gris"></button>
+            </div>
           </div>
         </div>
-        
-        <div class="control-group">
-          <label data-i18n="ui.customBlock.color">Couleur</label>
-          <div class="color-picker">
-            <button class="color-btn" data-color="#e3f2fd" data-border="#1976d2" style="background: #e3f2fd; border-color: #1976d2;" title="Bleu"></button>
-            <button class="color-btn" data-color="#e8f5e9" data-border="#388e3c" style="background: #e8f5e9; border-color: #388e3c;" title="Vert"></button>
-            <button class="color-btn" data-color="#fff3e0" data-border="#f57c00" style="background: #fff3e0; border-color: #f57c00;" title="Orange"></button>
-            <button class="color-btn" data-color="#f3e5f5" data-border="#7b1fa2" style="background: #f3e5f5; border-color: #7b1fa2;" title="Violet"></button>
-            <button class="color-btn" data-color="#fce4ec" data-border="#c2185b" style="background: #fce4ec; border-color: #c2185b;" title="Rose"></button>
-            <button class="color-btn" data-color="#e0f2f1" data-border="#00796b" style="background: #e0f2f1; border-color: #00796b;" title="Turquoise"></button>
-            <button class="color-btn" data-color="#fff9c4" data-border="#f9a825" style="background: #fff9c4; border-color: #f9a825;" title="Jaune"></button>
-            <button class="color-btn active" data-color="#fafafa" data-border="#555" style="background: #fafafa; border-color: #555;" title="Gris"></button>
-          </div>
-        </div>
       </div>
-
       
-    </aside>
+    </div>
 
     <!-- Top toolbar -->
     <header id="toolbar" class="toolbar" role="toolbar" aria-label="Editor toolbar">
+      <div class="tb-group">
+        <button
+          id="toggleSidebar"
+          class="tb-btn"
+          type="button"
+          title="Replier/Déplier la palette"
+          aria-label="Toggle sidebar"
+        >
+          ◀
+        </button>
+      </div>
+
+      <div class="tb-sep" aria-hidden="true"></div>
+
       <div class="tb-group">
         <button
           id="btnUndo"

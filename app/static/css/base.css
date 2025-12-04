@@ -83,6 +83,12 @@
       sans-serif;
     background: var(--bg);
     color: #111;
+    transition: grid-template-columns 0.3s ease;
+  }
+  
+  /* When sidebar is collapsed, expand viewport to full width */
+  body:has(.sidebar.collapsed) {
+    grid-template-columns: 0 1fr;
   }
 
   /* Place elements into fixed areas */
