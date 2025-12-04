@@ -12,7 +12,7 @@
 /* ---------------------------------------------
  * Config / Globals
  * ------------------------------------------- */
-const FALLBACK_LANG = 'en';
+const FALLBACK_LANG = 'fr';
 export const SUPPORTED_LANGS = [
   'en',
   'ko',
@@ -141,7 +141,7 @@ function setDirByLang(lang) {
  * Detect preferred language:
  * 1) URL ?lang=xx
  * 2) localStorage 'lang'
- * 3) navigator.language: ko → 'ko', otherwise 'en'
+ * 3) Default: 'fr' (French)
  * @returns {string}
  */
 export function detectPreferredLang() {

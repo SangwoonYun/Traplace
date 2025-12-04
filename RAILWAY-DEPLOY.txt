@@ -1,0 +1,89 @@
+## 🚀 Déploiement Railway - Guide Simple
+
+### Prérequis
+```bash
+npm install -g @railway/cli
+```
+
+### Étape 1 : Créer un compte Railway
+1. Aller sur https://railway.app
+2. Se connecter avec GitHub
+3. Créer un nouveau projet
+
+### Étape 2 : Déployer depuis GitHub
+
+**Méthode simple (GitHub)**:
+```bash
+# Le CLI Railway va se connecter à votre compte GitHub
+railway login
+
+# Créer le projet
+cd /path/to/Traplace
+railway init --name traplace
+
+# Déployer
+railway up
+```
+
+**Depuis le Dashboard Railway**:
+1. Dashboard → New Project → GitHub Repo
+2. Sélectionner `SangwoonYun/Traplace`
+3. Sélectionner la branche `feature/custom-blocks-and-enhancements`
+4. Railway déploiera automatiquement
+
+### Étape 3 : Configurer Redis
+
+Railway va détecter automatiquement le `docker-compose.yml` qui définit Redis.
+
+Vérifier dans le Dashboard :
+- Services → Redis
+- Variables → `REDIS_URL` doit être auto-remplie
+
+### Étape 4 : Configurer les variables d'environnement
+
+Via le Dashboard Railway :
+```
+ENV = production
+PORT = 8000
+```
+
+### Étape 5 : Vérifier le déploiement
+
+```bash
+# Voir l'URL de votre app
+railway open
+
+# Consulter les logs
+railway logs -f
+```
+
+### Commandes utiles
+```bash
+# Voir l'URL
+railway open
+
+# Logs en temps réel
+railway logs -f
+
+# Variables d'environnement
+railway variables list
+
+# Redéployer
+railway up
+
+# Voir le status
+railway status
+```
+
+### URL de l'app
+Après déploiement, l'app sera accessible à :
+```
+https://<your-railway-domain>.railway.app
+```
+
+Railway génère un domaine automatique. Pour un domaine custom :
+- Settings → Domains → Add Custom Domain
+
+---
+
+**Status** : Prêt pour le déploiement ✅

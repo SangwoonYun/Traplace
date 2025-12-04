@@ -1,6 +1,6 @@
 <!-- File: app/templates/index.html -->
 <!doctype html>
-<html lang="ko">
+<html lang="fr">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -167,63 +167,7 @@
         </div>
       </div>
 
-      <div class="sidebar-footer">
-```
-        <!-- QR 코드 2개 -->
-        <div class="footer-qrs">
-          <div class="qr-item">
-            <a
-              class="qr-link"
-              href="https://www.buymeacoffee.com/swyun"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="Buy me a coffee"
-            >
-              <img
-                class="qr-img"
-                src="{{ url_for('static', filename='img/qr-code-bmc.png') }}"
-                alt="Buy me a coffee QR"
-              />
-            </a>
-            <span class="qr-label">Buy me a coffee</span>
-          </div>
-
-          <div class="qr-item">
-            <a
-              class="qr-link"
-              href="supertoss://send?amount=0&bank=IBK%EA%B8%B0%EC%97%85%EC%9D%80%ED%96%89&accountNo=29810334201018&origin=qr"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="토스 송금"
-            >
-              <img
-                class="qr-img"
-                src="{{ url_for('static', filename='img/qr-code-toss.jpg') }}"
-                alt="Toss QR"
-              />
-            </a>
-            <span class="qr-label">Toss</span>
-          </div>
-        </div>
-
-        <!-- GitHub + 크레딧 -->
-        <div class="footer-info">
-          <a
-            class="github-link"
-            href="https://github.com/SangwoonYun/Traplace"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Traplace GitHub"
-          >
-            <img
-              class="github-icon"
-              src="{{ url_for('static', filename='img/github-mark.svg') }}"
-              alt="GitHub"
-            />
-          </a>
-          <span class="credit">Created by #135 [KOR] 방구석개발자</span>
-        </div>
-      </div>
+      
     </aside>
 
     <!-- Top toolbar -->

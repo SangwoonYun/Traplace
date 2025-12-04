@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Project
+metadata:
+  name: traplace
+spec:
+  services:
+    - name: traplace-app
+      source:
+        image:
+          build: true
+      port: 8000
+      environment:
+        - name: ENV
+          value: production
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: redis-url
+              key: url
+      healthCheck:
+        path: /healthz
+        interval: 30s
+    - name: redis
+      source:
+        image:
+          repository: redis
+          tag: '7-alpine'
+      port: 6379

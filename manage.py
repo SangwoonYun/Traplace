@@ -14,7 +14,7 @@ from app import create_app
 def main() -> None:
     """Entry point for running the application."""
     host = os.getenv('HOST', '0.0.0.0')
-    port = int(os.getenv('PORT', '5000'))
+    port = int(os.getenv('PORT', '3001'))
     env = os.getenv('ENV', 'development')
 
     app = create_app(env)
