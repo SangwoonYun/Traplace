@@ -156,8 +156,8 @@ export function detectPreferredLang() {
     // ignore storage access errors
   }
 
-  const nav = navigator.language || FALLBACK_LANG;
-  return normalizeLang(nav);
+  // Default to FR, not navigator.language
+  return FALLBACK_LANG;
 }
 
 /**
