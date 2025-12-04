@@ -872,21 +872,9 @@ body.rtl .icon-arrow { transform: scaleX(-1); }
  * Toggle Hints Button (Mobile)
  * =========================================== */
 .toggle-hints-btn {
-  display: none;
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 10001;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #1976d2;
-  border: none;
-  color: white;
-  font-size: 20px;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .toggle-hints-btn:hover {
@@ -998,5 +986,18 @@ body.rtl .icon-arrow { transform: scaleX(-1); }
       background: #555;
       color: #fff;
     }
+  }
+}
+
+/* =============================================
+ * Mobile-only elements
+ * =========================================== */
+.mobile-only {
+  display: none !important;
+}
+
+@media (max-width: 991.98px) {
+  .mobile-only {
+    display: inline-flex !important;
   }
 }

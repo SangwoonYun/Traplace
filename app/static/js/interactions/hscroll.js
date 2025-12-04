@@ -18,6 +18,7 @@ export function enableDragScroll(el) {
 
   let dragging = false;
   let startX = 0; // clientX at gesture start
+  let startY = 0; // clientY at gesture start
   let startScrollLeft = 0; // el.scrollLeft at gesture start
 
   /* -------------------------------------------
@@ -26,6 +27,9 @@ export function enableDragScroll(el) {
 
   /** Get the current clientX from mouse or the first touch. */
   const getClientX = (e) => e.touches?.[0]?.clientX ?? e.clientX;
+  
+  /** Get the current clientY from mouse or the first touch. */
+  const getClientY = (e) => e.touches?.[0]?.clientY ?? e.clientY;
 
   /* -------------------------------------------
    * Handlers
@@ -40,6 +44,7 @@ export function enableDragScroll(el) {
 
     dragging = true;
     startX = getClientX(e);
+    startY = getClientY(e);
     startScrollLeft = el.scrollLeft;
 
     el.classList.add('is-dragging');
@@ -57,10 +62,19 @@ export function enableDragScroll(el) {
       return;
     }
 
+    const dx = getClientX(e) - startX;
+    const dy = getClientY(e) - startY;
+    
+    // Only hijack horizontal scrolling on touch devices
+    // If user is scrolling more vertically, let native scroll happen
+    if (e.touches && Math.abs(dy) > Math.abs(dx)) {
+      // Vertical scroll dominates - allow native behavior
+      return;
+    }
+
     // Convert pan gesture into scroll (touchmove is passive:false so we can preventDefault)
     if (e.cancelable) e.preventDefault();
 
-    const dx = getClientX(e) - startX;
     el.scrollLeft = startScrollLeft - dx;
   };
 

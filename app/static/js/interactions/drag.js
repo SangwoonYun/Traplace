@@ -474,10 +474,18 @@ export function setupPaletteDrag() {
       const startY = e.clientY;
       let timer = null;
 
-      e.preventDefault();
-      safeSetPointerCapture(item, e.pointerId);
+      // Don't preventDefault immediately on touch - let scroll happen
+      if (!isTouch) {
+        e.preventDefault();
+        safeSetPointerCapture(item, e.pointerId);
+      }
 
       const startDrag = () => {
+        // Capture pointer now that we're actually dragging
+        if (isTouch) {
+          safeSetPointerCapture(item, e.pointerId);
+        }
+        
         hapticTap(15);
         lockPaletteScroll(true);
 
