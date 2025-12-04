@@ -19,11 +19,11 @@
     <!-- Sidebar: palette only (footer removed by convention) -->
     <aside id="sidebar" class="sidebar">
       <!-- Hidden on mobile: usage block -->
-      <h2 data-i18n="ui.usageTitle" data-mobile-hidden>사용 방법</h2>
+      <h2 data-i18n="ui.usageTitle" data-mobile-hidden></h2>
       <div class="usage" data-i18n="ui.usage" data-mobile-hidden></div>
 
       <!-- Hidden on mobile: palette title -->
-      <div class="palette-title" data-i18n="ui.paletteTitle" data-mobile-hidden>객체 팔레트</div>
+      <div class="palette-title" data-i18n="ui.paletteTitle" data-mobile-hidden></div>
 
       <!-- Palette -->
       <div
@@ -39,7 +39,7 @@
           data-size="3"
           role="button"
           tabindex="0"
-          aria-label="평원본부"
+          aria-label="Quartier général"
         >
           <div class="pi-rot"></div>
           <span class="pi-text"></span>
@@ -51,7 +51,7 @@
           data-size="1"
           role="button"
           tabindex="0"
-          aria-label="연맹깃발"
+          aria-label="Drapeau d'alliance"
         >
           <div class="pi-rot"></div>
           <span class="pi-text"></span>
@@ -63,7 +63,7 @@
           data-size="3"
           role="button"
           tabindex="0"
-          aria-label="사냥함정"
+          aria-label="Piège de chasse"
         >
           <div class="pi-rot"></div>
           <span class="pi-text"></span>
@@ -75,7 +75,7 @@
           data-size="2"
           role="button"
           tabindex="0"
-          aria-label="도시"
+          aria-label="Ville"
         >
           <div class="pi-rot"></div>
           <span class="pi-text"></span>
@@ -87,7 +87,7 @@
           data-size="2"
           role="button"
           tabindex="0"
-          aria-label="연맹자원"
+          aria-label="Ressource d'alliance"
         >
           <div class="pi-rot"></div>
           <span class="pi-text"></span>
@@ -99,7 +99,7 @@
           data-size="1"
           role="button"
           tabindex="0"
-          aria-label="1×1 블록"
+          aria-label="Bloc 1×1"
         >
           <div class="pi-rot"></div>
           <span class="pi-text">1×1</span>
@@ -111,7 +111,7 @@
           data-size="2"
           role="button"
           tabindex="0"
-          aria-label="2×2 블록"
+          aria-label="Bloc 2×2"
         >
           <div class="pi-rot"></div>
           <span class="pi-text">2×2</span>
@@ -123,7 +123,7 @@
           data-size="3"
           role="button"
           tabindex="0"
-          aria-label="3×3 블록"
+          aria-label="Bloc 3×3"
         >
           <div class="pi-rot"></div>
           <span class="pi-text">3×3</span>
@@ -135,7 +135,7 @@
           data-size="10"
           role="button"
           tabindex="0"
-          aria-label="10×10 블록"
+          aria-label="Bloc 10×10"
         >
                     <div class="pi-rot"></div>
           <span class="pi-text">10×10</span>
@@ -177,8 +177,8 @@
           id="btnUndo"
           class="tb-btn"
           type="button"
-          title="되돌리기 (⌘Z / Ctrl+Z)"
-          aria-label="되돌리기"
+          title="Annuler (⌘Z / Ctrl+Z)"
+          aria-label="Annuler"
         >
           ↶
         </button>
@@ -186,8 +186,8 @@
           id="btnRedo"
           class="tb-btn"
           type="button"
-          title="다시하기 (⇧⌘Z 또는 Ctrl+Y)"
-          aria-label="다시하기"
+          title="Refaire (⇧⌘Z ou Ctrl+Y)"
+          aria-label="Refaire"
         >
           ↷
         </button>
@@ -200,8 +200,8 @@
           id="btnCityTrapDist"
           class="tb-btn"
           type="button"
-          title="사냥함정과의 거리 예측 (⌥⌘D / Ctrl+Alt+D)"
-          aria-label="거리 예측"
+          title="Prédire la distance au piège (⌥⌘D / Ctrl+Alt+D)"
+          aria-label="Prédire la distance"
         >
           📏
         </button>
@@ -209,8 +209,8 @@
           id="btnReset"
           class="tb-btn danger"
           type="button"
-          title="초기화 (⌥⌘R / Ctrl+Alt+R)"
-          aria-label="초기화"
+          title="Réinitialiser (⌥⌘R / Ctrl+Alt+R)"
+          aria-label="Réinitialiser"
         >
           🧹
         </button>
@@ -218,8 +218,8 @@
           id="btnCopyURL"
           class="tb-btn"
           type="button"
-          title="URL 복사 (⌥⌘C / Ctrl+Alt+C)"
-          aria-label="URL 복사"
+          title="Copier l'URL (⌥⌘C / Ctrl+Alt+C)"
+          aria-label="Copier l'URL"
         >
           🔗
         </button>
@@ -227,8 +227,8 @@
           id="btnExportPNG"
           class="tb-btn primary"
           type="button"
-          title="PNG 내보내기 (⌥⌘E / Ctrl+Alt+E)"
-          aria-label="PNG 내보내기"
+          title="Exporter en PNG (⌥⌘E / Ctrl+Alt+E)"
+          aria-label="Exporter en PNG"
         >
           🖼
         </button>
@@ -237,7 +237,7 @@
       <div class="tb-flex-spacer" aria-hidden="true"></div>
 
       <div class="tb-group">
-        <label class="lang-label" for="langSelect" data-i18n="ui.toolbar.lang">언어</label>
+        <label class="lang-label" for="langSelect" data-i18n="ui.toolbar.lang"></label>
         <select id="langSelect" class="lang-select" aria-label="Language">
           <option value="fr" selected>🇫🇷 Français</option>
           <option value="en">🇺🇸 English</option>
@@ -285,13 +285,13 @@
       id="trashZone"
       class="trash-zone"
       data-i18n-title="ui.trash.title"
-      title="여기로 드래그하면 삭제"
+      title="Glissez ici pour supprimer"
     >
       <span class="trash-emoji" aria-hidden="true">🗑</span>
-      <span class="trash-label" data-i18n="ui.trash.label">여기로 드래그하면 삭제</span>
+      <span class="trash-label" data-i18n="ui.trash.label"></span>
     </div>
 
-    <noscript>이 앱을 사용하려면 JavaScript를 활성화하세요.</noscript>
+    <noscript>Veuillez activer JavaScript pour utiliser cette application.</noscript>
     <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
   </body>
 </html>
