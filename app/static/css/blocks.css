@@ -67,6 +67,52 @@
   background: #0d47a1;
 }
 
+/* Rename button */
+.rename-btn {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #666;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transform: scaleY(-1) scaleX(-1) rotate(-45deg);
+  transform-origin: center;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.block:hover .rename-btn,
+.city:hover .rename-btn {
+  opacity: 1;
+}
+
+/* Always visible on mobile */
+@media (max-width: 991.98px) {
+  .rename-btn {
+    opacity: 1;
+  }
+}
+
+.rename-btn:hover {
+  background: #ffa726;
+  border-color: #ffa726;
+}
+
+.rename-btn:active {
+  background: #ff9800;
+}
+
 /* RTL: Let inline content inside blocks follow RTL flow (labels, etc.) */
 body.rtl .block,
 html[dir='rtl'] .block {

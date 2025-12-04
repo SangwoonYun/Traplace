@@ -13,32 +13,15 @@ export function setupPaletteScrollButtons() {
   }
   
   const scrollAmount = 200; // pixels to scroll
-  
-  console.log('Sidebar dimensions:', {
-    scrollWidth: sidebar.scrollWidth,
-    clientWidth: sidebar.clientWidth,
-    canScroll: sidebar.scrollWidth > sidebar.clientWidth,
-    computedOverflow: window.getComputedStyle(sidebar).overflowX
-  });
+
   
   // Prevent default to avoid any interference
   const handleScroll = (direction) => (e) => {
       e.preventDefault();
       e.stopPropagation();
       
-      console.log('Before scroll:', {
-        scrollLeft: sidebar.scrollLeft,
-        scrollWidth: sidebar.scrollWidth,
-        clientWidth: sidebar.clientWidth
-      });
-      
       const scrollValue = direction === 'left' ? -scrollAmount : scrollAmount;
       sidebar.scrollLeft += scrollValue;
-      
-      console.log('After scroll:', {
-        scrollLeft: sidebar.scrollLeft,
-        attempted: scrollValue
-      });
 
     // Force update after scroll
     setTimeout(updateButtons, 100);

@@ -223,16 +223,38 @@ function startEditLabel(blockEl) {
   label.contentEditable = 'true';
   label.spellcheck = false;
   label.setAttribute('role', 'textbox');
-  label.focus();
-
-  // Select all text on first focus
-  requestAnimationFrame(() => {
-    const sel = window.getSelection();
-    const range = document.createRange();
-    range.selectNodeContents(label);
-    sel.removeAllRanges();
-    sel.addRange(range);
-  });
+  
+  // Prevent iOS from scrolling the entire page when keyboard opens
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  if (isIOS) {
+    // Store original scroll position
+    const scrollY = window.scrollY;
+    
+    // Focus and select text
+    label.focus();
+    
+    // Restore scroll position after iOS tries to scroll
+    requestAnimationFrame(() => {
+      window.scrollTo(0, scrollY);
+      
+      const sel = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(label);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    });
+  } else {
+    label.focus();
+    
+    // Select all text on first focus
+    requestAnimationFrame(() => {
+      const sel = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(label);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    });
+  }
 
   // Use event listeners to avoid clobbering potential external handlers
   const onKeyDown = (e) => {
@@ -357,27 +379,53 @@ export function createBlock(kind, size, left, top) {
   controls.appendChild(btnBackward);
   el.appendChild(controls);
 
+  // Add rename button for city and block types
   if (kind === 'city' || kind === 'block') {
-    el.addEventListener('dblclick', (e) => {
+    const renameBtn = document.createElement('button');
+    renameBtn.className = 'rename-btn';
+    renameBtn.textContent = '✏️';
+    renameBtn.title = 'Renommer';
+    
+    // Handle click/touch to start editing
+    renameBtn.addEventListener('click', (e) => {
       e.stopPropagation();
+      e.preventDefault();
       startEditLabel(el);
     });
     
-    // Mobile: double-tap to edit
-    let lastTap = 0;
-    el.addEventListener('touchend', (e) => {
-      const now = Date.now();
-      const DOUBLE_TAP_DELAY = 300; // ms
-      
-      if (now - lastTap < DOUBLE_TAP_DELAY) {
-        e.preventDefault();
-        e.stopPropagation();
-        startEditLabel(el);
-        lastTap = 0;
-      } else {
-        lastTap = now;
-      }
+    // For touch devices, use touchend instead of blocking touchstart
+    renameBtn.addEventListener('touchend', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      startEditLabel(el);
     });
+    
+    // Prevent mousedown from bubbling to drag handlers
+    renameBtn.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      e.preventDefault();
+    });
+    
+    // Prevent pointer events from triggering drag
+    renameBtn.addEventListener('pointerdown', (e) => {
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      e.preventDefault();
+    });
+    
+    // Prevent touch from triggering drag
+    renameBtn.addEventListener('touchstart', (e) => {
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+    }, { passive: false });
+    
+    renameBtn.addEventListener('dragstart', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    
+    el.appendChild(renameBtn);
   }
 
   rot.appendChild(el);
