@@ -51,6 +51,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
 
 # ── Entrypoint (Gunicorn) ─────────────────────────────────────────────────────
 # App factory pattern: import from wsgi:app
-# Use gunicorn.conf.py for advanced config (limit-request-line, etc.)
-# ENV vars still override: WORKERS, PORT
-CMD ["sh", "-c", "gunicorn -c gunicorn.conf.py -w ${WORKERS} -b 0.0.0.0:${PORT} wsgi:app"]
+CMD ["sh", "-c", "gunicorn -w ${WORKERS} -b 0.0.0.0:${PORT} wsgi:app"]
