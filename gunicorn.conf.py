@@ -5,13 +5,13 @@
 limit_request_line = 8190
 
 # Bind address
-bind = "0.0.0.0:8000"
+bind = '0.0.0.0:8000'
 
 # Number of worker processes
 workers = 4
 
 # Worker class
-worker_class = "sync"
+worker_class = 'sync'
 
 # Timeout in seconds
 timeout = 30
