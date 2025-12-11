@@ -14,7 +14,6 @@ import {
   world,
   rot,
   tilesLayer,
-  redZoneLayer,
   userLayer,
   outlinesLayer,
   outlinesPreviewLayer,
@@ -143,49 +142,6 @@ export function renderCells(layer, cellList, opts) {
 
     layer.appendChild(t);
   }
-}
-
-/** Render barren tiles (light yellow color, outermost area - rest of map).
- * Optimized: uses CSS background instead of individual tiles.
- */
-export function renderBarren() {
-  // No need to render individual tiles - CSS background handles it
-  // barrenLayer already has background color via CSS
-}
-
-/** Render plain tiles (yellow-green color, outer area). */
-export function renderPlain() {
-  // CSS handles rendering via clip-path
-  // No need to create individual DOM elements
-}
-
-/** Render rich tiles (green color, outer area). */
-export function renderRich() {
-  // CSS handles rendering via clip-path
-  // No need to create individual DOM elements
-}
-
-/** Render ruins tiles (olive color, outer area). */
-export function renderRuins() {
-  // CSS handles rendering via clip-path
-  // No need to create individual DOM elements
-}
-
-/** Render red zone tiles (light red, around castle and fortresses). */
-export function renderRedZone() {
-  redZoneLayer.innerHTML = '';
-  const cpx = cellPx();
-  const fragment = document.createDocumentFragment();
-
-  for (const k of state.redZone) {
-    const [x, y] = k.split(',').map(Number);
-    const d = document.createElement('div');
-    d.className = 'tile-redzone';
-    d.style.cssText = `transform:translate(${x * cpx}px,${y * cpx}px);width:${cpx}px;height:${cpx}px`;
-    fragment.appendChild(d);
-  }
-
-  redZoneLayer.appendChild(fragment);
 }
 
 /** Render user-painted red tiles. */
