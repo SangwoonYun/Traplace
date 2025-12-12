@@ -45,6 +45,9 @@ export const state = {
   /** Union of blue painter coverage ("x,y" keys). */
   paintedSet: new Set(),
 
+  /** Red zone tiles (light red, around castle and fortresses) ("x,y" keys). */
+  redZone: new Set(),
+
   /** User red paint toggles ("x,y" keys). */
   userPaint: new Set(),
 

@@ -51,7 +51,22 @@
 }
 
 /* ---------------------------------------------
- * Red Tiles (alternative highlight)
+ * Red Zone Tiles (light red, around castle and fortresses)
+ * ------------------------------------------- */
+.tiles-redzone {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.tile-redzone {
+  position: absolute;
+  border-radius: 0;
+  background: var(--paint-redzone);
+}
+
+/* ---------------------------------------------
+ * Red Tiles (user toggle, dark red)
  * ------------------------------------------- */
 .tile-red {
   position: absolute;

@@ -14,6 +14,7 @@ import {
   world,
   rot,
   tilesLayer,
+  redZoneLayer,
   userLayer,
   outlinesLayer,
   outlinesPreviewLayer,
@@ -21,7 +22,7 @@ import {
   badgeCoord,
   badgeZoom,
 } from './dom.js';
-import { PAINTER_KINDS, cellsForKindAt, areaBoundingBox } from './painter.js';
+import { PAINTER_KINDS, cellsForKindAt, areaBoundingBox, REDZONE_KINDS, redZoneCellsForKindAt } from './painter.js';
 import { posToCell, keyOf, clamp } from './transform.js';
 
 /* ---------------------------------------------
@@ -144,6 +145,25 @@ export function renderCells(layer, cellList, opts) {
   }
 }
 
+/**
+ * Render red zone tiles (light red, around castle and fortresses).
+ */
+export function renderRedZone() {
+  redZoneLayer.innerHTML = '';
+  const cpx = cellPx();
+  const fragment = document.createDocumentFragment();
+
+  for (const k of state.redZone) {
+    const [x, y] = k.split(',').map(Number);
+    const d = document.createElement('div');
+    d.className = 'tile-redzone';
+    d.style.cssText = `transform:translate(${x * cpx}px,${y * cpx}px);width:${cpx}px;height:${cpx}px`;
+    fragment.appendChild(d);
+  }
+
+  redZoneLayer.appendChild(fragment);
+}
+
 /** Render user-painted red tiles. */
 export function renderUserTiles() {
   userLayer.innerHTML = '';
@@ -209,6 +229,28 @@ export function recomputePaint() {
 
   renderCells(tilesLayer, cells, { dashed: false });
   renderOutlines();
+}
+
+/**
+ * Recompute red zone coverage from all castle/fortress/sanctuary blocks.
+ * Similar to recomputePaint but for redZone.
+ */
+export function recomputeRedZone() {
+  state.redZone = new Set();
+
+  for (const b of state.blocks) {
+    if (!REDZONE_KINDS.has(b.kind)) continue;
+
+    const { cx, cy } = posToCell(b.left, b.top);
+    const centerCx = cx + Math.floor(b.size / 2);
+    const centerCy = cy + Math.floor(b.size / 2);
+
+    for (const c of redZoneCellsForKindAt(b.kind, centerCx, centerCy, b.size)) {
+      state.redZone.add(keyOf(c.x, c.y));
+    }
+  }
+
+  console.log(`[RedZone] Recomputed ${state.redZone.size} cells from ${state.blocks.filter(b => REDZONE_KINDS.has(b.kind)).length} blocks`);
 }
 
 /* ---------------------------------------------
