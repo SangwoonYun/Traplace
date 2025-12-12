@@ -52,6 +52,7 @@
 
 /* ---------------------------------------------
  * Red Zone Tiles (light red, around castle and fortresses)
+ * CSS-based rendering - each redzone block as a simple rectangle
  * ------------------------------------------- */
 .tiles-redzone {
   position: absolute;
@@ -59,9 +60,8 @@
   pointer-events: none;
 }
 
-.tile-redzone {
+.redzone-rect {
   position: absolute;
-  border-radius: 0;
   background: var(--paint-redzone);
 }
 

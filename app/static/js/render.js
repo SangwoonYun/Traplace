@@ -22,7 +22,7 @@ import {
   badgeCoord,
   badgeZoom,
 } from './dom.js';
-import { PAINTER_KINDS, cellsForKindAt, areaBoundingBox, REDZONE_KINDS, redZoneCellsForKindAt } from './painter.js';
+import { PAINTER_KINDS, cellsForKindAt, areaBoundingBox, REDZONE_KINDS, redZoneCellsForKindAt, KIND_REDZONE_RADIUS } from './painter.js';
 import { posToCell, keyOf, clamp } from './transform.js';
 
 /* ---------------------------------------------
@@ -146,22 +146,36 @@ export function renderCells(layer, cellList, opts) {
 }
 
 /**
- * Render red zone tiles (light red, around castle and fortresses).
+ * Render red zone as simple CSS rectangles for each castle/fortress/sanctuary.
+ * Each block gets one rectangle covering its entire red zone area.
  */
 export function renderRedZone() {
   redZoneLayer.innerHTML = '';
   const cpx = cellPx();
-  const fragment = document.createDocumentFragment();
 
-  for (const k of state.redZone) {
-    const [x, y] = k.split(',').map(Number);
-    const d = document.createElement('div');
-    d.className = 'tile-redzone';
-    d.style.cssText = `transform:translate(${x * cpx}px,${y * cpx}px);width:${cpx}px;height:${cpx}px`;
-    fragment.appendChild(d);
+  for (const b of state.blocks) {
+    if (!REDZONE_KINDS.has(b.kind)) continue;
+
+    const { cx, cy } = posToCell(b.left, b.top);
+    const centerCx = cx + Math.floor(b.size / 2);
+    const centerCy = cy + Math.floor(b.size / 2);
+
+    // Get red zone radius from painter config
+    const edgeRange = KIND_REDZONE_RADIUS[b.kind] ?? 0;
+    const halfSize = Math.floor(b.size / 2);
+
+    // Calculate red zone bounding box
+    const minX = centerCx - halfSize - edgeRange;
+    const minY = centerCy - halfSize - edgeRange;
+    const width = b.size + 2 * edgeRange;
+    const height = b.size + 2 * edgeRange;
+
+    // Create single rectangle for this red zone
+    const rect = document.createElement('div');
+    rect.className = 'redzone-rect';
+    rect.style.cssText = `left:${minX * cpx}px;top:${minY * cpx}px;width:${width * cpx}px;height:${height * cpx}px`;
+    redZoneLayer.appendChild(rect);
   }
-
-  redZoneLayer.appendChild(fragment);
 }
 
 /** Render user-painted red tiles. */
