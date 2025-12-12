@@ -18,7 +18,7 @@ export const PAINTER_KINDS = new Set(['flag', 'hq']);
 
 /** Red zone paint radii (in cell units from block edge) for castle/fortress/sanctuary. */
 export const KIND_REDZONE_RADIUS = {
-  castle: 8,    // 8 cells from castle edge
+  castle: 8, // 8 cells from castle edge
   fortress: 27, // 27 cells from fortress edge
   sanctuary: 27, // 27 cells from sanctuary edge
 };

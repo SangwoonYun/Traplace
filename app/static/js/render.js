@@ -22,7 +22,14 @@ import {
   badgeCoord,
   badgeZoom,
 } from './dom.js';
-import { PAINTER_KINDS, cellsForKindAt, areaBoundingBox, REDZONE_KINDS, redZoneCellsForKindAt, KIND_REDZONE_RADIUS } from './painter.js';
+import {
+  PAINTER_KINDS,
+  cellsForKindAt,
+  areaBoundingBox,
+  REDZONE_KINDS,
+  redZoneCellsForKindAt,
+  KIND_REDZONE_RADIUS,
+} from './painter.js';
 import { posToCell, keyOf, clamp } from './transform.js';
 
 /* ---------------------------------------------
@@ -264,7 +271,9 @@ export function recomputeRedZone() {
     }
   }
 
-  console.log(`[RedZone] Recomputed ${state.redZone.size} cells from ${state.blocks.filter(b => REDZONE_KINDS.has(b.kind)).length} blocks`);
+  console.log(
+    `[RedZone] Recomputed ${state.redZone.size} cells from ${state.blocks.filter((b) => REDZONE_KINDS.has(b.kind)).length} blocks`,
+  );
 }
 
 /* ---------------------------------------------

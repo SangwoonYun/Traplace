@@ -19,7 +19,7 @@ import { saveCheckpoint } from '../history.js';
  */
 function isOverBlock(clientX, clientY) {
   const elements = document.elementsFromPoint(clientX, clientY);
-  return elements.some(el => el.classList.contains('block'));
+  return elements.some((el) => el.classList.contains('block'));
 }
 
 /**
