@@ -352,34 +352,6 @@ window.addEventListener('load', async () => {
     sanctuary12,
   };
 
-  /* ---------------------------------------------
-   * Create invisible castle/fortress/sanctuary blocks for redZone painting
-   * ------------------------------------------- */
-  state._restoring = true;
-
-  // Castle (12x12) at center (599.5, 599.5)
-  createBlock('castle', 12, 594 * cellPx(), 594 * cellPx());
-
-  // Fortresses (6x6)
-  createBlock('fortress', 6, 800 * cellPx(), 597 * cellPx()); // Fortress I
-  createBlock('fortress', 6, 597 * cellPx(), 400 * cellPx()); // Fortress II
-  createBlock('fortress', 6, 400 * cellPx(), 597 * cellPx()); // Fortress III
-  createBlock('fortress', 6, 597 * cellPx(), 800 * cellPx()); // Fortress IV
-
-  // Sanctuaries (6x6)
-  createBlock('sanctuary', 6, 828 * cellPx(), 237 * cellPx()); // Sanctuary I
-  createBlock('sanctuary', 6, 606 * cellPx(), 237 * cellPx()); // Sanctuary II
-  createBlock('sanctuary', 6, 348 * cellPx(), 237 * cellPx()); // Sanctuary III
-  createBlock('sanctuary', 6, 237 * cellPx(), 366 * cellPx()); // Sanctuary IV
-  createBlock('sanctuary', 6, 237 * cellPx(), 588 * cellPx()); // Sanctuary V
-  createBlock('sanctuary', 6, 237 * cellPx(), 846 * cellPx()); // Sanctuary VI
-  createBlock('sanctuary', 6, 348 * cellPx(), 957 * cellPx()); // Sanctuary VII
-  createBlock('sanctuary', 6, 606 * cellPx(), 957 * cellPx()); // Sanctuary VIII
-  createBlock('sanctuary', 6, 828 * cellPx(), 957 * cellPx()); // Sanctuary IX
-  createBlock('sanctuary', 6, 957 * cellPx(), 846 * cellPx()); // Sanctuary X
-  createBlock('sanctuary', 6, 957 * cellPx(), 606 * cellPx()); // Sanctuary XI
-  createBlock('sanctuary', 6, 957 * cellPx(), 366 * cellPx()); // Sanctuary XII
-
   state._restoring = false;
 
   /* ---------------------------------------------
