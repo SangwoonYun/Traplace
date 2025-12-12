@@ -15,6 +15,14 @@ import { queueSaveToURL } from '../urlState.js';
 import { saveCheckpoint } from '../history.js';
 
 /**
+ * Check if a given client coordinate is over a block element.
+ */
+function isOverBlock(clientX, clientY) {
+  const elements = document.elementsFromPoint(clientX, clientY);
+  return elements.some(el => el.classList.contains('block'));
+}
+
+/**
  * Enables click-to-toggle paint on the grid.
  */
 export function setupTileToggle() {
@@ -22,6 +30,9 @@ export function setupTileToggle() {
     // Ignore drag events, resizing, or clicks on existing blocks
     if (state.drag || state.panning || state._isResizing || e.target.closest('.block')) return;
     if (e.button !== 0) return; // left click only
+
+    // Also check if click ended over a block (for drag cases)
+    if (isOverBlock(e.clientX, e.clientY)) return;
 
     // Determine clicked cell
     const { x, y } = clientToLocalRot(e.clientX, e.clientY);
