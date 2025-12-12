@@ -37,6 +37,7 @@
   border-color: var(--castle-border);
   cursor: not-allowed;
   opacity: 0.9;
+  z-index: 1;
 }
 
 .block[data-kind='turret'] {
@@ -44,6 +45,7 @@
   border-color: var(--turret-border);
   cursor: not-allowed;
   opacity: 0.95;
+  z-index: 2;
 }
 
 .block[data-kind='fortress'] {
