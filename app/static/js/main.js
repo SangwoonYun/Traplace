@@ -24,6 +24,7 @@ import { setupZoom } from './interactions/zoom.js';
 import { setupTileToggle } from './interactions/tileToggle.js';
 import { setupCursorBadge } from './interactions/cursor.js';
 import { setupCoordJump } from './interactions/coordJump.js';
+import { setupRemoteControl } from './interactions/remote.js';
 import { validateAllObjects, createBlock } from './blocks.js';
 import { expand } from './interactions/expand.js';
 import { parseFromURL, saveToURLImmediate } from './urlState.js';
@@ -439,6 +440,7 @@ window.addEventListener('load', async () => {
   setupCoordJump();
   setupActions();
   setupColorPicker();
+  setupRemoteControl();
 
   /* ---------------------------------------------
    * Initial render & validation
