@@ -210,10 +210,77 @@
 }
 
 /* ---------------------------------------------
+ * Remote Control (4-way diagonal arrows)
+ * ------------------------------------------- */
+.remote-control {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  margin: auto auto 0px auto;
+  flex-shrink: 0;
+}
+
+.remote-btn {
+  appearance: none;
+  border: 1px solid #999;
+  background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  user-select: none;
+  padding: 0;
+  line-height: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.remote-btn:hover {
+  background: linear-gradient(135deg, #e8e8e8, #d8d8d8);
+  transform: scale(1.05);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.remote-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.remote-btn-tl {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.remote-btn-tr {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.remote-btn-bl {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.remote-btn-br {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+/* ---------------------------------------------
  * Sidebar Footer (QR / GitHub credit)
  * ------------------------------------------- */
 .sidebar-footer {
-  margin-top: auto;
+  margin-top: 0px;
   padding: 12px;
   width: 100%;
   display: flex;
@@ -731,6 +798,22 @@ html[dir='rtl'] .trash-zone {
     background: rgba(255, 255, 255, 0.12);
     color: #e0e0e0;
     border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Remote control */
+  .remote-control {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .remote-btn {
+    border-color: #666;
+    background: linear-gradient(135deg, #3a3a3a, #2a2a2a);
+    color: #e0e0e0;
+  }
+
+  .remote-btn:hover {
+    background: linear-gradient(135deg, #454545, #353535);
   }
 }
 
