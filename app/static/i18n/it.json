@@ -49,7 +49,8 @@
     "noCities": "Nessuna città.",
     "noTraps": "Nessuna trappola.",
     "resetConfirm": "Reimpostare tutto? (Tutti gli oggetti e le celle rosse verranno eliminate)",
-    "exportFail": "Esportazione PNG non riuscita."
+    "exportFail": "Esportazione PNG non riuscita.",
+    "exportAreaTooLarge": "L'area di esportazione è troppo grande. Ridurre gli oggetti o rendere l'area più piccola."
   },
   "msg": {
     "copiedShort": "URL breve copiata!",

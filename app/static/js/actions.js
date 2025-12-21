@@ -360,6 +360,9 @@ export function setupActions() {
   btnExportPNG?.addEventListener('click', async () => {
     try {
       const blob = await exportPNG();
+      if (!blob) {
+        throw new Error('Export returned empty blob');
+      }
       const a = document.createElement('a');
       const ts = new Date().toISOString().replace(/[:.]/g, '-');
       a.download = `grid-export-${ts}.png`;
@@ -369,8 +372,19 @@ export function setupActions() {
       a.remove();
       setTimeout(() => URL.revokeObjectURL(a.href), 3000);
     } catch (e) {
-      console.error(e);
-      alert(t('alert.exportFail'));
+      console.error('PNG export error:', e);
+      // Check if it's a memory/canvas size error
+      const errorMsg = e.message || '';
+      if (
+        errorMsg.includes('memory') ||
+        errorMsg.includes('ImageData') ||
+        errorMsg.includes('canvas') ||
+        errorMsg.includes('too large')
+      ) {
+        alert(t('alert.exportAreaTooLarge'));
+      } else {
+        alert(t('alert.exportFail'));
+      }
     }
   });
 

@@ -49,7 +49,8 @@
     "noCities": "Tidak ada kota.",
     "noTraps": "Tidak ada perangkap.",
     "resetConfirm": "Atur ulang semua? (Semua objek dan ubin merah akan dihapus)",
-    "exportFail": "Gagal mengekspor PNG."
+    "exportFail": "Gagal mengekspor PNG.",
+    "exportAreaTooLarge": "Area ekspor terlalu besar. Harap kurangi objek atau perkecil area."
   },
   "msg": {
     "copiedShort": "URL pendek disalin!",

@@ -49,7 +49,8 @@
     "noCities": "Brak miast.",
     "noTraps": "Brak pułapek.",
     "resetConfirm": "Zresetować wszystko? (Wszystkie obiekty i czerwone pola zostaną usunięte)",
-    "exportFail": "Nie udało się wyeksportować PNG."
+    "exportFail": "Nie udało się wyeksportować PNG.",
+    "exportAreaTooLarge": "Obszar eksportu jest zbyt duży. Proszę zmniejszyć liczbę obiektów lub obszar."
   },
   "msg": {
     "copiedShort": "Skrócony URL skopiowany!",

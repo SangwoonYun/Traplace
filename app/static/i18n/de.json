@@ -49,7 +49,8 @@
     "noCities": "Keine Städte.",
     "noTraps": "Keine Fallen.",
     "resetConfirm": "Alles zurücksetzen? (Alle Objekte und roten Felder werden gelöscht)",
-    "exportFail": "PNG-Export fehlgeschlagen."
+    "exportFail": "PNG-Export fehlgeschlagen.",
+    "exportAreaTooLarge": "Der Exportbereich ist zu groß. Bitte reduzieren Sie die Objekte oder verkleinern Sie den Bereich."
   },
   "msg": {
     "copiedShort": "Kurz-URL kopiert!",
