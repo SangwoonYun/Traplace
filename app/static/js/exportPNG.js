@@ -154,7 +154,7 @@ function cellsCoveredByBlocks() {
  * Compute the bounding box of all used cells (painter union, block coverage).
  * EXCLUDES red paint (userPaint) and immutable blocks.
  * Returns null if nothing is used.
- * @returns {{minx:number,miny:number,maxx:number,maxy:number,painted:Set<string>}|null}
+ * @returns {{minx:number,miny:number,maxx:number,maxy:number,painted:Set<string>,immutableBlocks:Array}|null}
  */
 function usedCellsBBox() {
   const used = new Set();
@@ -178,7 +178,29 @@ function usedCellsBBox() {
     if (x > maxx) maxx = x;
     if (y > maxy) maxy = y;
   }
-  return { minx, miny, maxx, maxy, painted };
+
+  // Find immutable blocks that overlap with the bounding box
+  const immutableBlocks = [];
+  for (const b of state.blocks) {
+    if (!b.immutable) continue;
+
+    const { cx, cy } = posToCell(b.left, b.top);
+    const width = b.kind === 'custom' ? b.width || b.size : b.size;
+    const height = b.kind === 'custom' ? b.height || b.size : b.size;
+
+    // Check if this immutable block overlaps with the bounding box
+    const blockMaxX = cx + width - 1;
+    const blockMaxY = cy + height - 1;
+
+    // Check for overlap: block intersects with [minx, maxx] x [miny, maxy]
+    const overlaps = !(cx > maxx || blockMaxX < minx || cy > maxy || blockMaxY < miny);
+
+    if (overlaps) {
+      immutableBlocks.push(b);
+    }
+  }
+
+  return { minx, miny, maxx, maxy, painted, immutableBlocks };
 }
 
 /* ---------------------------------------------
@@ -366,13 +388,14 @@ export async function exportPNG() {
   const bbox = usedCellsBBox();
   if (!bbox) throw new Error('No used grid. Place objects or paint before exporting.');
 
-  const { minx, miny, maxx, maxy, painted } = bbox;
+  const { minx, miny, maxx, maxy, painted, immutableBlocks } = bbox;
   const cellSize = cellPx();
 
   const gridColor = cssVar('--grid-bold', '#d0d0d0');
   const bgColor = cssVar('--bg', '#ffffff');
   const blueFill = cssVar('--paint-blue', 'rgba(66,133,244,0.25)');
   const blueEdge = cssVar('--paint-blue-border', 'rgba(66,133,244,0.9)');
+  const redFill = cssVar('--paint-red', 'rgba(220,20,60,0.35)');
 
   // Crop region in unrotated space
   const offX = minx * cellSize;
@@ -437,10 +460,7 @@ export async function exportPNG() {
   }
   ctx.restore();
 
-  /* 2) Red paint - SKIP (exclude from export) */
-  // Red paint is not exported
-
-  /* 3) Blue paint + perimeters */
+  /* 2) Blue paint + perimeters */
   ctx.save();
   ctx.fillStyle = blueFill;
   for (const key of painted) {
@@ -455,7 +475,29 @@ export async function exportPNG() {
   }
   ctx.restore();
 
-  /* 4) Painter area dashed boxes (flag/HQ) - excluding immutable blocks */
+  /* 3) Red zone (castle/fortress/sanctuary areas) - overlapping parts only */
+  ctx.save();
+  ctx.fillStyle = redFill;
+  for (const key of state.redZone) {
+    const [x, y] = key.split(',').map(Number);
+    // Only render red zone that falls within the bounding box
+    if (x < minx || x > maxx || y < miny || y > maxy) continue;
+    ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+  }
+  ctx.restore();
+
+  /* 4) User red paint (manually painted tiles) - overlapping parts only */
+  ctx.save();
+  ctx.fillStyle = redFill;
+  for (const key of state.userPaint) {
+    const [x, y] = key.split(',').map(Number);
+    // Only render red paint that falls within the bounding box
+    if (x < minx || x > maxx || y < miny || y > maxy) continue;
+    ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+  }
+  ctx.restore();
+
+  /* 5) Painter area dashed boxes (flag/HQ) - excluding immutable blocks */
   ctx.save();
   ctx.strokeStyle = blueEdge;
   ctx.setLineDash([6, 6]);
@@ -478,7 +520,90 @@ export async function exportPNG() {
   }
   ctx.restore();
 
-  /* 5) Blocks + labels (labels localized via i18n) - excluding immutable blocks */
+  /* 5) Immutable blocks (only overlapping parts) */
+  for (const b of immutableBlocks) {
+    const st = styleForBlock(b, painted);
+    const { cx, cy } = posToCell(b.left, b.top);
+    const width = b.kind === 'custom' ? b.width || b.size : b.size;
+    const height = b.kind === 'custom' ? b.height || b.size : b.size;
+    const x = cx * cellSize,
+      y = cy * cellSize,
+      w = width * cellSize,
+      h = height * cellSize;
+
+    // Calculate the clipped region (only the overlapping part)
+    const clipLeft = Math.max(x, offX);
+    const clipTop = Math.max(y, offY);
+    const clipRight = Math.min(x + w, offX + widthPx);
+    const clipBottom = Math.min(y + h, offY + heightPx);
+
+    // Skip if completely outside
+    if (clipRight <= clipLeft || clipBottom <= clipTop) continue;
+
+    const clipW = clipRight - clipLeft;
+    const clipH = clipBottom - clipTop;
+
+    // Draw only the clipped portion
+    ctx.save();
+    ctx.fillStyle = st.fill;
+    ctx.strokeStyle = st.stroke;
+    ctx.lineWidth = 1.5;
+    ctx.fillRect(clipLeft, clipTop, clipW, clipH);
+    ctx.strokeRect(clipLeft, clipTop, clipW, clipH);
+    ctx.restore();
+
+    // Label text for immutable blocks (only if center is within crop area)
+    const centerX = x + w / 2;
+    const centerY = y + h / 2;
+    const centerInCrop =
+      centerX >= offX && centerX <= offX + widthPx && centerY >= offY && centerY <= offY + heightPx;
+
+    if (centerInCrop) {
+      const labelEl = b.el?.querySelector('.label');
+      const userText = (labelEl?.textContent || '').trim();
+
+      let text;
+      if ((b.kind === 'turret' || b.kind === 'fortress') && userText) {
+        text = t(`palette.${b.kind}`, userText);
+      } else if ((b.kind === 'city' || b.kind === 'custom') && userText) {
+        text = userText;
+      } else {
+        text =
+          b.kind === 'flag'
+            ? t('palette.flag')
+            : b.kind === 'hq'
+              ? t('palette.hq')
+              : b.kind === 'city'
+                ? t('palette.city')
+                : b.kind === 'resource'
+                  ? t('palette.resource')
+                  : b.kind === 'trap'
+                    ? t('palette.trap')
+                    : b.kind === 'castle'
+                      ? t('palette.castle')
+                      : b.kind === 'turret'
+                        ? t('palette.turret', userText)
+                        : b.kind === 'fortress'
+                          ? t('palette.fortress', userText)
+                          : b.kind === 'custom'
+                            ? t('palette.custom')
+                            : `${b.size}×${b.size}`;
+      }
+
+      const p = projectWithShift(W, H, shiftX, shiftY, centerX, centerY);
+
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.font = 'bold 14px system-ui, -apple-system, Segoe UI, Roboto, Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#333';
+      ctx.fillText(text, p.x, p.y);
+      ctx.restore();
+    }
+  }
+
+  /* 6) User blocks + labels (labels localized via i18n) - excluding immutable blocks */
   for (const b of state.blocks) {
     // Skip immutable blocks
     if (b.immutable) continue;
