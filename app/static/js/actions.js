@@ -370,7 +370,12 @@ export function setupActions() {
       setTimeout(() => URL.revokeObjectURL(a.href), 3000);
     } catch (e) {
       console.error(e);
-      alert(t('alert.exportFail'));
+      // Check if it's a memory/canvas size error
+      if (e.message && (e.message.includes('memory') || e.message.includes('ImageData'))) {
+        alert(t('alert.exportAreaTooLarge'));
+      } else {
+        alert(t('alert.exportFail'));
+      }
     }
   });
 

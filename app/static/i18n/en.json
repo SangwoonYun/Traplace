@@ -47,7 +47,8 @@
     "noCities": "No cities.",
     "noTraps": "No traps.",
     "resetConfirm": "Reset everything? (All objects and red tiles will be removed)",
-    "exportFail": "Failed to export PNG."
+    "exportFail": "Failed to export PNG.",
+    "exportAreaTooLarge": "Export area is too large. Please reduce objects or make the area smaller."
   },
   "msg": {
     "copiedShort": "Short URL copied!",

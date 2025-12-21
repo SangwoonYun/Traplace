@@ -102,10 +102,12 @@ function trimCanvasByBackground(inCanvas, bgColor) {
   return out;
 }
 
-/** Compute blue painted union (flag/HQ) in real-time. */
+/** Compute blue painted union (flag/HQ) in real-time, excluding immutable blocks. */
 function computePaintedSet() {
   const set = new Set();
   for (const b of state.blocks) {
+    // Skip immutable blocks
+    if (b.immutable) continue;
     if (!PAINTER_KINDS.has(b.kind)) continue;
     const { cx, cy } = posToCell(b.left, b.top);
     const centerCx = cx + Math.floor(b.size / 2);
@@ -118,15 +120,19 @@ function computePaintedSet() {
 }
 
 /**
- * Collect all cells covered by placed blocks (their footprint).
+ * Collect all cells covered by placed blocks (their footprint), excluding immutable blocks.
  * @returns {Set<string>}
  */
 function cellsCoveredByBlocks() {
   const out = new Set();
   for (const b of state.blocks) {
+    // Skip immutable blocks
+    if (b.immutable) continue;
     const { cx, cy } = posToCell(b.left, b.top);
-    for (let y = cy; y < cy + b.size; y++) {
-      for (let x = cx; x < cx + b.size; x++) {
+    const width = b.kind === 'custom' ? b.width || b.size : b.size;
+    const height = b.kind === 'custom' ? b.height || b.size : b.size;
+    for (let y = cy; y < cy + height; y++) {
+      for (let x = cx; x < cx + width; x++) {
         out.add(`${x},${y}`);
       }
     }
@@ -135,17 +141,18 @@ function cellsCoveredByBlocks() {
 }
 
 /**
- * Compute the bounding box of all used cells (red paint, painter union, block coverage).
+ * Compute the bounding box of all used cells (painter union, block coverage).
+ * EXCLUDES red paint (userPaint) and immutable blocks.
  * Returns null if nothing is used.
  * @returns {{minx:number,miny:number,maxx:number,maxy:number,painted:Set<string>}|null}
  */
 function usedCellsBBox() {
   const used = new Set();
 
-  for (const k of state.userPaint) used.add(k); // red
-  const painted = computePaintedSet(); // blue
+  // SKIP red paint - don't include state.userPaint
+  const painted = computePaintedSet(); // blue (from non-immutable painters)
   for (const k of painted) used.add(k);
-  const cover = cellsCoveredByBlocks(); // blocks
+  const cover = cellsCoveredByBlocks(); // blocks (excluding immutable)
   for (const k of cover) used.add(k);
 
   if (!used.size) return null;
@@ -356,7 +363,6 @@ export async function exportPNG() {
   const bgColor = cssVar('--bg', '#ffffff');
   const blueFill = cssVar('--paint-blue', 'rgba(66,133,244,0.25)');
   const blueEdge = cssVar('--paint-blue-border', 'rgba(66,133,244,0.9)');
-  const redFill = cssVar('--paint-red', 'rgba(220,20,60,0.35)');
 
   // Crop region in unrotated space
   const offX = minx * cellSize;
@@ -376,12 +382,40 @@ export async function exportPNG() {
 
   const dpr = window.devicePixelRatio || 1;
 
+  // Calculate canvas dimensions with DPR
+  const canvasWidth = Math.max(1, Math.floor(boxW * dpr));
+  const canvasHeight = Math.max(1, Math.floor(boxH * dpr));
+
+  // Limit canvas size to prevent memory errors
+  // Most browsers have a max canvas area of ~16,777,216 pixels (4096x4096)
+  // We'll use a conservative limit of 8,000,000 pixels
+  const MAX_CANVAS_AREA = 8000000;
+  const MAX_DIMENSION = 4000;
+
+  let finalWidth = canvasWidth;
+  let finalHeight = canvasHeight;
+  let scaleFactor = dpr;
+
+  // Check if canvas exceeds size limits
+  if (finalWidth > MAX_DIMENSION || finalHeight > MAX_DIMENSION || finalWidth * finalHeight > MAX_CANVAS_AREA) {
+    // Calculate the scale factor needed to fit within limits
+    const dimensionScale = Math.min(MAX_DIMENSION / finalWidth, MAX_DIMENSION / finalHeight);
+    const areaScale = Math.sqrt(MAX_CANVAS_AREA / (finalWidth * finalHeight));
+    const limitScale = Math.min(dimensionScale, areaScale);
+
+    finalWidth = Math.floor(finalWidth * limitScale);
+    finalHeight = Math.floor(finalHeight * limitScale);
+    scaleFactor = dpr * limitScale;
+
+    console.warn(`Canvas size reduced from ${canvasWidth}x${canvasHeight} to ${finalWidth}x${finalHeight} to prevent memory errors`);
+  }
+
   // Draw on a work canvas first (we may trim it later)
   const work = document.createElement('canvas');
-  work.width = Math.max(1, Math.floor(boxW * dpr));
-  work.height = Math.max(1, Math.floor(boxH * dpr));
+  work.width = finalWidth;
+  work.height = finalHeight;
   const ctx = work.getContext('2d');
-  ctx.scale(dpr, dpr);
+  ctx.scale(scaleFactor, scaleFactor);
 
   // Background
   ctx.fillStyle = bgColor;
@@ -411,15 +445,8 @@ export async function exportPNG() {
   }
   ctx.restore();
 
-  /* 2) Red paint */
-  ctx.save();
-  ctx.fillStyle = redFill;
-  for (const key of state.userPaint) {
-    const [x, y] = key.split(',').map(Number);
-    if (x < minx || x > maxx || y < miny || y > maxy) continue;
-    ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-  }
-  ctx.restore();
+  /* 2) Red paint - SKIP (exclude from export) */
+  // Red paint is not exported
 
   /* 3) Blue paint + perimeters */
   ctx.save();
@@ -436,12 +463,14 @@ export async function exportPNG() {
   }
   ctx.restore();
 
-  /* 4) Painter area dashed boxes (flag/HQ) */
+  /* 4) Painter area dashed boxes (flag/HQ) - excluding immutable blocks */
   ctx.save();
   ctx.strokeStyle = blueEdge;
   ctx.setLineDash([6, 6]);
   ctx.lineWidth = 2;
   for (const b of state.blocks) {
+    // Skip immutable blocks
+    if (b.immutable) continue;
     if (!PAINTER_KINDS.has(b.kind)) continue;
     const { cx, cy } = posToCell(b.left, b.top);
     const centerCx = cx + Math.floor(b.size / 2);
@@ -457,14 +486,19 @@ export async function exportPNG() {
   }
   ctx.restore();
 
-  /* 5) Blocks + labels (labels localized via i18n) */
+  /* 5) Blocks + labels (labels localized via i18n) - excluding immutable blocks */
   for (const b of state.blocks) {
+    // Skip immutable blocks
+    if (b.immutable) continue;
+
     const st = styleForBlock(b, painted);
     const { cx, cy } = posToCell(b.left, b.top);
+    const width = b.kind === 'custom' ? b.width || b.size : b.size;
+    const height = b.kind === 'custom' ? b.height || b.size : b.size;
     const x = cx * cellSize,
       y = cy * cellSize,
-      w = b.size * cellSize,
-      h = b.size * cellSize;
+      w = width * cellSize,
+      h = height * cellSize;
 
     // Skip outside crop
     if (x > offX + widthPx || x + w < offX || y > offY + heightPx || y + h < offY) continue;

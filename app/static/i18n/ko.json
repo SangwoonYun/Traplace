@@ -47,7 +47,8 @@
     "noCities": "도시가 없습니다.",
     "noTraps": "사냥함정이 없습니다.",
     "resetConfirm": "정말 초기화할까요? (모든 객체 및 빨간 칠이 삭제됩니다)",
-    "exportFail": "PNG 내보내기에 실패했습니다."
+    "exportFail": "PNG 내보내기에 실패했습니다.",
+    "exportAreaTooLarge": "내보내기 영역이 너무 큽니다. 객체를 줄이거나 영역을 작게 만들어주세요."
   },
   "msg": {
     "copiedShort": "단축 복사됨!",
