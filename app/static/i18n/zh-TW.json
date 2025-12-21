@@ -49,7 +49,8 @@
     "noCities": "沒有城市。",
     "noTraps": "沒有陷阱。",
     "resetConfirm": "要重置所有內容嗎？（所有物件與紅色格子將被清除）",
-    "exportFail": "匯出 PNG 失敗。"
+    "exportFail": "匯出 PNG 失敗。",
+    "exportAreaTooLarge": "匯出區域太大。請減少物件或縮小區域。"
   },
   "msg": {
     "copiedShort": "已複製短網址！",

@@ -47,7 +47,8 @@
     "noCities": "都市がありません。",
     "noTraps": "トラップがありません。",
     "resetConfirm": "すべてをリセットしますか？（すべてのオブジェクトと赤いタイルが削除されます）",
-    "exportFail": "PNGのエクスポートに失敗しました。"
+    "exportFail": "PNGのエクスポートに失敗しました。",
+    "exportAreaTooLarge": "エクスポート領域が大きすぎます。オブジェクトを減らすか、領域を小さくしてください。"
   },
   "msg": {
     "copiedShort": "短縮URLをコピーしました！",

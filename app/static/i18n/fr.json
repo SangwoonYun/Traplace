@@ -49,7 +49,8 @@
     "noCities": "Aucune ville.",
     "noTraps": "Aucun piège.",
     "resetConfirm": "Tout réinitialiser ? (Tous les objets et tuiles rouges seront supprimés)",
-    "exportFail": "Échec de l’exportation du PNG."
+    "exportFail": "Échec de l'exportation du PNG.",
+    "exportAreaTooLarge": "La zone d'exportation est trop grande. Veuillez réduire les objets ou diminuer la taille de la zone."
   },
   "msg": {
     "copiedShort": "URL courte copiée !",

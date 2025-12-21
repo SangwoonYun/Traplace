@@ -49,7 +49,8 @@
     "noCities": "Hiç şehir yok.",
     "noTraps": "Hiç tuzak yok.",
     "resetConfirm": "Her şeyi sıfırlamak istiyor musunuz? (Tüm nesneler ve kırmızı kutular silinecektir)",
-    "exportFail": "PNG dışa aktarımı başarısız oldu."
+    "exportFail": "PNG dışa aktarımı başarısız oldu.",
+    "exportAreaTooLarge": "Dışa aktarma alanı çok büyük. Lütfen nesneleri azaltın veya alanı küçültün."
   },
   "msg": {
     "copiedShort": "Kısa URL kopyalandı!",

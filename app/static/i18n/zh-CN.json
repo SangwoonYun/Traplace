@@ -47,7 +47,8 @@
     "noCities": "没有城市。",
     "noTraps": "没有陷阱。",
     "resetConfirm": "要重置所有内容吗？（所有对象和红色方格将被清除）",
-    "exportFail": "导出 PNG 失败。"
+    "exportFail": "导出 PNG 失败。",
+    "exportAreaTooLarge": "导出区域太大。请减少对象或缩小区域。"
   },
   "msg": {
     "copiedShort": "短链接已复制！",
