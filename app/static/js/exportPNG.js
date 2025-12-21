@@ -48,7 +48,17 @@ function trimCanvasByBackground(inCanvas, bgColor) {
   if (!w || !h) return inCanvas;
 
   const ctx = inCanvas.getContext('2d');
-  const data = ctx.getImageData(0, 0, w, h).data;
+
+  // Try to get image data - this can fail if canvas is too large
+  let data;
+  try {
+    data = ctx.getImageData(0, 0, w, h).data;
+  } catch (e) {
+    // If getImageData fails (e.g., out of memory), return the original canvas without trimming
+    console.warn('Failed to trim canvas (likely too large):', e.message);
+    return inCanvas;
+  }
+
   const [br, bg, bb, ba] = cssColorToRgbaTuple(bgColor);
 
   // Helper: test pixel at (x, y) equals background
@@ -386,36 +396,18 @@ export async function exportPNG() {
   const canvasWidth = Math.max(1, Math.floor(boxW * dpr));
   const canvasHeight = Math.max(1, Math.floor(boxH * dpr));
 
-  // Limit canvas size to prevent memory errors
-  // Most browsers have a max canvas area of ~16,777,216 pixels (4096x4096)
-  // We'll use a conservative limit of 8,000,000 pixels
-  const MAX_CANVAS_AREA = 8000000;
-  const MAX_DIMENSION = 4000;
-
-  let finalWidth = canvasWidth;
-  let finalHeight = canvasHeight;
-  let scaleFactor = dpr;
-
-  // Check if canvas exceeds size limits
-  if (finalWidth > MAX_DIMENSION || finalHeight > MAX_DIMENSION || finalWidth * finalHeight > MAX_CANVAS_AREA) {
-    // Calculate the scale factor needed to fit within limits
-    const dimensionScale = Math.min(MAX_DIMENSION / finalWidth, MAX_DIMENSION / finalHeight);
-    const areaScale = Math.sqrt(MAX_CANVAS_AREA / (finalWidth * finalHeight));
-    const limitScale = Math.min(dimensionScale, areaScale);
-
-    finalWidth = Math.floor(finalWidth * limitScale);
-    finalHeight = Math.floor(finalHeight * limitScale);
-    scaleFactor = dpr * limitScale;
-
-    console.warn(`Canvas size reduced from ${canvasWidth}x${canvasHeight} to ${finalWidth}x${finalHeight} to prevent memory errors`);
-  }
-
   // Draw on a work canvas first (we may trim it later)
   const work = document.createElement('canvas');
-  work.width = finalWidth;
-  work.height = finalHeight;
+  work.width = canvasWidth;
+  work.height = canvasHeight;
   const ctx = work.getContext('2d');
-  ctx.scale(scaleFactor, scaleFactor);
+
+  // Check if context creation failed (can happen with very large canvases)
+  if (!ctx) {
+    throw new Error('Failed to create canvas context. Export area may be too large.');
+  }
+
+  ctx.scale(dpr, dpr);
 
   // Background
   ctx.fillStyle = bgColor;
