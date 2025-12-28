@@ -14,7 +14,8 @@
       "export": "Esporta come PNG",
       "dist2label": "Misura il tempo di movimento",
       "lang": "Lingua",
-      "home": "Vai al centro"
+      "home": "Vai al centro",
+      "import": "Importa PNG"
     },
     "trash": {
       "label": "Trascina qui per eliminare",
@@ -50,7 +51,8 @@
     "noTraps": "Nessuna trappola.",
     "resetConfirm": "Reimpostare tutto? (Tutti gli oggetti e le celle rosse verranno eliminate)",
     "exportFail": "Esportazione PNG non riuscita.",
-    "exportAreaTooLarge": "L'area di esportazione è troppo grande. Ridurre gli oggetti o rendere l'area più piccola."
+    "exportAreaTooLarge": "L'area di esportazione è troppo grande. Ridurre gli oggetti o rendere l'area più piccola.",
+    "importFail": "Importazione PNG non riuscita."
   },
   "msg": {
     "copiedShort": "URL breve copiata!",

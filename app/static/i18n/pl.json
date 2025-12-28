@@ -14,7 +14,8 @@
       "export": "Eksportuj jako PNG",
       "dist2label": "Zmierz czas ruchu",
       "lang": "Język",
-      "home": "Przejdź do środka"
+      "home": "Przejdź do środka",
+      "import": "Importuj PNG"
     },
     "trash": {
       "label": "Przeciągnij tutaj, aby usunąć",
@@ -50,7 +51,8 @@
     "noTraps": "Brak pułapek.",
     "resetConfirm": "Zresetować wszystko? (Wszystkie obiekty i czerwone pola zostaną usunięte)",
     "exportFail": "Nie udało się wyeksportować PNG.",
-    "exportAreaTooLarge": "Obszar eksportu jest zbyt duży. Proszę zmniejszyć liczbę obiektów lub obszar."
+    "exportAreaTooLarge": "Obszar eksportu jest zbyt duży. Proszę zmniejszyć liczbę obiektów lub obszar.",
+    "importFail": "Nie udało się zaimportować PNG."
   },
   "msg": {
     "copiedShort": "Skrócony URL skopiowany!",

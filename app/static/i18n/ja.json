@@ -10,6 +10,7 @@
       "reset": "リセット",
       "copy": "短縮URLをコピー",
       "export": "PNGをエクスポート",
+      "import": "PNGをインポート",
       "dist2label": "移動時間を測定",
       "lang": "言語",
       "home": "中央に移動"
@@ -48,7 +49,8 @@
     "noTraps": "トラップがありません。",
     "resetConfirm": "すべてをリセットしますか？（すべてのオブジェクトと赤いタイルが削除されます）",
     "exportFail": "PNGのエクスポートに失敗しました。",
-    "exportAreaTooLarge": "エクスポート領域が大きすぎます。オブジェクトを減らすか、領域を小さくしてください。"
+    "exportAreaTooLarge": "エクスポート領域が大きすぎます。オブジェクトを減らすか、領域を小さくしてください。",
+    "importFail": "PNGのインポートに失敗しました。"
   },
   "msg": {
     "copiedShort": "短縮URLをコピーしました！",

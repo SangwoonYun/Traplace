@@ -12,6 +12,7 @@
       "reset": "Reiniciar",
       "copy": "Copiar URL corta",
       "export": "Exportar como PNG",
+      "import": "Importar PNG",
       "dist2label": "Medir tiempo de movimiento",
       "lang": "Idioma",
       "home": "Ir al centro"
@@ -50,7 +51,8 @@
     "noTraps": "No hay trampas.",
     "resetConfirm": "¿Reiniciar todo? (Todos los objetos y celdas rojas serán eliminados)",
     "exportFail": "Error al exportar PNG.",
-    "exportAreaTooLarge": "El área de exportación es demasiado grande. Reduzca los objetos o haga el área más pequeña."
+    "exportAreaTooLarge": "El área de exportación es demasiado grande. Reduzca los objetos o haga el área más pequeña.",
+    "importFail": "Error al importar PNG."
   },
   "msg": {
     "copiedShort": "¡URL corta copiada!",

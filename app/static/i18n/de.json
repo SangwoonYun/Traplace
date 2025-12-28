@@ -12,6 +12,7 @@
       "reset": "Zurücksetzen",
       "copy": "Kurz-URL kopieren",
       "export": "Als PNG exportieren",
+      "import": "PNG importieren",
       "dist2label": "Bewegungszeit messen",
       "lang": "Sprache",
       "home": "Zur Mitte"
@@ -50,7 +51,8 @@
     "noTraps": "Keine Fallen.",
     "resetConfirm": "Alles zurücksetzen? (Alle Objekte und roten Felder werden gelöscht)",
     "exportFail": "PNG-Export fehlgeschlagen.",
-    "exportAreaTooLarge": "Der Exportbereich ist zu groß. Bitte reduzieren Sie die Objekte oder verkleinern Sie den Bereich."
+    "exportAreaTooLarge": "Der Exportbereich ist zu groß. Bitte reduzieren Sie die Objekte oder verkleinern Sie den Bereich.",
+    "importFail": "PNG-Import fehlgeschlagen."
   },
   "msg": {
     "copiedShort": "Kurz-URL kopiert!",

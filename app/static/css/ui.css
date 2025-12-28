@@ -536,6 +536,7 @@ html[dir='rtl'] .toolbar {
   font-weight: 800;
   cursor: pointer;
   min-width: 36px;
+  width: 44px;
   line-height: 1;
   user-select: none;
 }

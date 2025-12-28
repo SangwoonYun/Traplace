@@ -6,7 +6,7 @@
  * - Reset / Copy URL / Export PNG / Undo / Redo behaviors
  */
 
-import { state } from './state.js';
+import { state, cellPx } from './state.js';
 import {
   tilesLayer,
   outlinesLayer,
@@ -17,6 +17,8 @@ import {
   btnReset,
   btnCopyURL,
   btnExportPNG,
+  btnImportPNG,
+  pngFileInput,
   btnUndo,
   btnRedo,
   btnHome,
@@ -24,12 +26,14 @@ import {
   btnCityTrapDist,
 } from './dom.js';
 import { recomputePaint, renderUserTiles, centerToWorldCenter, centerToCell } from './render.js';
-import { validateAllObjects } from './blocks.js';
+import { validateAllObjects, createBlock } from './blocks.js';
 import { updateAllCounts } from './counters.js';
-import { saveToURLImmediate } from './urlState.js';
+import { saveToURLImmediate, deserializeState, updateURLWithSerialized } from './urlState.js';
 import { exportPNG } from './exportPNG.js';
+import { importPNG } from './importPNG.js';
 import { undo, redo, onHistoryChange, saveCheckpoint } from './history.js';
 import { posToCell } from './transform.js';
+import { makeMovable } from './interactions/drag.js';
 import { t } from './i18n.js';
 
 /** Platform detection (used for shortcut hint labels). */
@@ -45,6 +49,7 @@ export function setTitles() {
     reset: mac ? '⌥⌘R' : 'Ctrl+Alt+R',
     copy: mac ? '⌥⌘C' : 'Ctrl+Alt+C',
     export: mac ? '⌥⌘E' : 'Ctrl+Alt+E',
+    import: mac ? '⌥⌘I' : 'Ctrl+Alt+I',
     dist: mac ? '⌥⌘D' : 'Ctrl+Alt+D',
   };
   if (btnUndo) btnUndo.title = `${t('ui.toolbar.undo')} (${sc.undo})`;
@@ -52,6 +57,7 @@ export function setTitles() {
   if (btnReset) btnReset.title = `${t('ui.toolbar.reset')} (${sc.reset})`;
   if (btnCopyURL) btnCopyURL.title = `${t('ui.toolbar.copy')} (${sc.copy})`;
   if (btnExportPNG) btnExportPNG.title = `${t('ui.toolbar.export')} (${sc.export})`;
+  if (btnImportPNG) btnImportPNG.title = `${t('ui.toolbar.import')} (${sc.import})`;
   if (btnCityTrapDist) btnCityTrapDist.title = `${t('ui.toolbar.dist2label')} (${sc.dist})`;
 }
 
@@ -388,6 +394,67 @@ export function setupActions() {
     }
   });
 
+  // Import PNG
+  btnImportPNG?.addEventListener('click', () => {
+    pngFileInput?.click();
+  });
+
+  pngFileInput?.addEventListener('change', async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      // Extract hash from PNG metadata
+      const hash = await importPNG(file);
+
+      // Deserialize state from hash
+      const parsed = deserializeState(hash);
+      const c = cellPx();
+
+      // Clear existing non-immutable blocks
+      rot.querySelectorAll('.block:not([data-immutable])').forEach((el) => el.remove());
+      state.blocks = state.blocks.filter((b) => b.immutable);
+      state.paintedSet.clear();
+      state.userPaint = new Set(parsed.red || []);
+      renderUserTiles();
+
+      // Restore blocks from parsed state
+      state._restoring = true;
+      for (const it of parsed.blocks) {
+        const left = it.cx * c;
+        const top = it.cy * c;
+
+        const el = createBlock(it.kind, it.size, left, top, it.width, it.height);
+
+        // Restore city and custom block labels if present
+        if ((it.kind === 'city' || it.kind === 'custom') && it.label) {
+          const lbl = el.querySelector('.label');
+          if (lbl) lbl.textContent = it.label;
+        }
+
+        makeMovable(el);
+      }
+      state._restoring = false;
+
+      // Recompute and validate
+      recomputePaint();
+      validateAllObjects();
+      updateAllCounts();
+
+      // Update URL with imported state
+      updateURLWithSerialized(hash);
+
+      // Save to history
+      saveCheckpoint();
+    } catch (error) {
+      console.error('PNG import error:', error);
+      alert(error.message || t('alert.importFail') || 'Failed to import PNG');
+    } finally {
+      // Reset file input to allow re-importing the same file
+      pngFileInput.value = '';
+    }
+  });
+
   // Keyboard shortcuts (Cmd/Ctrl modifiers)
   window.addEventListener('keydown', (e) => {
     const meta = e.metaKey || e.ctrlKey;
@@ -429,6 +496,12 @@ export function setupActions() {
     if (k === 'e' && e.altKey) {
       e.preventDefault();
       btnExportPNG?.click();
+      return;
+    }
+    // Import PNG: Cmd/Ctrl+Alt+I
+    if (k === 'i' && e.altKey) {
+      e.preventDefault();
+      btnImportPNG?.click();
       return;
     }
   });
