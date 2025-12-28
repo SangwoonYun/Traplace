@@ -48,3 +48,5 @@ export const btnCityTrapDist = document.getElementById('btnCityTrapDist');
 export const btnReset = document.getElementById('btnReset');
 export const btnCopyURL = document.getElementById('btnCopyURL');
 export const btnExportPNG = document.getElementById('btnExportPNG');
+export const btnImportPNG = document.getElementById('btnImportPNG');
+export const pngFileInput = document.getElementById('pngFileInput');

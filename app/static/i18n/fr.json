@@ -10,8 +10,9 @@
       "undo": "Annuler",
       "redo": "Rétablir",
       "reset": "Réinitialiser",
-      "copy": "Copier l’URL courte",
+      "copy": "Copier l'URL courte",
       "export": "Exporter en PNG",
+      "import": "Importer un PNG",
       "dist2label": "Mesurer le temps de déplacement",
       "lang": "Langue",
       "home": "Aller au centre"
@@ -50,7 +51,8 @@
     "noTraps": "Aucun piège.",
     "resetConfirm": "Tout réinitialiser ? (Tous les objets et tuiles rouges seront supprimés)",
     "exportFail": "Échec de l'exportation du PNG.",
-    "exportAreaTooLarge": "La zone d'exportation est trop grande. Veuillez réduire les objets ou diminuer la taille de la zone."
+    "exportAreaTooLarge": "La zone d'exportation est trop grande. Veuillez réduire les objets ou diminuer la taille de la zone.",
+    "importFail": "Échec de l'importation du PNG."
   },
   "msg": {
     "copiedShort": "URL courte copiée !",

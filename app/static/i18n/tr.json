@@ -14,7 +14,8 @@
       "export": "PNG olarak dışa aktar",
       "dist2label": "Hareket süresini ölç",
       "lang": "Dil",
-      "home": "Merkeze git"
+      "home": "Merkeze git",
+      "import": "PNG içe aktar"
     },
     "trash": {
       "label": "Silmek için buraya sürükle",
@@ -50,7 +51,8 @@
     "noTraps": "Hiç tuzak yok.",
     "resetConfirm": "Her şeyi sıfırlamak istiyor musunuz? (Tüm nesneler ve kırmızı kutular silinecektir)",
     "exportFail": "PNG dışa aktarımı başarısız oldu.",
-    "exportAreaTooLarge": "Dışa aktarma alanı çok büyük. Lütfen nesneleri azaltın veya alanı küçültün."
+    "exportAreaTooLarge": "Dışa aktarma alanı çok büyük. Lütfen nesneleri azaltın veya alanı küçültün.",
+    "importFail": "PNG içe aktarımı başarısız oldu."
   },
   "msg": {
     "copiedShort": "Kısa URL kopyalandı!",

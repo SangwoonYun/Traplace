@@ -14,7 +14,8 @@
       "export": "Exportar como PNG",
       "dist2label": "Medir tempo de movimento",
       "lang": "Idioma",
-      "home": "Ir para o centro"
+      "home": "Ir para o centro",
+      "import": "Importar PNG"
     },
     "trash": {
       "label": "Arraste aqui para excluir",
@@ -50,7 +51,8 @@
     "noTraps": "Nenhuma armadilha.",
     "resetConfirm": "Redefinir tudo? (Todos os objetos e células vermelhas serão removidos)",
     "exportFail": "Falha ao exportar PNG.",
-    "exportAreaTooLarge": "A área de exportação é muito grande. Reduza os objetos ou diminua a área."
+    "exportAreaTooLarge": "A área de exportação é muito grande. Reduza os objetos ou diminua a área.",
+    "importFail": "Falha ao importar PNG."
   },
   "msg": {
     "copiedShort": "URL curta copiada!",

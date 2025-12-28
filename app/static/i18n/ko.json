@@ -10,6 +10,7 @@
       "reset": "초기화",
       "copy": "단축 URL 복사",
       "export": "PNG 내보내기",
+      "import": "PNG 가져오기",
       "dist2label": "행군 시간 계산",
       "lang": "언어",
       "home": "중앙으로 이동"
@@ -48,7 +49,8 @@
     "noTraps": "사냥함정이 없습니다.",
     "resetConfirm": "정말 초기화할까요? (모든 객체 및 빨간 칠이 삭제됩니다)",
     "exportFail": "PNG 내보내기에 실패했습니다.",
-    "exportAreaTooLarge": "내보내기 영역이 너무 큽니다. 객체를 줄이거나 영역을 작게 만들어주세요."
+    "exportAreaTooLarge": "내보내기 영역이 너무 큽니다. 객체를 줄이거나 영역을 작게 만들어주세요.",
+    "importFail": "PNG 가져오기에 실패했습니다."
   },
   "msg": {
     "copiedShort": "단축 복사됨!",

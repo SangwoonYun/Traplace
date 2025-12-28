@@ -14,7 +14,8 @@
       "export": "Ekspor sebagai PNG",
       "dist2label": "Ukur waktu perpindahan",
       "lang": "Bahasa",
-      "home": "Kembali ke tengah"
+      "home": "Kembali ke tengah",
+      "import": "Impor PNG"
     },
     "trash": {
       "label": "Seret ke sini untuk menghapus",
@@ -50,7 +51,8 @@
     "noTraps": "Tidak ada perangkap.",
     "resetConfirm": "Atur ulang semua? (Semua objek dan ubin merah akan dihapus)",
     "exportFail": "Gagal mengekspor PNG.",
-    "exportAreaTooLarge": "Area ekspor terlalu besar. Harap kurangi objek atau perkecil area."
+    "exportAreaTooLarge": "Area ekspor terlalu besar. Harap kurangi objek atau perkecil area.",
+    "importFail": "Gagal mengimpor PNG."
   },
   "msg": {
     "copiedShort": "URL pendek disalin!",
