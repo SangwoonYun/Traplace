@@ -67,7 +67,7 @@ function addPngTextChunk(pngData, keyword, text) {
   // PNG structure: signature (8) + IHDR chunk (25 typically)
   // We'll insert after the first chunk (IHDR)
 
-  let pos = 8; // skip signature
+  const pos = 8; // skip signature
   const ihdrLength = new DataView(view.buffer).getUint32(pos, false);
   const afterIHDR = pos + 4 + 4 + ihdrLength + 4; // length + type + data + crc
 
