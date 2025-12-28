@@ -15,6 +15,107 @@ import { PAINTER_KINDS, cellsForKindAt, areaBoundingBox } from './painter.js';
 import { posToCell } from './transform.js';
 import { t } from './i18n.js';
 
+/* ================= PNG metadata utils ================= */
+
+/**
+ * Add a tEXt chunk to PNG data with a keyword-text pair.
+ * @param {ArrayBuffer} pngData Original PNG file data
+ * @param {string} keyword Metadata keyword (e.g., "URI")
+ * @param {string} text Metadata text value
+ * @returns {ArrayBuffer} New PNG with tEXt chunk inserted
+ */
+function addPngTextChunk(pngData, keyword, text) {
+  const view = new Uint8Array(pngData);
+
+  // PNG signature: 8 bytes
+  const PNG_SIGNATURE = new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10]);
+
+  // Verify PNG signature
+  for (let i = 0; i < 8; i++) {
+    if (view[i] !== PNG_SIGNATURE[i]) {
+      throw new Error('Invalid PNG signature');
+    }
+  }
+
+  // Encode keyword and text as Latin-1
+  const keywordBytes = new TextEncoder().encode(keyword);
+  const textBytes = new TextEncoder().encode(text);
+
+  // tEXt chunk: keyword + null separator + text
+  const chunkData = new Uint8Array(keywordBytes.length + 1 + textBytes.length);
+  chunkData.set(keywordBytes, 0);
+  chunkData[keywordBytes.length] = 0; // null separator
+  chunkData.set(textBytes, keywordBytes.length + 1);
+
+  // Chunk type "tEXt"
+  const chunkType = new Uint8Array([116, 69, 88, 116]); // "tEXt"
+
+  // Calculate CRC32 for type + data
+  const crc = crc32(new Uint8Array([...chunkType, ...chunkData]));
+
+  // Build tEXt chunk: length (4) + type (4) + data + crc (4)
+  const chunkLength = chunkData.length;
+  const chunk = new Uint8Array(4 + 4 + chunkLength + 4);
+  const dv = new DataView(chunk.buffer);
+
+  dv.setUint32(0, chunkLength, false); // big-endian length
+  chunk.set(chunkType, 4);
+  chunk.set(chunkData, 8);
+  dv.setUint32(8 + chunkLength, crc, false); // big-endian CRC
+
+  // Insert tEXt chunk after IHDR (which is always first chunk after signature)
+  // PNG structure: signature (8) + IHDR chunk (25 typically)
+  // We'll insert after the first chunk (IHDR)
+
+  let pos = 8; // skip signature
+  const ihdrLength = new DataView(view.buffer).getUint32(pos, false);
+  const afterIHDR = pos + 4 + 4 + ihdrLength + 4; // length + type + data + crc
+
+  // Build new PNG: signature + IHDR + tEXt + rest
+  const result = new Uint8Array(view.length + chunk.length);
+  result.set(view.subarray(0, afterIHDR), 0);
+  result.set(chunk, afterIHDR);
+  result.set(view.subarray(afterIHDR), afterIHDR + chunk.length);
+
+  return result.buffer;
+}
+
+/**
+ * Calculate CRC32 checksum (PNG uses this for chunk integrity).
+ * @param {Uint8Array} data
+ * @returns {number}
+ */
+function crc32(data) {
+  const table = getCRC32Table();
+  let crc = 0xffffffff;
+
+  for (let i = 0; i < data.length; i++) {
+    const byte = data[i];
+    const index = (crc ^ byte) & 0xff;
+    crc = (crc >>> 8) ^ table[index];
+  }
+
+  return crc ^ 0xffffffff;
+}
+
+/**
+ * Generate CRC32 lookup table (cached).
+ */
+let crcTable = null;
+function getCRC32Table() {
+  if (crcTable) return crcTable;
+
+  crcTable = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) {
+      c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    }
+    crcTable[n] = c;
+  }
+  return crcTable;
+}
+
 /* ================= Common utils ================= */
 
 const k = Math.SQRT1_2; // √2/2
@@ -685,6 +786,18 @@ export async function exportPNG() {
   // Tight-trim: remove right/bottom (and any) extra background margins
   const trimmed = trimCanvasByBackground(work, bgColor);
 
-  // Return PNG Blob
-  return await new Promise((resolve) => trimmed.toBlob(resolve, 'image/png'));
+  // Convert canvas to PNG blob
+  const blob = await new Promise((resolve) => trimmed.toBlob(resolve, 'image/png'));
+
+  // Embed current URI in PNG metadata
+  try {
+    const currentURI = window.location.href;
+    const arrayBuffer = await blob.arrayBuffer();
+    const withMetadata = addPngTextChunk(arrayBuffer, 'URI', currentURI);
+    return new Blob([withMetadata], { type: 'image/png' });
+  } catch (error) {
+    console.warn('Failed to add URI metadata to PNG:', error);
+    // Fallback: return original blob without metadata
+    return blob;
+  }
 }
