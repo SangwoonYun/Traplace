@@ -13,6 +13,7 @@ import { setDragScrollLock } from './hscroll.js';
 import { PAINTER_KINDS } from '../painter.js';
 import { showPreview, clearPreview } from '../render.js';
 import { createBlock, updateBlockPosition, deleteBlock, updateBlockSize } from '../blocks.js';
+import { createObjectLayer } from '../objectLayer.js';
 import { t } from '../i18n.js';
 
 /* ---------------------------------------------
@@ -368,8 +369,13 @@ function onPointerUp(e) {
       const top = y - (h * cpx) / 2;
       const snapped = snapLocal(left, top, Math.max(w, h));
 
-      const el = createBlock(kind, size, snapped.left, snapped.top, width, height);
-      makeMovable(el);
+      // Object layer is created separately (not as a block)
+      if (kind === 'object') {
+        createObjectLayer(snapped.left, snapped.top, width, height);
+      } else {
+        const el = createBlock(kind, size, snapped.left, snapped.top, width, height);
+        makeMovable(el);
+      }
     }
 
     cleanupDrag();
@@ -438,8 +444,8 @@ export function setupPaletteDrag() {
     item.addEventListener('pointerdown', (e) => {
       if (e.button !== 0) return;
 
-      // Don't start drag when clicking on custom input fields
-      if (e.target.matches('.custom-width, .custom-height')) {
+      // Don't start drag when clicking on custom/object input fields
+      if (e.target.matches('.custom-width, .custom-height, .object-width, .object-height')) {
         return;
       }
 
@@ -469,6 +475,14 @@ export function setupPaletteDrag() {
           // Clamp values between 1 and 30
           width = Math.min(30, Math.max(1, parseInt(widthInput?.value, 10) || 1));
           height = Math.min(30, Math.max(1, parseInt(heightInput?.value, 10) || 1));
+          size = Math.max(width, height);
+          ghostText = `${width}×${height}`;
+        } else if (kind === 'object') {
+          // Object layer uses its own input values
+          const widthInput = item.querySelector('.object-width');
+          const heightInput = item.querySelector('.object-height');
+          width = Math.min(30, Math.max(1, parseInt(widthInput?.value, 10) || 4));
+          height = Math.min(30, Math.max(1, parseInt(heightInput?.value, 10) || 4));
           size = Math.max(width, height);
           ghostText = `${width}×${height}`;
         } else {
@@ -577,6 +591,18 @@ export function setupPaletteDrag() {
 
   if (customHeightInput) {
     customHeightInput.addEventListener('blur', () => validateInput(customHeightInput));
+  }
+
+  // Add input validation for object layer size inputs
+  const objectWidthInput = palette.querySelector('.object-width');
+  const objectHeightInput = palette.querySelector('.object-height');
+
+  if (objectWidthInput) {
+    objectWidthInput.addEventListener('blur', () => validateInput(objectWidthInput));
+  }
+
+  if (objectHeightInput) {
+    objectHeightInput.addEventListener('blur', () => validateInput(objectHeightInput));
   }
 }
 

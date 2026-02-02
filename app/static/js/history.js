@@ -11,7 +11,9 @@ import { state, cellPx } from './state.js';
 import { rot } from './dom.js';
 import { serializeState, deserializeState, updateURLWithSerialized } from './urlState.js';
 import { createBlock, validateAllObjects } from './blocks.js';
-import { renderUserTiles, recomputePaint } from './render.js';
+import { renderUserTiles, recomputePaint, renderObjectLayer } from './render.js';
+import { createObjectLayer } from './objectLayer.js';
+import { refreshControlPoints } from './interactions/objectLayer.js';
 import { makeMovable } from './interactions/drag.js';
 import { updateAllCounts } from './counters.js';
 
@@ -50,6 +52,8 @@ function applySerialized(qs) {
   state.blocks = state.blocks.filter((b) => b.immutable);
   state.paintedSet.clear();
   state.userPaint = new Set(parsed.red || []);
+  state.objectLayers = [];
+  state.selectedObjectId = null;
   renderUserTiles();
 
   // Rebuild (defer heavy ops until done)
@@ -58,20 +62,35 @@ function applySerialized(qs) {
     const left = it.cx * c;
     const top = it.cy * c;
 
-    const el = createBlock(it.kind, it.size, left, top);
+    const el = createBlock(it.kind, it.size, left, top, it.width, it.height);
 
-    // Restore city label if any
-    if (it.kind === 'city' && it.label) {
+    // Restore city and custom block labels if any
+    if ((it.kind === 'city' || it.kind === 'custom') && it.label) {
       const lbl = el.querySelector('.label');
       if (lbl) lbl.textContent = it.label;
     }
 
     makeMovable(el);
   }
+
+  // Rebuild object layers
+  if (parsed.objectLayers?.length) {
+    for (const it of parsed.objectLayers) {
+      const left = it.cx * c;
+      const top = it.cy * c;
+      const obj = createObjectLayer(left, top, it.baseWidth, it.baseHeight, it.color);
+      obj.topEdge = it.topEdge;
+      obj.rightEdge = it.rightEdge;
+      obj.bottomEdge = it.bottomEdge;
+      obj.leftEdge = it.leftEdge;
+    }
+  }
   state._restoring = false;
 
   // Single recompute/validate pass
   recomputePaint();
+  renderObjectLayer();
+  refreshControlPoints();
   validateAllObjects();
   updateAllCounts();
 

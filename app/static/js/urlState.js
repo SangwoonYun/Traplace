@@ -204,10 +204,30 @@ export function serializeState() {
 
   const rRLE = encodeRedRLE(state.userPaint, true);
 
+  // Serialize object layers
+  const oItems = state.objectLayers.map((o) => {
+    const c = cellPx();
+    const cx = Math.round(o.left / c);
+    const cy = Math.round(o.top / c);
+
+    // Format: O<w>x<h>@<cx>,<cy>~<color>~<edges>
+    // edges: top|right|bottom|left as dot-separated offsets
+    const edges = [
+      o.topEdge.join('.'),
+      o.rightEdge.join('.'),
+      o.bottomEdge.join('.'),
+      o.leftEdge.join('.'),
+    ].join('|');
+
+    const colorPart = o.color ? o.color.replace('#', '') : '';
+    return `O${toB36(o.baseWidth)}x${toB36(o.baseHeight)}@${toB36(cx)},${toB36(cy)}~${colorPart}~${edges}`;
+  });
+
   const params = new URLSearchParams();
   params.set('v', '2');
   params.set('b', bItems.join(';'));
   if (rRLE) params.set('r', rRLE);
+  if (oItems.length > 0) params.set('o', oItems.join(';'));
 
   return params.toString();
 }
@@ -276,7 +296,65 @@ export function deserializeState(qs) {
   const redParam = params.get('r') || '';
   const red = decodeRed(redParam, /* useBase36= */ isV2);
 
-  return { blocks, red, ver };
+  // Parse object layers
+  const objectLayers = [];
+  const ostr = params.get('o') || '';
+  for (const token of ostr.split(';')) {
+    if (!token) continue;
+
+    // Format: O<w>x<h>@<cx>,<cy>~<color>~<edges>
+    const atIdx = token.indexOf('@');
+    if (atIdx < 0) continue;
+
+    const head = token.slice(0, atIdx);
+    const tail = token.slice(atIdx + 1);
+
+    // Skip the 'O' prefix
+    const sizeRaw = head.slice(1);
+    const [wStr, hStr] = sizeRaw.split('x');
+    const baseWidth = isV2 ? parseInt(wStr, 36) : parseInt(wStr, 10) || 4;
+    const baseHeight = isV2 ? parseInt(hStr, 36) : parseInt(hStr, 10) || 4;
+
+    // Parse position and optional color/edges
+    const parts = tail.split('~');
+    const posPart = parts[0];
+    const colorPart = parts[1] || '';
+    const edgesPart = parts[2] || '';
+
+    const [cxStr, cyStr] = posPart.split(',');
+    const cx = isV2 ? parseInt(cxStr, 36) : parseInt(cxStr, 10) || 0;
+    const cy = isV2 ? parseInt(cyStr, 36) : parseInt(cyStr, 10) || 0;
+
+    const color = colorPart ? `#${colorPart}` : null;
+
+    // Parse edges: top|right|bottom|left
+    let topEdge = new Array(baseWidth).fill(0);
+    let rightEdge = new Array(baseHeight).fill(0);
+    let bottomEdge = new Array(baseWidth).fill(0);
+    let leftEdge = new Array(baseHeight).fill(0);
+
+    if (edgesPart) {
+      const edgeParts = edgesPart.split('|');
+      if (edgeParts[0]) topEdge = edgeParts[0].split('.').map((n) => parseInt(n, 10) || 0);
+      if (edgeParts[1]) rightEdge = edgeParts[1].split('.').map((n) => parseInt(n, 10) || 0);
+      if (edgeParts[2]) bottomEdge = edgeParts[2].split('.').map((n) => parseInt(n, 10) || 0);
+      if (edgeParts[3]) leftEdge = edgeParts[3].split('.').map((n) => parseInt(n, 10) || 0);
+    }
+
+    objectLayers.push({
+      baseWidth,
+      baseHeight,
+      cx,
+      cy,
+      color,
+      topEdge,
+      rightEdge,
+      bottomEdge,
+      leftEdge,
+    });
+  }
+
+  return { blocks, red, objectLayers, ver };
 }
 
 /* ---------------------------------------------

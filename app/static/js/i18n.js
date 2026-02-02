@@ -76,6 +76,7 @@ const BUILTIN_EN = {
     block1: '1×1',
     block2: '2×2',
     block3: '3×3',
+    object: 'Object',
   },
   alert: {
     noCities: 'No cities.',

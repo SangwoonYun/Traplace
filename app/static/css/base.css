@@ -53,6 +53,12 @@
   --sanctuary-bg: #f3e5f5;
   --sanctuary-border: #7b1fa2;
 
+  /* Object Layer */
+  --object-bg: rgba(144, 238, 144, 0.6);
+  --object-border: rgba(60, 179, 113, 0.8);
+  --object-control-bg: #4a90e2;
+  --object-control-border: #fff;
+
   /* World / Zoom */
   --zoom: 1; /* 1 = 100% */
   --world-w: 1200px; /* Updated dynamically by JS */

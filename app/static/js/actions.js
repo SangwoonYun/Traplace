@@ -25,7 +25,13 @@ import {
   btnTrap,
   btnCityTrapDist,
 } from './dom.js';
-import { recomputePaint, renderUserTiles, centerToWorldCenter, centerToCell } from './render.js';
+import {
+  recomputePaint,
+  renderUserTiles,
+  centerToWorldCenter,
+  centerToCell,
+  renderObjectLayer,
+} from './render.js';
 import { validateAllObjects, createBlock } from './blocks.js';
 import { updateAllCounts } from './counters.js';
 import { saveToURLImmediate, deserializeState, updateURLWithSerialized } from './urlState.js';
@@ -34,6 +40,7 @@ import { importPNG } from './importPNG.js';
 import { undo, redo, onHistoryChange, saveCheckpoint } from './history.js';
 import { posToCell } from './transform.js';
 import { makeMovable } from './interactions/drag.js';
+import { deselectObject } from './interactions/objectLayer.js';
 import { t } from './i18n.js';
 
 /** Platform detection (used for shortcut hint labels). */
@@ -316,6 +323,11 @@ export function setupActions() {
     state.paintedSet.clear();
     state.userPaint.clear();
 
+    // Clear object layers
+    state.objectLayers = [];
+    state.selectedObjectId = null;
+    deselectObject();
+
     tilesLayer.innerHTML = '';
     userLayer.innerHTML = '';
     outlinesLayer.innerHTML = '';
@@ -324,6 +336,7 @@ export function setupActions() {
 
     recomputePaint();
     renderUserTiles();
+    renderObjectLayer();
     validateAllObjects();
     updateAllCounts();
 

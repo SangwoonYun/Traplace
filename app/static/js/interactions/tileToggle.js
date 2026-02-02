@@ -13,6 +13,7 @@ import { clientToLocalRot, pointToCell, keyOf } from '../transform.js';
 import { renderUserTiles } from '../render.js';
 import { queueSaveToURL } from '../urlState.js';
 import { saveCheckpoint } from '../history.js';
+import { isObjectLayerDragging } from './objectLayer.js';
 
 /**
  * Check if a given client coordinate is over a block element.
@@ -27,8 +28,11 @@ function isOverBlock(clientX, clientY) {
  */
 export function setupTileToggle() {
   rot.addEventListener('click', (e) => {
-    // Ignore drag events, resizing, or clicks on existing blocks
-    if (state.drag || state.panning || state._isResizing || e.target.closest('.block')) return;
+    // Ignore drag events, resizing, object layer dragging, or clicks on existing blocks
+    if (state.drag || state.panning || state._isResizing || isObjectLayerDragging()) return;
+    if (e.target.closest('.block')) return;
+    if (e.target.closest('.object-control-point')) return;
+    if (e.target.closest('#objectLayer')) return;
     if (e.button !== 0) return; // left click only
 
     // Also check if click ended over a block (for drag cases)

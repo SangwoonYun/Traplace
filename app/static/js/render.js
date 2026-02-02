@@ -16,6 +16,7 @@ import {
   tilesLayer,
   redZoneLayer,
   userLayer,
+  objectLayer,
   outlinesLayer,
   outlinesPreviewLayer,
   previewLayer,
@@ -340,4 +341,208 @@ export function initialLayout() {
   setWorldSizeCells(BASE_CELLS_X, BASE_CELLS_Y);
   centerToWorldCenter();
   updateBadge();
+}
+
+/* ---------------------------------------------
+ * Object Layer Rendering
+ * ------------------------------------------- */
+/**
+ * Compute SVG path string for an object layer polygon.
+ * Each cell on the edge can extend outward as a rectangular block (tile-shaped).
+ * Only draws the outermost boundary - no internal lines between adjacent cells with same offset.
+ * @param {import('./state.js').ObjectLayerItem} obj
+ * @param {number} cpx - cell size in pixels
+ * @returns {string} SVG path d attribute
+ */
+export function computePolygonPath(obj, cpx) {
+  const { left, top, baseWidth, baseHeight, topEdge, rightEdge, bottomEdge, leftEdge } = obj;
+
+  const pathParts = [];
+
+  // Helper to get offset safely
+  const get = (arr, i) => arr[i] || 0;
+
+  // Start at top-left corner, considering first top offset and last left offset
+  const firstTopOff = get(topEdge, 0);
+  const firstLeftOff = get(leftEdge, 0);
+
+  // Start from the top-left of the shape
+  // We need to handle the corner where left edge meets top edge
+  if (firstLeftOff > 0 && firstTopOff > 0) {
+    // Both protrude - start at outer corner
+    pathParts.push(`M ${left - firstLeftOff * cpx} ${top}`);
+    pathParts.push(`L ${left - firstLeftOff * cpx} ${top - firstTopOff * cpx}`);
+    pathParts.push(`L ${left} ${top - firstTopOff * cpx}`);
+  } else if (firstTopOff > 0) {
+    pathParts.push(`M ${left} ${top - firstTopOff * cpx}`);
+  } else if (firstLeftOff > 0) {
+    pathParts.push(`M ${left - firstLeftOff * cpx} ${top}`);
+    pathParts.push(`L ${left} ${top}`);
+  } else {
+    pathParts.push(`M ${left} ${top}`);
+  }
+
+  // Top edge: left to right - only draw outer boundary
+  for (let i = 0; i < baseWidth; i++) {
+    const offset = get(topEdge, i);
+    const prevOffset = i > 0 ? get(topEdge, i - 1) : firstLeftOff > 0 ? 0 : offset;
+    const cellLeft = left + i * cpx;
+    const cellRight = left + (i + 1) * cpx;
+
+    // If offset changed from previous, draw vertical transition
+    if (i > 0 && offset !== prevOffset) {
+      const y1 = top - prevOffset * cpx;
+      const y2 = top - offset * cpx;
+      pathParts.push(`L ${cellLeft} ${y1}`);
+      pathParts.push(`L ${cellLeft} ${y2}`);
+    }
+
+    // Draw horizontal at this offset level
+    pathParts.push(`L ${cellRight} ${top - offset * cpx}`);
+  }
+
+  // Corner: top-right
+  const lastTopOff = get(topEdge, baseWidth - 1);
+  const firstRightOff = get(rightEdge, 0);
+  const rightX = left + baseWidth * cpx;
+
+  if (lastTopOff > 0 && firstRightOff > 0) {
+    pathParts.push(`L ${rightX} ${top - lastTopOff * cpx}`);
+    pathParts.push(`L ${rightX + firstRightOff * cpx} ${top - lastTopOff * cpx}`);
+    pathParts.push(`L ${rightX + firstRightOff * cpx} ${top}`);
+  } else if (lastTopOff > 0) {
+    pathParts.push(`L ${rightX} ${top - lastTopOff * cpx}`);
+    pathParts.push(`L ${rightX} ${top}`);
+  } else if (firstRightOff > 0) {
+    pathParts.push(`L ${rightX} ${top}`);
+    pathParts.push(`L ${rightX + firstRightOff * cpx} ${top}`);
+  }
+
+  // Right edge: top to bottom
+  for (let i = 0; i < baseHeight; i++) {
+    const offset = get(rightEdge, i);
+    const prevOffset = i > 0 ? get(rightEdge, i - 1) : offset;
+    const cellTop = top + i * cpx;
+    const cellBottom = top + (i + 1) * cpx;
+
+    if (i > 0 && offset !== prevOffset) {
+      const x1 = rightX + prevOffset * cpx;
+      const x2 = rightX + offset * cpx;
+      pathParts.push(`L ${x1} ${cellTop}`);
+      pathParts.push(`L ${x2} ${cellTop}`);
+    }
+
+    pathParts.push(`L ${rightX + offset * cpx} ${cellBottom}`);
+  }
+
+  // Corner: bottom-right
+  const lastRightOff = get(rightEdge, baseHeight - 1);
+  const lastBottomOff = get(bottomEdge, baseWidth - 1);
+  const bottomY = top + baseHeight * cpx;
+
+  if (lastRightOff > 0 && lastBottomOff > 0) {
+    pathParts.push(`L ${rightX + lastRightOff * cpx} ${bottomY}`);
+    pathParts.push(`L ${rightX + lastRightOff * cpx} ${bottomY + lastBottomOff * cpx}`);
+    pathParts.push(`L ${rightX} ${bottomY + lastBottomOff * cpx}`);
+  } else if (lastRightOff > 0) {
+    pathParts.push(`L ${rightX + lastRightOff * cpx} ${bottomY}`);
+    pathParts.push(`L ${rightX} ${bottomY}`);
+  } else if (lastBottomOff > 0) {
+    pathParts.push(`L ${rightX} ${bottomY}`);
+    pathParts.push(`L ${rightX} ${bottomY + lastBottomOff * cpx}`);
+  }
+
+  // Bottom edge: right to left
+  for (let i = baseWidth - 1; i >= 0; i--) {
+    const offset = get(bottomEdge, i);
+    const prevOffset = i < baseWidth - 1 ? get(bottomEdge, i + 1) : offset;
+    const cellLeft = left + i * cpx;
+    const cellRight = left + (i + 1) * cpx;
+
+    if (i < baseWidth - 1 && offset !== prevOffset) {
+      const y1 = bottomY + prevOffset * cpx;
+      const y2 = bottomY + offset * cpx;
+      pathParts.push(`L ${cellRight} ${y1}`);
+      pathParts.push(`L ${cellRight} ${y2}`);
+    }
+
+    pathParts.push(`L ${cellLeft} ${bottomY + offset * cpx}`);
+  }
+
+  // Corner: bottom-left
+  const firstBottomOff = get(bottomEdge, 0);
+  const lastLeftOff = get(leftEdge, baseHeight - 1);
+
+  if (firstBottomOff > 0 && lastLeftOff > 0) {
+    pathParts.push(`L ${left} ${bottomY + firstBottomOff * cpx}`);
+    pathParts.push(`L ${left - lastLeftOff * cpx} ${bottomY + firstBottomOff * cpx}`);
+    pathParts.push(`L ${left - lastLeftOff * cpx} ${bottomY}`);
+  } else if (firstBottomOff > 0) {
+    pathParts.push(`L ${left} ${bottomY + firstBottomOff * cpx}`);
+    pathParts.push(`L ${left} ${bottomY}`);
+  } else if (lastLeftOff > 0) {
+    pathParts.push(`L ${left} ${bottomY}`);
+    pathParts.push(`L ${left - lastLeftOff * cpx} ${bottomY}`);
+  }
+
+  // Left edge: bottom to top
+  for (let i = baseHeight - 1; i >= 0; i--) {
+    const offset = get(leftEdge, i);
+    const prevOffset = i < baseHeight - 1 ? get(leftEdge, i + 1) : offset;
+    const cellTop = top + i * cpx;
+    const cellBottom = top + (i + 1) * cpx;
+
+    if (i < baseHeight - 1 && offset !== prevOffset) {
+      const x1 = left - prevOffset * cpx;
+      const x2 = left - offset * cpx;
+      pathParts.push(`L ${x1} ${cellBottom}`);
+      pathParts.push(`L ${x2} ${cellBottom}`);
+    }
+
+    pathParts.push(`L ${left - offset * cpx} ${cellTop}`);
+  }
+
+  // Close: back to start (top-left corner)
+  if (firstLeftOff > 0 && firstTopOff > 0) {
+    pathParts.push(`L ${left - firstLeftOff * cpx} ${top}`);
+  } else if (firstLeftOff > 0) {
+    pathParts.push(`L ${left - firstLeftOff * cpx} ${top}`);
+  } else if (firstTopOff > 0) {
+    pathParts.push(`L ${left} ${top}`);
+    pathParts.push(`L ${left} ${top - firstTopOff * cpx}`);
+  }
+
+  pathParts.push('Z');
+  return pathParts.join(' ');
+}
+
+/**
+ * Render all object layers as SVG paths.
+ */
+export function renderObjectLayer() {
+  if (!objectLayer) return;
+
+  objectLayer.innerHTML = '';
+  const cpx = cellPx();
+  const style = getComputedStyle(document.documentElement);
+  const defaultColor = style.getPropertyValue('--object-bg').trim() || 'rgba(144, 238, 144, 0.6)';
+  const borderColor = style.getPropertyValue('--object-border').trim() || 'rgba(60, 179, 113, 0.8)';
+
+  for (const obj of state.objectLayers) {
+    const pathData = computePolygonPath(obj, cpx);
+    if (!pathData) continue;
+
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', pathData);
+    path.setAttribute('fill', obj.color || defaultColor);
+    path.setAttribute('stroke', borderColor);
+    path.setAttribute('stroke-width', '2');
+    path.setAttribute('data-id', obj.id);
+
+    if (state.selectedObjectId === obj.id) {
+      path.classList.add('selected');
+    }
+
+    objectLayer.appendChild(path);
+  }
 }

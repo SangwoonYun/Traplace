@@ -181,6 +181,11 @@
   border-color: var(--block123-border, #555);
 }
 
+.palette-item[data-kind='object'] .pi-rot {
+  background: var(--object-bg, rgba(144, 238, 144, 0.6));
+  border-color: var(--object-border, rgba(60, 179, 113, 0.8));
+}
+
 /* Palette count badge */
 .palette-item {
   position: relative;

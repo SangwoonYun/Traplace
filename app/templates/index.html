@@ -157,6 +157,38 @@
             />
           </div>
         </div>
+
+        <div
+          class="palette-item palette-item-object"
+          data-kind="object"
+          role="button"
+          tabindex="0"
+          aria-label="Object Layer"
+        >
+          <div class="pi-rot"></div>
+          <span class="pi-text" data-i18n="palette.object">Object</span>
+          <div class="custom-inputs">
+            <input
+              type="number"
+              class="object-width"
+              placeholder="W"
+              min="1"
+              max="30"
+              value="4"
+              aria-label="Width"
+            />
+            <span class="custom-separator">×</span>
+            <input
+              type="number"
+              class="object-height"
+              placeholder="H"
+              min="1"
+              max="30"
+              value="4"
+              aria-label="Height"
+            />
+          </div>
+        </div>
       </div>
 
       <!-- Remote Control -->
@@ -354,6 +386,7 @@
           <div id="tilesRedZone" class="tiles-redzone"></div>
           <div id="tiles" class="tiles"></div>
           <div id="tilesUser" class="tiles-user"></div>
+          <svg id="objectLayer" class="object-layer"></svg>
           <div id="tilesPreview" class="tiles-preview"></div>
           <div id="outlines" class="outlines"></div>
           <div id="outlinesPreview" class="outlines-preview"></div>

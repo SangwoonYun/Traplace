@@ -36,6 +36,20 @@ export function cellPx() {
  * @property {boolean} [immutable]
  */
 
+/**
+ * @typedef {Object} ObjectLayerItem
+ * @property {string} id - Unique identifier
+ * @property {number} left - Top-left x position (pixels)
+ * @property {number} top - Top-left y position (pixels)
+ * @property {number} baseWidth - Base width in cells
+ * @property {number} baseHeight - Base height in cells
+ * @property {string} color - Fill color (hex or rgba)
+ * @property {number[]} topEdge - Array of offsets for each cell on top edge
+ * @property {number[]} rightEdge - Array of offsets for each cell on right edge
+ * @property {number[]} bottomEdge - Array of offsets for each cell on bottom edge
+ * @property {number[]} leftEdge - Array of offsets for each cell on left edge
+ */
+
 export const state = {
   zoom: 1,
 
@@ -50,6 +64,12 @@ export const state = {
 
   /** User red paint toggles ("x,y" keys). */
   userPaint: new Set(),
+
+  /** @type {ObjectLayerItem[]} */
+  objectLayers: [],
+
+  /** Currently selected object layer item ID for editing */
+  selectedObjectId: null,
 
   /** Last-known cursor cell (for HUD). */
   cursorCell: { x: 599, y: 599 },

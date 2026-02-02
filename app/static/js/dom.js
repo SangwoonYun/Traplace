@@ -20,6 +20,7 @@ export const previewLayer = document.getElementById('tilesPreview');
 export const outlinesLayer = document.getElementById('outlines');
 export const outlinesPreviewLayer = document.getElementById('outlinesPreview');
 export const userLayer = document.getElementById('tilesUser');
+export const objectLayer = document.getElementById('objectLayer');
 export const snapEl = document.getElementById('snap');
 
 /* ---------------------------------------------

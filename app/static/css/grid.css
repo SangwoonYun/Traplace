@@ -87,3 +87,58 @@
 .outlines-preview .area-outline {
   opacity: 0.9;
 }
+
+/* ---------------------------------------------
+ * Object Layer (polygon shapes below blocks)
+ * ------------------------------------------- */
+.object-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.object-layer path {
+  pointer-events: fill;
+  cursor: pointer;
+}
+
+.object-layer path:hover {
+  filter: brightness(1.1);
+}
+
+.object-layer path.selected {
+  stroke: var(--object-border);
+  stroke-width: 3;
+  stroke-dasharray: 5, 3;
+}
+
+/* Control points for edge adjustment */
+.object-control-point {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--object-control-bg);
+  border: 2px solid var(--object-control-border);
+  border-radius: 50%;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  z-index: 100;
+  transition: transform 0.1s ease;
+}
+
+.object-control-point:hover {
+  background: #2d6fd4;
+  transform: translate(-50%, -50%) scale(1.3);
+}
+
+/* Step control points (between cells with different offsets) */
+.object-control-point-step {
+  background: var(--object-control-step-bg, #e4a04a);
+  border-color: var(--object-control-step-border, #c4802a);
+}
+
+.object-control-point-step:hover {
+  background: #d4902a;
+}

@@ -17,6 +17,7 @@ import {
   centerToCell,
   setWorldSizeCells,
   centerToInitialPosition,
+  renderObjectLayer,
 } from './render.js';
 import { setupPaletteDrag, makeMovable } from './interactions/drag.js';
 import { setupPan } from './interactions/pan.js';
@@ -25,6 +26,8 @@ import { setupTileToggle } from './interactions/tileToggle.js';
 import { setupCursorBadge } from './interactions/cursor.js';
 import { setupCoordJump } from './interactions/coordJump.js';
 import { setupRemoteControl } from './interactions/remote.js';
+import { setupObjectLayerInteraction } from './interactions/objectLayer.js';
+import { createObjectLayer } from './objectLayer.js';
 import { validateAllObjects, createBlock } from './blocks.js';
 import { expand } from './interactions/expand.js';
 import { parseFromURL, saveToURLImmediate } from './urlState.js';
@@ -420,6 +423,24 @@ window.addEventListener('load', async () => {
     renderUserTiles();
   }
 
+  // Restore object layers from URL
+  if (parsed?.objectLayers?.length) {
+    state._restoring = true;
+    for (const it of parsed.objectLayers) {
+      const c = cellPx();
+      const left = it.cx * c;
+      const top = it.cy * c;
+      const obj = createObjectLayer(left, top, it.baseWidth, it.baseHeight, it.color);
+      // Restore edge offsets
+      obj.topEdge = it.topEdge;
+      obj.rightEdge = it.rightEdge;
+      obj.bottomEdge = it.bottomEdge;
+      obj.leftEdge = it.leftEdge;
+    }
+    state._restoring = false;
+    renderObjectLayer();
+  }
+
   updateAllCounts();
 
   // If we converted legacy blocks, update the URL to reflect the conversion
@@ -442,6 +463,7 @@ window.addEventListener('load', async () => {
   setupActions();
   setupColorPicker();
   setupRemoteControl();
+  setupObjectLayerInteraction();
 
   /* ---------------------------------------------
    * Initial render & validation
@@ -450,6 +472,7 @@ window.addEventListener('load', async () => {
   recomputeRedZone();
   renderRedZone();
   renderUserTiles();
+  renderObjectLayer();
   validateAllObjects();
 
   /* ---------------------------------------------
@@ -498,6 +521,7 @@ function relayoutForCellChange() {
   // Repaint overlays
   renderRedZone();
   renderUserTiles();
+  renderObjectLayer();
   recomputePaint();
   // Keep badge up to date
   updateBadge();
