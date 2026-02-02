@@ -458,20 +458,20 @@ export function updateBlockLabelsForLocale(state) {
 
   // Defaults we want to auto-replace on locale switch (all palette.city translations)
   const PREV_DEFAULTS = new Set([
-    'Town',      // en
-    '도시',       // ko
-    '城市',       // zh-CN, zh-TW
-    '都市',       // ja
-    'Ville',     // fr
-    'Stadt',     // de
-    'Ciudad',    // es
-    'Città',     // it
-    'Miasto',    // pl
-    'Cidade',    // pt
-    'Şehir',     // tr
-    'المدينة',   // ar
-    'เมือง',      // th
-    'Kota',      // id
+    'Town', // en
+    '도시', // ko
+    '城市', // zh-CN, zh-TW
+    '都市', // ja
+    'Ville', // fr
+    'Stadt', // de
+    'Ciudad', // es
+    'Città', // it
+    'Miasto', // pl
+    'Cidade', // pt
+    'Şehir', // tr
+    'المدينة', // ar
+    'เมือง', // th
+    'Kota', // id
   ]);
 
   // Update turret labels specifically

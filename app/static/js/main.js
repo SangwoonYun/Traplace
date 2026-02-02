@@ -160,7 +160,7 @@ window.addEventListener('load', async () => {
     undefined,
     undefined,
     true,
-    'Turret I'
+    'Turret I',
   ); // 6 o'clock (bottom-right): Turret I
   const turret2 = createBlock(
     'turret',
@@ -170,7 +170,7 @@ window.addEventListener('load', async () => {
     undefined,
     undefined,
     true,
-    'Turret II'
+    'Turret II',
   ); // 9 o'clock (bottom-left): Turret II
   const turret3 = createBlock(
     'turret',
@@ -180,7 +180,7 @@ window.addEventListener('load', async () => {
     undefined,
     undefined,
     true,
-    'Turret III'
+    'Turret III',
   ); // 3 o'clock (top-right): Turret III
   const turret4 = createBlock(
     'turret',
@@ -190,7 +190,7 @@ window.addEventListener('load', async () => {
     undefined,
     undefined,
     true,
-    'Turret IV'
+    'Turret IV',
   ); // 12 o'clock (top-left): Turret IV
 
   // Store turret elements for i18n updates
@@ -205,7 +205,7 @@ window.addEventListener('load', async () => {
     undefined,
     undefined,
     true,
-    'Fortress I'
+    'Fortress I',
   ); // 12 o'clock
   const fortress2 = createBlock(
     'fortress',
@@ -215,8 +215,8 @@ window.addEventListener('load', async () => {
     undefined,
     undefined,
     true,
-    'Fortress II'
-); // 3 o'clock
+    'Fortress II',
+  ); // 3 o'clock
   const fortress3 = createBlock(
     'fortress',
     6,
@@ -225,7 +225,7 @@ window.addEventListener('load', async () => {
     undefined,
     undefined,
     true,
-    'Fortress III'
+    'Fortress III',
   ); // 6 o'clock
   const fortress4 = createBlock(
     'fortress',
@@ -235,7 +235,7 @@ window.addEventListener('load', async () => {
     undefined,
     undefined,
     true,
-    'Fortress IV'
+    'Fortress IV',
   ); // 9 o'clock
   // Store fortress elements for i18n updates
   window.__fortresses = { fortress1, fortress2, fortress3, fortress4 };
