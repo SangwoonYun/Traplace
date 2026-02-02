@@ -1,6 +1,6 @@
 <!-- File: app/templates/index.html -->
 <!doctype html>
-<html lang="ko">
+<html lang="en">
   <head>
     <!-- Google Tag Manager -->
     <script>
@@ -47,7 +47,7 @@
       <!-- Hidden on mobile: usage block -->
       <div class="usage-section" data-mobile-hidden>
         <button id="usageToggle" class="usage-toggle" type="button" aria-expanded="false">
-          <h2 data-i18n="ui.usageTitle">사용 방법</h2>
+          <h2 data-i18n="ui.usageTitle">How to use</h2>
           <span class="toggle-icon" aria-hidden="true">▼</span>
         </button>
         <div id="usageContent" class="usage-content collapsed">
@@ -56,7 +56,7 @@
       </div>
 
       <!-- Hidden on mobile: palette title -->
-      <div class="palette-title" data-i18n="ui.paletteTitle" data-mobile-hidden>객체 팔레트</div>
+      <div class="palette-title" data-i18n="ui.paletteTitle" data-mobile-hidden>Palette</div>
 
       <!-- Palette -->
       <div
@@ -72,10 +72,10 @@
           data-size="3"
           role="button"
           tabindex="0"
-          aria-label="평원본부"
+          aria-label="HQ"
         >
           <div class="pi-rot"></div>
-          <span class="pi-text">평원본부</span>
+          <span class="pi-text">HQ</span>
         </div>
 
         <div
@@ -84,10 +84,10 @@
           data-size="1"
           role="button"
           tabindex="0"
-          aria-label="연맹깃발"
+          aria-label="Banner"
         >
           <div class="pi-rot"></div>
-          <span class="pi-text">연맹깃발</span>
+          <span class="pi-text">Banner</span>
         </div>
 
         <div
@@ -96,10 +96,10 @@
           data-size="3"
           role="button"
           tabindex="0"
-          aria-label="사냥함정"
+          aria-label="Hunting Trap"
         >
           <div class="pi-rot"></div>
-          <span class="pi-text">사냥함정</span>
+          <span class="pi-text">Hunting Trap</span>
         </div>
 
         <div
@@ -108,10 +108,10 @@
           data-size="2"
           role="button"
           tabindex="0"
-          aria-label="도시"
+          aria-label="Town"
         >
           <div class="pi-rot"></div>
-          <span class="pi-text">도시</span>
+          <span class="pi-text">Town</span>
         </div>
 
         <div
@@ -120,10 +120,10 @@
           data-size="2"
           role="button"
           tabindex="0"
-          aria-label="연맹자원"
+          aria-label="Resource"
         >
           <div class="pi-rot"></div>
-          <span class="pi-text">연맹자원</span>
+          <span class="pi-text">Resource</span>
         </div>
 
         <div
@@ -131,10 +131,10 @@
           data-kind="custom"
           role="button"
           tabindex="0"
-          aria-label="커스텀 블록"
+          aria-label="Custom Block"
         >
           <div class="pi-rot"></div>
-          <span class="pi-text">커스텀</span>
+          <span class="pi-text">Custom</span>
           <div class="custom-inputs">
             <input
               type="number"
@@ -143,7 +143,7 @@
               min="1"
               max="30"
               value="1"
-              aria-label="가로 크기"
+              aria-label="Width"
             />
             <span class="custom-separator">×</span>
             <input
@@ -153,7 +153,7 @@
               min="1"
               max="30"
               value="1"
-              aria-label="세로 크기"
+              aria-label="Height"
             />
           </div>
         </div>
@@ -249,8 +249,8 @@
           id="btnUndo"
           class="tb-btn"
           type="button"
-          title="되돌리기 (⌘Z / Ctrl+Z)"
-          aria-label="되돌리기"
+          title="Undo (⌘Z / Ctrl+Z)"
+          aria-label="Undo"
         >
           ↶
         </button>
@@ -258,8 +258,8 @@
           id="btnRedo"
           class="tb-btn"
           type="button"
-          title="다시하기 (⇧⌘Z 또는 Ctrl+Y)"
-          aria-label="다시하기"
+          title="Redo (⇧⌘Z / Ctrl+Y)"
+          aria-label="Redo"
         >
           ↷
         </button>
@@ -272,8 +272,8 @@
           id="btnCityTrapDist"
           class="tb-btn"
           type="button"
-          title="사냥함정과의 거리 예측 (⌥⌘D / Ctrl+Alt+D)"
-          aria-label="거리 예측"
+          title="Measure move time (⌥⌘D / Ctrl+Alt+D)"
+          aria-label="Measure move time"
         >
           📏
         </button>
@@ -281,8 +281,8 @@
           id="btnReset"
           class="tb-btn danger"
           type="button"
-          title="초기화 (⌥⌘R / Ctrl+Alt+R)"
-          aria-label="초기화"
+          title="Reset (⌥⌘R / Ctrl+Alt+R)"
+          aria-label="Reset"
         >
           🧹
         </button>
@@ -290,8 +290,8 @@
           id="btnCopyURL"
           class="tb-btn"
           type="button"
-          title="URL 복사 (⌥⌘C / Ctrl+Alt+C)"
-          aria-label="URL 복사"
+          title="Copy URL (⌥⌘C / Ctrl+Alt+C)"
+          aria-label="Copy URL"
         >
           🔗
         </button>
@@ -299,8 +299,8 @@
           id="btnExportPNG"
           class="tb-btn primary"
           type="button"
-          title="PNG 내보내기 (⌥⌘E / Ctrl+Alt+E)"
-          aria-label="PNG 내보내기"
+          title="Export PNG (⌥⌘E / Ctrl+Alt+E)"
+          aria-label="Export PNG"
         >
           🖼
         </button>
@@ -308,8 +308,8 @@
           id="btnImportPNG"
           class="tb-btn primary"
           type="button"
-          title="PNG 가져오기 (⌥⌘I / Ctrl+Alt+I)"
-          aria-label="PNG 가져오기"
+          title="Import PNG (⌥⌘I / Ctrl+Alt+I)"
+          aria-label="Import PNG"
         >
           📥
         </button>
@@ -325,7 +325,7 @@
       <div class="tb-flex-spacer" aria-hidden="true"></div>
 
       <div class="tb-group">
-        <label class="lang-label" for="langSelect" data-i18n="ui.toolbar.lang">언어</label>
+        <label class="lang-label" for="langSelect" data-i18n="ui.toolbar.lang">Language</label>
         <select id="langSelect" class="lang-select" aria-label="Language">
           <option value="en">🇺🇸 English</option>
           <option value="ko">🇰🇷 한국어</option>
@@ -379,32 +379,32 @@
       id="trashZone"
       class="trash-zone"
       data-i18n-title="ui.trash.title"
-      title="여기로 드래그하면 삭제"
+      title="Drag here to delete"
     >
       <span class="trash-emoji" aria-hidden="true">🗑</span>
-      <span class="trash-label" data-i18n="ui.trash.label">여기로 드래그하면 삭제</span>
+      <span class="trash-label" data-i18n="ui.trash.label">Drag here to delete</span>
     </div>
 
     <!-- URL Copy Modal -->
     <div id="urlModal" class="url-modal" style="display: none;">
       <div class="url-modal-content">
         <div class="url-modal-header">
-          <h3 data-i18n="modal.urlCopy.title">URL 복사</h3>
-          <button id="urlModalClose" class="url-modal-close" type="button" aria-label="닫기">&times;</button>
+          <h3 data-i18n="modal.urlCopy.title">Copy URL</h3>
+          <button id="urlModalClose" class="url-modal-close" type="button" aria-label="Close">&times;</button>
         </div>
         <div class="url-modal-body">
-          <p data-i18n="modal.urlCopy.message">클립보드 복사에 실패했습니다. 아래 URL을 수동으로 복사해주세요.</p>
+          <p data-i18n="modal.urlCopy.message">Please copy the URL below.</p>
           <div class="url-display-container">
             <input id="urlDisplayInput" class="url-display-input" type="text" readonly />
           </div>
         </div>
         <div class="url-modal-footer">
-          <button id="urlModalCopy" class="url-modal-copy-btn" type="button" data-i18n="modal.urlCopy.copyBtn">복사</button>
+          <button id="urlModalCopy" class="url-modal-copy-btn" type="button" data-i18n="modal.urlCopy.copyBtn">Copy</button>
         </div>
       </div>
     </div>
 
-    <noscript>이 앱을 사용하려면 JavaScript를 활성화하세요.</noscript>
+    <noscript>Please enable JavaScript to use this app.</noscript>
     <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
   </body>
 </html>
