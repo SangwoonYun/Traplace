@@ -415,8 +415,180 @@ function clearControlPoints() {
 }
 
 /**
+ * Get the position for an extension side control point.
+ * These are on the side walls of extended cells.
+ * @param {import('../state.js').ObjectLayerItem} obj
+ * @param {'top-left'|'top-right'|'bottom-left'|'bottom-right'|'left-top'|'left-bottom'|'right-top'|'right-bottom'} sideType
+ * @param {number} cellIndex - Which cell on the main edge
+ * @param {number} extIndex - Which cell of the extension (0 = closest to base)
+ * @param {number} cpx
+ * @returns {{x: number, y: number}}
+ */
+function getExtensionSidePosition(obj, sideType, cellIndex, extIndex, cpx) {
+  switch (sideType) {
+    case 'top-left': {
+      // Left side of a top-extended cell
+      const x = obj.left + cellIndex * cpx;
+      const y = obj.top - (extIndex + 0.5) * cpx;
+      return { x, y };
+    }
+    case 'top-right': {
+      // Right side of a top-extended cell
+      const x = obj.left + (cellIndex + 1) * cpx;
+      const y = obj.top - (extIndex + 0.5) * cpx;
+      return { x, y };
+    }
+    case 'bottom-left': {
+      // Left side of a bottom-extended cell
+      const x = obj.left + cellIndex * cpx;
+      const y = obj.top + obj.baseHeight * cpx + (extIndex + 0.5) * cpx;
+      return { x, y };
+    }
+    case 'bottom-right': {
+      // Right side of a bottom-extended cell
+      const x = obj.left + (cellIndex + 1) * cpx;
+      const y = obj.top + obj.baseHeight * cpx + (extIndex + 0.5) * cpx;
+      return { x, y };
+    }
+    case 'left-top': {
+      // Top side of a left-extended cell
+      const x = obj.left - (extIndex + 0.5) * cpx;
+      const y = obj.top + cellIndex * cpx;
+      return { x, y };
+    }
+    case 'left-bottom': {
+      // Bottom side of a left-extended cell
+      const x = obj.left - (extIndex + 0.5) * cpx;
+      const y = obj.top + (cellIndex + 1) * cpx;
+      return { x, y };
+    }
+    case 'right-top': {
+      // Top side of a right-extended cell
+      const x = obj.left + obj.baseWidth * cpx + (extIndex + 0.5) * cpx;
+      const y = obj.top + cellIndex * cpx;
+      return { x, y };
+    }
+    case 'right-bottom': {
+      // Bottom side of a right-extended cell
+      const x = obj.left + obj.baseWidth * cpx + (extIndex + 0.5) * cpx;
+      const y = obj.top + (cellIndex + 1) * cpx;
+      return { x, y };
+    }
+    default:
+      return { x: 0, y: 0 };
+  }
+}
+
+/**
+ * Create an extension side control point.
+ * @param {import('../state.js').ObjectLayerItem} obj
+ * @param {'top-left'|'top-right'|'bottom-left'|'bottom-right'|'left-top'|'left-bottom'|'right-top'|'right-bottom'} sideType
+ * @param {number} cellIndex
+ * @param {number} extIndex
+ * @param {number} cpx
+ * @returns {HTMLElement}
+ */
+function createExtensionSidePoint(obj, sideType, cellIndex, extIndex, cpx) {
+  const pos = getExtensionSidePosition(obj, sideType, cellIndex, extIndex, cpx);
+
+  const point = document.createElement('div');
+  point.className = 'object-control-point object-control-point-ext';
+  point.style.left = `${pos.x}px`;
+  point.style.top = `${pos.y}px`;
+  point.dataset.sideType = sideType;
+  point.dataset.cellIndex = String(cellIndex);
+  point.dataset.extIndex = String(extIndex);
+  point.dataset.objectId = obj.id;
+
+  setupExtensionSidePointDrag(point, obj, sideType, cellIndex, extIndex);
+
+  return point;
+}
+
+/**
+ * Setup drag behavior for an extension side control point.
+ * Dragging these points extends/contracts the cell perpendicular to the main edge.
+ * @param {HTMLElement} point
+ * @param {import('../state.js').ObjectLayerItem} obj
+ * @param {string} sideType
+ * @param {number} cellIndex
+ * @param {number} extIndex
+ */
+function setupExtensionSidePointDrag(point, obj, sideType, cellIndex, extIndex) {
+  point.addEventListener('pointerdown', (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    isDraggingControlPoint = true;
+    didMove = false;
+
+    const cpx = cellPx();
+    // Determine which edge array this affects
+    const mainEdge = sideType.split('-')[0]; // 'top', 'bottom', 'left', 'right'
+    const edgeArray = obj[`${mainEdge}Edge`];
+    const startOffset = edgeArray[cellIndex] || 0;
+    const startLocal = clientToLocalRot(e.clientX, e.clientY);
+
+    point.setPointerCapture(e.pointerId);
+
+    const onMove = (moveEvent) => {
+      const currentLocal = clientToLocalRot(moveEvent.clientX, moveEvent.clientY);
+
+      // For extension side points, dragging perpendicular to the main edge
+      // changes the offset of that cell
+      let delta;
+      if (mainEdge === 'top') {
+        // Vertical drag changes top offset
+        delta = -Math.round((currentLocal.y - startLocal.y) / cpx);
+      } else if (mainEdge === 'bottom') {
+        delta = Math.round((currentLocal.y - startLocal.y) / cpx);
+      } else if (mainEdge === 'left') {
+        delta = -Math.round((currentLocal.x - startLocal.x) / cpx);
+      } else if (mainEdge === 'right') {
+        delta = Math.round((currentLocal.x - startLocal.x) / cpx);
+      } else {
+        delta = 0;
+      }
+
+      const newOffset = Math.max(-10, Math.min(10, startOffset + delta));
+      if (newOffset !== edgeArray[cellIndex]) {
+        didMove = true;
+        edgeArray[cellIndex] = newOffset;
+      }
+
+      // Update path
+      const pathEl = objectLayer.querySelector(`path[data-id="${obj.id}"]`);
+      if (pathEl) {
+        pathEl.setAttribute('d', computePolygonPath(obj, cpx));
+      }
+    };
+
+    const onUp = () => {
+      isDraggingControlPoint = false;
+      if (didMove) {
+        lastDragEndTime = Date.now();
+      }
+      point.releasePointerCapture(e.pointerId);
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+
+      renderObjectLayer();
+      refreshControlPoints();
+
+      if (didMove) {
+        queueSaveToURL();
+        saveCheckpoint();
+      }
+    };
+
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+  });
+}
+
+/**
  * Create control points for all edges of an object, including step edges
- * created by extensions/contractions.
+ * and extension side edges.
  * @param {import('../state.js').ObjectLayerItem} obj
  */
 function createControlPoints(obj) {
@@ -443,52 +615,108 @@ function createControlPoints(obj) {
     }
   }
 
-  // 2. Step edge control points (where offset changes between adjacent cells)
-  // These appear on the "vertical walls" created by top/bottom extensions
-  // and "horizontal walls" created by left/right extensions
+  // 2. Extension side control points (on the sides of extended cells)
+  // For each cell with offset > 0, create points on the left and right (or top and bottom) of the extension
 
-  // Top edge steps (vertical walls between cells with different top offsets)
-  for (let i = 0; i < obj.baseWidth - 1; i++) {
-    const currOff = get(obj.topEdge, i);
-    const nextOff = get(obj.topEdge, i + 1);
-    if (currOff !== nextOff) {
-      // There's a step between cell i and cell i+1
-      const stepPoint = createStepControlPoint(obj, 'top-step', i, cpx);
-      rot.appendChild(stepPoint);
-      controlPoints.push(stepPoint);
+  // Top edge extensions - create left/right side points for each extended cell
+  for (let i = 0; i < obj.baseWidth; i++) {
+    const offset = get(obj.topEdge, i);
+    if (offset > 0) {
+      const prevOff = i > 0 ? get(obj.topEdge, i - 1) : 0;
+      const nextOff = i < obj.baseWidth - 1 ? get(obj.topEdge, i + 1) : 0;
+
+      // Left side of extension (only if this cell extends more than the left neighbor)
+      for (let ext = 0; ext < offset; ext++) {
+        if (ext >= prevOff) {
+          const pt = createExtensionSidePoint(obj, 'top-left', i, ext, cpx);
+          rot.appendChild(pt);
+          controlPoints.push(pt);
+        }
+      }
+
+      // Right side of extension (only if this cell extends more than the right neighbor)
+      for (let ext = 0; ext < offset; ext++) {
+        if (ext >= nextOff) {
+          const pt = createExtensionSidePoint(obj, 'top-right', i, ext, cpx);
+          rot.appendChild(pt);
+          controlPoints.push(pt);
+        }
+      }
     }
   }
 
-  // Bottom edge steps
-  for (let i = 0; i < obj.baseWidth - 1; i++) {
-    const currOff = get(obj.bottomEdge, i);
-    const nextOff = get(obj.bottomEdge, i + 1);
-    if (currOff !== nextOff) {
-      const stepPoint = createStepControlPoint(obj, 'bottom-step', i, cpx);
-      rot.appendChild(stepPoint);
-      controlPoints.push(stepPoint);
+  // Bottom edge extensions
+  for (let i = 0; i < obj.baseWidth; i++) {
+    const offset = get(obj.bottomEdge, i);
+    if (offset > 0) {
+      const prevOff = i > 0 ? get(obj.bottomEdge, i - 1) : 0;
+      const nextOff = i < obj.baseWidth - 1 ? get(obj.bottomEdge, i + 1) : 0;
+
+      for (let ext = 0; ext < offset; ext++) {
+        if (ext >= prevOff) {
+          const pt = createExtensionSidePoint(obj, 'bottom-left', i, ext, cpx);
+          rot.appendChild(pt);
+          controlPoints.push(pt);
+        }
+      }
+
+      for (let ext = 0; ext < offset; ext++) {
+        if (ext >= nextOff) {
+          const pt = createExtensionSidePoint(obj, 'bottom-right', i, ext, cpx);
+          rot.appendChild(pt);
+          controlPoints.push(pt);
+        }
+      }
     }
   }
 
-  // Right edge steps (horizontal walls between cells with different right offsets)
-  for (let i = 0; i < obj.baseHeight - 1; i++) {
-    const currOff = get(obj.rightEdge, i);
-    const nextOff = get(obj.rightEdge, i + 1);
-    if (currOff !== nextOff) {
-      const stepPoint = createStepControlPoint(obj, 'right-step', i, cpx);
-      rot.appendChild(stepPoint);
-      controlPoints.push(stepPoint);
+  // Left edge extensions
+  for (let i = 0; i < obj.baseHeight; i++) {
+    const offset = get(obj.leftEdge, i);
+    if (offset > 0) {
+      const prevOff = i > 0 ? get(obj.leftEdge, i - 1) : 0;
+      const nextOff = i < obj.baseHeight - 1 ? get(obj.leftEdge, i + 1) : 0;
+
+      for (let ext = 0; ext < offset; ext++) {
+        if (ext >= prevOff) {
+          const pt = createExtensionSidePoint(obj, 'left-top', i, ext, cpx);
+          rot.appendChild(pt);
+          controlPoints.push(pt);
+        }
+      }
+
+      for (let ext = 0; ext < offset; ext++) {
+        if (ext >= nextOff) {
+          const pt = createExtensionSidePoint(obj, 'left-bottom', i, ext, cpx);
+          rot.appendChild(pt);
+          controlPoints.push(pt);
+        }
+      }
     }
   }
 
-  // Left edge steps
-  for (let i = 0; i < obj.baseHeight - 1; i++) {
-    const currOff = get(obj.leftEdge, i);
-    const nextOff = get(obj.leftEdge, i + 1);
-    if (currOff !== nextOff) {
-      const stepPoint = createStepControlPoint(obj, 'left-step', i, cpx);
-      rot.appendChild(stepPoint);
-      controlPoints.push(stepPoint);
+  // Right edge extensions
+  for (let i = 0; i < obj.baseHeight; i++) {
+    const offset = get(obj.rightEdge, i);
+    if (offset > 0) {
+      const prevOff = i > 0 ? get(obj.rightEdge, i - 1) : 0;
+      const nextOff = i < obj.baseHeight - 1 ? get(obj.rightEdge, i + 1) : 0;
+
+      for (let ext = 0; ext < offset; ext++) {
+        if (ext >= prevOff) {
+          const pt = createExtensionSidePoint(obj, 'right-top', i, ext, cpx);
+          rot.appendChild(pt);
+          controlPoints.push(pt);
+        }
+      }
+
+      for (let ext = 0; ext < offset; ext++) {
+        if (ext >= nextOff) {
+          const pt = createExtensionSidePoint(obj, 'right-bottom', i, ext, cpx);
+          rot.appendChild(pt);
+          controlPoints.push(pt);
+        }
+      }
     }
   }
 }

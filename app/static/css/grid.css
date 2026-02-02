@@ -142,3 +142,13 @@
 .object-control-point-step:hover {
   background: #d4902a;
 }
+
+/* Extension side control points (on sides of extended cells) */
+.object-control-point-ext {
+  background: var(--object-control-ext-bg, #7cb87c);
+  border-color: var(--object-control-ext-border, #5a985a);
+}
+
+.object-control-point-ext:hover {
+  background: #5a985a;
+}
