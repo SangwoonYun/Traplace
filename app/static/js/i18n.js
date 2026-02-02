@@ -238,7 +238,7 @@ export async function loadLanguageOnline(lang) {
  * @returns {any}
  */
 /**
- * Extract Roman numeral suffix from a label (e.g., "포탑 IV" -> "IV")
+ * Extract Roman numeral suffix from a label (e.g., "Turret IV" -> "IV")
  * @param {string} label
  * @returns {string | null}
  */
@@ -456,8 +456,23 @@ export function updateBlockLabelsForLocale(state) {
     return '';
   };
 
-  // Defaults we want to auto-replace on locale switch
-  const PREV_DEFAULTS = new Set(['도시', 'City']);
+  // Defaults we want to auto-replace on locale switch (all palette.city translations)
+  const PREV_DEFAULTS = new Set([
+    'Town',      // en
+    '도시',       // ko
+    '城市',       // zh-CN, zh-TW
+    '都市',       // ja
+    'Ville',     // fr
+    'Stadt',     // de
+    'Ciudad',    // es
+    'Città',     // it
+    'Miasto',    // pl
+    'Cidade',    // pt
+    'Şehir',     // tr
+    'المدينة',   // ar
+    'เมือง',      // th
+    'Kota',      // id
+  ]);
 
   // Update turret labels specifically
   if (window.__turrets) {
@@ -472,7 +487,7 @@ export function updateBlockLabelsForLocale(state) {
       const labelEl = el?.querySelector?.('.label');
       if (labelEl) {
         const roman = turretRomans[key];
-        labelEl.textContent = t('palette.turret', `포탑 ${roman}`);
+        labelEl.textContent = t('palette.turret', `Turret ${roman}`);
       }
     }
   }
@@ -490,7 +505,7 @@ export function updateBlockLabelsForLocale(state) {
       const labelEl = el?.querySelector?.('.label');
       if (labelEl) {
         const roman = fortressRomans[key];
-        labelEl.textContent = t('palette.fortress', `성채 ${roman}`);
+        labelEl.textContent = t('palette.fortress', `Fortress ${roman}`);
       }
     }
   }
@@ -516,7 +531,7 @@ export function updateBlockLabelsForLocale(state) {
       const labelEl = el?.querySelector?.('.label');
       if (labelEl) {
         const roman = sanctuaryRomans[key];
-        labelEl.textContent = t('palette.sanctuary', `유적 ${roman}`);
+        labelEl.textContent = t('palette.sanctuary', `Sanctuary ${roman}`);
       }
     }
   }
