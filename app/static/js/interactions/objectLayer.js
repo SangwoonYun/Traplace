@@ -54,13 +54,16 @@ let lastDragEndTime = 0;
 /** Flag to track if actual movement occurred during drag */
 let didMove = false;
 
+/** Currently active label editor element */
+let activeLabelEditor = null;
+
 /**
- * Check if currently dragging object layer elements.
+ * Check if currently dragging object layer elements or editing a label.
  * Used by tileToggle to prevent red tile painting.
  * @returns {boolean}
  */
 export function isObjectLayerDragging() {
-  return isDraggingControlPoint || isDraggingObject;
+  return isDraggingControlPoint || isDraggingObject || activeLabelEditor !== null;
 }
 
 /**
@@ -769,6 +772,10 @@ export function refreshControlPoints() {
   }
 }
 
+/** Track last click time and object for double-click detection */
+let lastClickTime = 0;
+let lastClickedId = null;
+
 /**
  * Setup click handlers for object layer selection.
  */
@@ -777,11 +784,26 @@ export function setupObjectLayerInteraction() {
 
   // Use event delegation for SVG paths - handle drag and selection
   objectLayer.addEventListener('pointerdown', (e) => {
-    const originalPath = e.target.closest('path');
+    const originalPath = e.target.closest('path, text');
     if (originalPath && e.button === 0) {
       const id = originalPath.dataset.id;
       const obj = findObjectLayer(id);
       if (obj) {
+        const now = Date.now();
+        const isDoubleClick = lastClickedId === id && now - lastClickTime < 400;
+
+        // Update click tracking
+        lastClickTime = now;
+        lastClickedId = id;
+
+        // If double-click on already selected object, show label editor
+        if (isDoubleClick && state.selectedObjectId === id) {
+          e.stopPropagation();
+          e.preventDefault();
+          showLabelEditor(obj, e.clientX, e.clientY);
+          return;
+        }
+
         // Select the object (this re-renders and replaces the path element)
         selectObject(id);
 
@@ -825,9 +847,23 @@ export function setupObjectLayerInteraction() {
           obj.left = snapped.left;
           obj.top = snapped.top;
 
-          // Update only the path's d attribute instead of full re-render
+          // Update path and label position without full re-render
           const cpx = cellPx();
           path.setAttribute('d', computePolygonPath(obj, cpx));
+
+          // Update label position if present
+          const labelEl = objectLayer.querySelector(`text[data-id="${id}"]`);
+          if (labelEl) {
+            const cx = obj.left + (obj.baseWidth * cpx) / 2;
+            const cy = obj.top + (obj.baseHeight * cpx) / 2;
+            labelEl.setAttribute('x', String(cx));
+            labelEl.setAttribute('y', String(cy));
+            labelEl.setAttribute(
+              'transform',
+              `translate(${cx}, ${cy}) scale(-1, -1) rotate(-45) translate(${-cx}, ${-cy})`,
+            );
+          }
+
           refreshControlPoints();
         };
 
@@ -905,4 +941,79 @@ export function setupObjectLayerInteraction() {
       deleteSelectedObject();
     }
   });
+
+}
+
+/**
+ * Show a label editor input at the specified position.
+ * @param {import('../state.js').ObjectLayerItem} obj
+ * @param {number} clientX
+ * @param {number} clientY
+ */
+function showLabelEditor(obj, clientX, clientY) {
+  // Remove any existing editor
+  hideLabelEditor();
+
+  const cpx = cellPx();
+  const centerX = obj.left + (obj.baseWidth * cpx) / 2;
+  const centerY = obj.top + (obj.baseHeight * cpx) / 2;
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'object-label-editor';
+  input.value = obj.label || '';
+  input.placeholder = `${obj.baseWidth}×${obj.baseHeight}`;
+  input.style.left = `${centerX}px`;
+  input.style.top = `${centerY}px`;
+
+  const commitEdit = () => {
+    const newLabel = input.value.trim();
+    const defaultLabel = `${obj.baseWidth}×${obj.baseHeight}`;
+
+    // Only set label if it's not empty and not the default
+    if (newLabel && newLabel !== defaultLabel) {
+      obj.label = newLabel;
+    } else {
+      obj.label = undefined;
+    }
+
+    hideLabelEditor();
+    renderObjectLayer();
+    refreshControlPoints();
+    queueSaveToURL();
+    saveCheckpoint();
+  };
+
+  // Prevent clicks on the editor from propagating to tile toggle or deselect
+  input.addEventListener('pointerdown', (e) => e.stopPropagation());
+  input.addEventListener('click', (e) => e.stopPropagation());
+
+  input.addEventListener('blur', commitEdit);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      commitEdit();
+    } else if (e.key === 'Escape') {
+      hideLabelEditor();
+    }
+  });
+
+  rot.appendChild(input);
+  activeLabelEditor = input;
+
+  // Focus and select all text
+  requestAnimationFrame(() => {
+    input.focus();
+    input.select();
+  });
+}
+
+/**
+ * Hide the label editor if active.
+ */
+function hideLabelEditor() {
+  if (activeLabelEditor) {
+    activeLabelEditor.remove();
+    activeLabelEditor = null;
+  }
 }

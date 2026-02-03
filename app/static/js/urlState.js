@@ -210,7 +210,7 @@ export function serializeState() {
     const cx = Math.round(o.left / c);
     const cy = Math.round(o.top / c);
 
-    // Format: O<w>x<h>@<cx>,<cy>~<color>~<edges>
+    // Format: O<w>x<h>@<cx>,<cy>~<color>~<edges>~<label>
     // edges: top|right|bottom|left as dot-separated offsets
     const edges = [
       o.topEdge.join('.'),
@@ -220,7 +220,14 @@ export function serializeState() {
     ].join('|');
 
     const colorPart = o.color ? o.color.replace('#', '') : '';
-    return `O${toB36(o.baseWidth)}x${toB36(o.baseHeight)}@${toB36(cx)},${toB36(cy)}~${colorPart}~${edges}`;
+    let token = `O${toB36(o.baseWidth)}x${toB36(o.baseHeight)}@${toB36(cx)},${toB36(cy)}~${colorPart}~${edges}`;
+
+    // Add label if exists
+    if (o.label) {
+      token += `~${encodeURIComponent(o.label)}`;
+    }
+
+    return token;
   });
 
   const params = new URLSearchParams();
@@ -315,17 +322,19 @@ export function deserializeState(qs) {
     const baseWidth = isV2 ? parseInt(wStr, 36) : parseInt(wStr, 10) || 4;
     const baseHeight = isV2 ? parseInt(hStr, 36) : parseInt(hStr, 10) || 4;
 
-    // Parse position and optional color/edges
+    // Parse position and optional color/edges/label
     const parts = tail.split('~');
     const posPart = parts[0];
     const colorPart = parts[1] || '';
     const edgesPart = parts[2] || '';
+    const labelPart = parts[3] || '';
 
     const [cxStr, cyStr] = posPart.split(',');
     const cx = isV2 ? parseInt(cxStr, 36) : parseInt(cxStr, 10) || 0;
     const cy = isV2 ? parseInt(cyStr, 36) : parseInt(cyStr, 10) || 0;
 
     const color = colorPart ? `#${colorPart}` : null;
+    const label = labelPart ? decodeURIComponent(labelPart) : undefined;
 
     // Parse edges: top|right|bottom|left
     let topEdge = new Array(baseWidth).fill(0);
@@ -347,6 +356,7 @@ export function deserializeState(qs) {
       cx,
       cy,
       color,
+      label,
       topEdge,
       rightEdge,
       bottomEdge,

@@ -517,7 +517,7 @@ export function computePolygonPath(obj, cpx) {
 }
 
 /**
- * Render all object layers as SVG paths.
+ * Render all object layers as SVG paths with optional labels.
  */
 export function renderObjectLayer() {
   if (!objectLayer) return;
@@ -532,6 +532,10 @@ export function renderObjectLayer() {
     const pathData = computePolygonPath(obj, cpx);
     if (!pathData) continue;
 
+    // Create a group to hold path and label
+    const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    group.setAttribute('data-id', obj.id);
+
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', pathData);
     path.setAttribute('fill', obj.color || defaultColor);
@@ -543,6 +547,30 @@ export function renderObjectLayer() {
       path.classList.add('selected');
     }
 
-    objectLayer.appendChild(path);
+    group.appendChild(path);
+
+    // Add label if exists
+    if (obj.label) {
+      const centerX = obj.left + (obj.baseWidth * cpx) / 2;
+      const centerY = obj.top + (obj.baseHeight * cpx) / 2;
+
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', String(centerX));
+      text.setAttribute('y', String(centerY));
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('dominant-baseline', 'middle');
+      text.setAttribute('class', 'object-label');
+      text.setAttribute('data-id', obj.id);
+      // Counter-rotate to match block label orientation inside rotated .rot
+      text.setAttribute(
+        'transform',
+        `translate(${centerX}, ${centerY}) scale(-1, -1) rotate(-45) translate(${-centerX}, ${-centerY})`,
+      );
+      text.textContent = obj.label;
+
+      group.appendChild(text);
+    }
+
+    objectLayer.appendChild(group);
   }
 }

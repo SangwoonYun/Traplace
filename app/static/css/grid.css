@@ -113,6 +113,42 @@
   stroke-dasharray: 5, 3;
 }
 
+/* Object layer labels */
+.object-label {
+  font-family: var(--font-family, sans-serif);
+  font-size: 14px;
+  font-weight: bold;
+  fill: var(--object-label-color, #2d5a2d);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Object layer label editor */
+.object-label-editor {
+  position: absolute;
+  /* Counter-rotate to match block label orientation inside rotated .rot */
+  transform: translate(-50%, -50%) scaleY(-1) scaleX(-1) rotate(-45deg);
+  transform-origin: center;
+  min-width: 60px;
+  max-width: 150px;
+  padding: 4px 8px;
+  font-family: var(--font-family, sans-serif);
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  border: 2px solid var(--object-border, #3cb371);
+  border-radius: 4px;
+  background: white;
+  color: #2d5a2d;
+  outline: none;
+  z-index: 200;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.object-label-editor:focus {
+  border-color: var(--object-control-bg, #4a90e2);
+}
+
 /* Control points for edge adjustment */
 .object-control-point {
   position: absolute;

@@ -33,6 +33,7 @@ export function setupTileToggle() {
     if (e.target.closest('.block')) return;
     if (e.target.closest('.object-control-point')) return;
     if (e.target.closest('#objectLayer')) return;
+    if (e.target.closest('.object-label-editor')) return;
     if (e.button !== 0) return; // left click only
 
     // Also check if click ended over a block (for drag cases)

@@ -431,11 +431,12 @@ window.addEventListener('load', async () => {
       const left = it.cx * c;
       const top = it.cy * c;
       const obj = createObjectLayer(left, top, it.baseWidth, it.baseHeight, it.color);
-      // Restore edge offsets
+      // Restore edge offsets and label
       obj.topEdge = it.topEdge;
       obj.rightEdge = it.rightEdge;
       obj.bottomEdge = it.bottomEdge;
       obj.leftEdge = it.leftEdge;
+      if (it.label) obj.label = it.label;
     }
     state._restoring = false;
     renderObjectLayer();

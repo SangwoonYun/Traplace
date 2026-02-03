@@ -44,6 +44,7 @@ export function cellPx() {
  * @property {number} baseWidth - Base width in cells
  * @property {number} baseHeight - Base height in cells
  * @property {string} color - Fill color (hex or rgba)
+ * @property {string} [label] - Optional label text
  * @property {number[]} topEdge - Array of offsets for each cell on top edge
  * @property {number[]} rightEdge - Array of offsets for each cell on right edge
  * @property {number[]} bottomEdge - Array of offsets for each cell on bottom edge

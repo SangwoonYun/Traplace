@@ -14,6 +14,7 @@ import { world } from './dom.js';
 import { PAINTER_KINDS, cellsForKindAt, areaBoundingBox } from './painter.js';
 import { posToCell } from './transform.js';
 import { t } from './i18n.js';
+import { computePolygonPath } from './render.js';
 
 /* ================= PNG metadata utils ================= */
 
@@ -265,6 +266,34 @@ function usedCellsBBox() {
   for (const k of painted) used.add(k);
   const cover = cellsCoveredByBlocks(); // blocks (excluding immutable)
   for (const k of cover) used.add(k);
+
+  // Include object layer cells (base area + edge extensions)
+  const c = cellPx();
+  for (const obj of state.objectLayers) {
+    const cx = Math.round(obj.left / c);
+    const cy = Math.round(obj.top / c);
+
+    // Base rectangle
+    for (let y = cy; y < cy + obj.baseHeight; y++) {
+      for (let x = cx; x < cx + obj.baseWidth; x++) {
+        used.add(`${x},${y}`);
+      }
+    }
+
+    // Edge extensions
+    for (let i = 0; i < obj.baseWidth; i++) {
+      const topOff = obj.topEdge[i] || 0;
+      for (let e = 1; e <= topOff; e++) used.add(`${cx + i},${cy - e}`);
+      const botOff = obj.bottomEdge[i] || 0;
+      for (let e = 1; e <= botOff; e++) used.add(`${cx + i},${cy + obj.baseHeight - 1 + e}`);
+    }
+    for (let i = 0; i < obj.baseHeight; i++) {
+      const leftOff = obj.leftEdge[i] || 0;
+      for (let e = 1; e <= leftOff; e++) used.add(`${cx - e},${cy + i}`);
+      const rightOff = obj.rightEdge[i] || 0;
+      for (let e = 1; e <= rightOff; e++) used.add(`${cx + obj.baseWidth - 1 + e},${cy + i}`);
+    }
+  }
 
   if (!used.size) return null;
 
@@ -575,6 +604,50 @@ export async function exportPNG() {
     strokeCellPerimeter(ctx, painted, x, y, blueEdge, 2, false);
   }
   ctx.restore();
+
+  /* 2.5) Object layers (below blocks, above blue paint) */
+  {
+    const objDefaultColor =
+      cssVar('--object-bg', 'rgba(144, 238, 144, 0.6)');
+    const objBorderColor =
+      cssVar('--object-border', 'rgba(60, 179, 113, 0.8)');
+
+    for (const obj of state.objectLayers) {
+      const pathStr = computePolygonPath(obj, cellSize);
+      if (!pathStr) continue;
+
+      const path2d = new Path2D(pathStr);
+
+      // Fill
+      ctx.save();
+      ctx.fillStyle = obj.color || objDefaultColor;
+      ctx.fill(path2d);
+      ctx.restore();
+
+      // Stroke
+      ctx.save();
+      ctx.strokeStyle = objBorderColor;
+      ctx.lineWidth = 2;
+      ctx.stroke(path2d);
+      ctx.restore();
+
+      // Label (drawn horizontally in projected coords, same as block labels)
+      if (obj.label) {
+        const centerX = obj.left + (obj.baseWidth * cellSize) / 2;
+        const centerY = obj.top + (obj.baseHeight * cellSize) / 2;
+        const p = projectWithShift(W, H, shiftX, shiftY, centerX, centerY);
+
+        ctx.save();
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.font = 'bold 14px system-ui, -apple-system, Segoe UI, Roboto, Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = cssVar('--object-label-color', '#2d5a2d');
+        ctx.fillText(obj.label, p.x, p.y);
+        ctx.restore();
+      }
+    }
+  }
 
   /* 3) Red zone (castle/fortress/sanctuary areas) - overlapping parts only */
   ctx.save();
