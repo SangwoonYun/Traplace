@@ -424,10 +424,19 @@ export function setupActions() {
         const left = it.cx * c;
         const top = it.cy * c;
 
-        const el = createBlock(it.kind, it.size, left, top, it.width, it.height);
-
-        // Restore city and custom block labels if present
-        if ((it.kind === 'city' || it.kind === 'custom') && it.label) {
+        const el = createBlock(
+          it.kind,
+          it.size,
+          left,
+          top,
+          it.width,
+          it.height,
+          false,
+          null,
+          it.fontSize,
+          it.wordWrap,
+        );
+        if (it.label) {
           const lbl = el.querySelector('.label');
           if (lbl) lbl.textContent = it.label;
         }
