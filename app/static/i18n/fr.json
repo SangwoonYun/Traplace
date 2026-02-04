@@ -27,6 +27,10 @@
       "toss": "Toss",
       "privacy": "Politique de confidentialité",
       "terms": "Conditions d'utilisation"
+    },
+    "contextMenu": {
+      "fontSize": "Taille de police",
+      "wordWrap": "Retour à la ligne"
     }
   },
   "palette": {

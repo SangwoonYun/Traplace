@@ -40,6 +40,7 @@ import {
 import { initCounters, updateAllCounts } from './counters.js';
 import { enableDragScroll } from './interactions/hscroll.js';
 import { setupColorPicker } from './colorPicker.js';
+import { initContextMenu } from './interactions/contextMenu.js';
 
 /* ---------------------------------------------
  * Helper Functions
@@ -402,7 +403,7 @@ window.addEventListener('load', async () => {
       const c = cellPx();
       const left = it.cx * c;
       const top = it.cy * c;
-      const el = createBlock(it.kind, it.size, left, top, it.width, it.height);
+      const el = createBlock(it.kind, it.size, left, top, it.width, it.height, false, null, it.fontSize, it.wordWrap);
 
       // Restore city and custom block labels if present
       if ((it.kind === 'city' || it.kind === 'custom') && it.label) {
@@ -442,6 +443,7 @@ window.addEventListener('load', async () => {
   setupActions();
   setupColorPicker();
   setupRemoteControl();
+  initContextMenu();
 
   /* ---------------------------------------------
    * Initial render & validation

@@ -25,6 +25,10 @@
       "toss": "Toss",
       "privacy": "Privacy Policy",
       "terms": "Terms of Service"
+    },
+    "contextMenu": {
+      "fontSize": "Font Size",
+      "wordWrap": "Word Wrap"
     }
   },
   "palette": {

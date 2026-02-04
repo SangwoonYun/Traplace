@@ -27,6 +27,10 @@
       "toss": "Toss",
       "privacy": "Gizlilik Politikası",
       "terms": "Hizmet Şartları"
+    },
+    "contextMenu": {
+      "fontSize": "Yazı Tipi Boyutu",
+      "wordWrap": "Metni Kaydır"
     }
   },
   "palette": {

@@ -1355,3 +1355,132 @@ body.rtl .icon-arrow { transform: scaleX(-1); }
     font-size: 13px;
   }
 }
+
+/* ---------------------------------------------
+ * Context Menu
+ * ------------------------------------------- */
+.context-menu {
+  position: fixed;
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  z-index: 100000;
+  padding: 8px;
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  color: #333;
+}
+
+.cm-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cm-label {
+  font-weight: 700;
+  color: #666;
+  font-size: 11px;
+  text-transform: uppercase;
+  padding: 0 4px;
+}
+
+.cm-font-sizes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.cm-size-btn {
+  appearance: none;
+  border: 1px solid #eee;
+  background: #f9f9f9;
+  border-radius: 4px;
+  padding: 4px 0;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.1s ease;
+}
+
+.cm-size-btn:hover {
+  background: #f0f0f0;
+  border-color: #ccc;
+}
+
+.cm-size-btn.active {
+  background: #1557ff;
+  color: white;
+  border-color: #1557ff;
+}
+
+.cm-sep {
+  height: 1px;
+  background: #eee;
+  margin: 2px 0;
+}
+
+.cm-item {
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.1s ease;
+}
+
+.cm-item:hover {
+  background: #f5f5f5;
+}
+
+.cm-checkbox label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.cm-checkbox input {
+  cursor: pointer;
+}
+
+@media (prefers-color-scheme: dark) {
+  .context-menu {
+    background: #252525;
+    border-color: #444;
+    color: #e0e0e0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  }
+
+  .cm-label {
+    color: #999;
+  }
+
+  .cm-size-btn {
+    background: #333;
+    border-color: #444;
+    color: #ccc;
+  }
+
+  .cm-size-btn:hover {
+    background: #444;
+  }
+
+  .cm-size-btn.active {
+    background: #1557ff;
+    color: white;
+  }
+
+  .cm-sep {
+    background: #333;
+  }
+
+  .cm-item:hover {
+    background: #333;
+  }
+}

@@ -27,6 +27,10 @@
       "toss": "Toss",
       "privacy": "Kebijakan Privasi",
       "terms": "Syarat Layanan"
+    },
+    "contextMenu": {
+      "fontSize": "Ukuran Font",
+      "wordWrap": "Bungkus Teks"
     }
   },
   "palette": {

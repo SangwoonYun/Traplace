@@ -199,6 +199,15 @@ export function serializeState() {
           token += `~${encodeURIComponent(label)}`;
         }
       }
+
+      // Persist font settings
+      if (b.fontSize && b.fontSize !== 14) {
+        token += `*${toB36(b.fontSize)}`;
+      }
+      if (b.wordWrap) {
+        token += '!';
+      }
+
       return token;
     });
 
@@ -242,6 +251,22 @@ export function deserializeState(qs) {
       tail = tail.slice(0, tildeIdx);
     }
 
+    // Optional font size part split by "*"
+    let fontSize;
+    const starIdx = tail.indexOf('*');
+    if (starIdx >= 0) {
+      fontSize = isV2 ? parseInt(tail.slice(starIdx + 1), 36) : parseInt(tail.slice(starIdx + 1), 10);
+      tail = tail.slice(0, starIdx);
+    }
+
+    // Optional word wrap part marked by "!"
+    let wordWrap = false;
+    const bangIdx = tail.indexOf('!');
+    if (bangIdx >= 0) {
+      wordWrap = true;
+      tail = tail.slice(0, bangIdx);
+    }
+
     const code = head[0];
     const sizeRaw = head.slice(1);
 
@@ -268,7 +293,7 @@ export function deserializeState(qs) {
       if (kind === 'custom') {
         blocks.push({ kind, width: size, height: size, size, cx, cy, label });
       } else {
-        blocks.push({ kind, size, cx, cy, label });
+        blocks.push({ kind, size, cx, cy, label, fontSize, wordWrap });
       }
     }
   }

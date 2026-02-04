@@ -25,6 +25,10 @@
       "toss": "토스 송금",
       "privacy": "개인정보 처리방침",
       "terms": "이용 약관"
+    },
+    "contextMenu": {
+      "fontSize": "글자 크기",
+      "wordWrap": "줄바꿈"
     }
   },
   "palette": {

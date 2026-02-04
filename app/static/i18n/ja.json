@@ -25,6 +25,10 @@
       "toss": "Toss",
       "privacy": "プライバシーポリシー",
       "terms": "利用規約"
+    },
+    "contextMenu": {
+      "fontSize": "フォントサイズ",
+      "wordWrap": "折り返し"
     }
   },
   "palette": {

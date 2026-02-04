@@ -27,6 +27,10 @@
       "toss": "Toss",
       "privacy": "隱私權政策",
       "terms": "服務條款"
+    },
+    "contextMenu": {
+      "fontSize": "字體大小",
+      "wordWrap": "自動換行"
     }
   },
   "palette": {
