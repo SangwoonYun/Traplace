@@ -40,6 +40,10 @@ export function createObjectLayer(left, top, baseWidth, baseHeight, color = null
     rightEdge: new Array(baseHeight).fill(0),
     bottomEdge: new Array(baseWidth).fill(0),
     leftEdge: new Array(baseHeight).fill(0),
+    topExtSides: {},
+    rightExtSides: {},
+    bottomExtSides: {},
+    leftExtSides: {},
   };
 
   state.objectLayers.push(obj);

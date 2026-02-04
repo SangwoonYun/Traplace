@@ -157,6 +157,71 @@ function decodeRed(str, useBase36) {
  *   r=<RLE base36>
  * @returns {string}
  */
+/**
+ * Serialize ExtSides data for an object layer.
+ * Format: T<idx>:<neg>/<pos>,...;R...;B...;L...
+ * Returns empty string if no ext sides exist.
+ * @param {import('./state.js').ObjectLayerItem} o
+ * @returns {string}
+ */
+function serializeExtSides(o) {
+  const parts = [];
+  for (const prefix of ['T', 'R', 'B', 'L']) {
+    const key =
+      prefix === 'T'
+        ? 'topExtSides'
+        : prefix === 'R'
+          ? 'rightExtSides'
+          : prefix === 'B'
+            ? 'bottomExtSides'
+            : 'leftExtSides';
+    const map = o[key];
+    if (!map || !Object.keys(map).length) {
+      parts.push('');
+      continue;
+    }
+    const entries = [];
+    for (const [idx, sides] of Object.entries(map)) {
+      const neg = (sides.neg || []).join('.');
+      const pos = (sides.pos || []).join('.');
+      entries.push(`${idx}:${neg}/${pos}`);
+    }
+    parts.push(entries.join(','));
+  }
+  // Only return if there's actual data
+  return parts.some((p) => p) ? parts.join(';') : '';
+}
+
+/**
+ * Deserialize ExtSides data from a string.
+ * @param {string} str
+ * @returns {{topExtSides: Object, rightExtSides: Object, bottomExtSides: Object, leftExtSides: Object}}
+ */
+function deserializeExtSides(str) {
+  const result = { topExtSides: {}, rightExtSides: {}, bottomExtSides: {}, leftExtSides: {} };
+  if (!str) return result;
+
+  const keys = ['topExtSides', 'rightExtSides', 'bottomExtSides', 'leftExtSides'];
+  const sections = str.split(';');
+
+  for (let s = 0; s < 4; s++) {
+    const section = sections[s];
+    if (!section) continue;
+    const entries = section.split(',');
+    for (const entry of entries) {
+      if (!entry) continue;
+      const [idxStr, data] = entry.split(':');
+      if (!data) continue;
+      const [negStr, posStr] = data.split('/');
+      const neg = negStr ? negStr.split('.').map((n) => parseInt(n, 10) || 0) : [];
+      const pos = posStr ? posStr.split('.').map((n) => parseInt(n, 10) || 0) : [];
+      result[keys[s]][parseInt(idxStr, 10)] = { neg, pos };
+    }
+  }
+
+  return result;
+}
+
 export function serializeState() {
   // Filter out immutable blocks from serialization
   const bItems = state.blocks
@@ -211,13 +276,21 @@ export function serializeState() {
     const cy = Math.round(o.top / c);
 
     // Format: O<w>x<h>@<cx>,<cy>~<color>~<edges>~<label>
-    // edges: top|right|bottom|left as dot-separated offsets
-    const edges = [
+    // edges: top|right|bottom|left|extSides as dot-separated offsets
+    const edgeParts = [
       o.topEdge.join('.'),
       o.rightEdge.join('.'),
       o.bottomEdge.join('.'),
       o.leftEdge.join('.'),
-    ].join('|');
+    ];
+
+    // Serialize ExtSides if any exist
+    const extSidesPart = serializeExtSides(o);
+    if (extSidesPart) {
+      edgeParts.push(extSidesPart);
+    }
+
+    const edges = edgeParts.join('|');
 
     const colorPart = o.color ? o.color.replace('#', '') : '';
     let token = `O${toB36(o.baseWidth)}x${toB36(o.baseHeight)}@${toB36(cx)},${toB36(cy)}~${colorPart}~${edges}`;
@@ -342,12 +415,15 @@ export function deserializeState(qs) {
     let bottomEdge = new Array(baseWidth).fill(0);
     let leftEdge = new Array(baseHeight).fill(0);
 
+    let extSides = { topExtSides: {}, rightExtSides: {}, bottomExtSides: {}, leftExtSides: {} };
+
     if (edgesPart) {
       const edgeParts = edgesPart.split('|');
       if (edgeParts[0]) topEdge = edgeParts[0].split('.').map((n) => parseInt(n, 10) || 0);
       if (edgeParts[1]) rightEdge = edgeParts[1].split('.').map((n) => parseInt(n, 10) || 0);
       if (edgeParts[2]) bottomEdge = edgeParts[2].split('.').map((n) => parseInt(n, 10) || 0);
       if (edgeParts[3]) leftEdge = edgeParts[3].split('.').map((n) => parseInt(n, 10) || 0);
+      if (edgeParts[4]) extSides = deserializeExtSides(edgeParts[4]);
     }
 
     objectLayers.push({
@@ -361,6 +437,7 @@ export function deserializeState(qs) {
       rightEdge,
       bottomEdge,
       leftEdge,
+      ...extSides,
     });
   }
 

@@ -49,6 +49,10 @@ export function cellPx() {
  * @property {number[]} rightEdge - Array of offsets for each cell on right edge
  * @property {number[]} bottomEdge - Array of offsets for each cell on bottom edge
  * @property {number[]} leftEdge - Array of offsets for each cell on left edge
+ * @property {Object.<number, {neg: number[], pos: number[]}>} [topExtSides] - Side offsets for top edge extensions
+ * @property {Object.<number, {neg: number[], pos: number[]}>} [rightExtSides] - Side offsets for right edge extensions
+ * @property {Object.<number, {neg: number[], pos: number[]}>} [bottomExtSides] - Side offsets for bottom edge extensions
+ * @property {Object.<number, {neg: number[], pos: number[]}>} [leftExtSides] - Side offsets for left edge extensions
  */
 
 export const state = {

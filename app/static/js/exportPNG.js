@@ -283,15 +283,40 @@ function usedCellsBBox() {
     // Edge extensions
     for (let i = 0; i < obj.baseWidth; i++) {
       const topOff = obj.topEdge[i] || 0;
-      for (let e = 1; e <= topOff; e++) used.add(`${cx + i},${cy - e}`);
+      for (let e = 1; e <= topOff; e++) {
+        used.add(`${cx + i},${cy - e}`);
+        // Side extensions of top edge
+        const negOff = obj.topExtSides?.[i]?.neg?.[e - 1] || 0;
+        for (let s = 1; s <= negOff; s++) used.add(`${cx + i - s},${cy - e}`);
+        const posOff = obj.topExtSides?.[i]?.pos?.[e - 1] || 0;
+        for (let s = 1; s <= posOff; s++) used.add(`${cx + i + 1 + s - 1},${cy - e}`);
+      }
       const botOff = obj.bottomEdge[i] || 0;
-      for (let e = 1; e <= botOff; e++) used.add(`${cx + i},${cy + obj.baseHeight - 1 + e}`);
+      for (let e = 1; e <= botOff; e++) {
+        used.add(`${cx + i},${cy + obj.baseHeight - 1 + e}`);
+        const negOff = obj.bottomExtSides?.[i]?.neg?.[e - 1] || 0;
+        for (let s = 1; s <= negOff; s++) used.add(`${cx + i - s},${cy + obj.baseHeight - 1 + e}`);
+        const posOff = obj.bottomExtSides?.[i]?.pos?.[e - 1] || 0;
+        for (let s = 1; s <= posOff; s++) used.add(`${cx + i + 1 + s - 1},${cy + obj.baseHeight - 1 + e}`);
+      }
     }
     for (let i = 0; i < obj.baseHeight; i++) {
       const leftOff = obj.leftEdge[i] || 0;
-      for (let e = 1; e <= leftOff; e++) used.add(`${cx - e},${cy + i}`);
+      for (let e = 1; e <= leftOff; e++) {
+        used.add(`${cx - e},${cy + i}`);
+        const negOff = obj.leftExtSides?.[i]?.neg?.[e - 1] || 0;
+        for (let s = 1; s <= negOff; s++) used.add(`${cx - e},${cy + i - s}`);
+        const posOff = obj.leftExtSides?.[i]?.pos?.[e - 1] || 0;
+        for (let s = 1; s <= posOff; s++) used.add(`${cx - e},${cy + i + 1 + s - 1}`);
+      }
       const rightOff = obj.rightEdge[i] || 0;
-      for (let e = 1; e <= rightOff; e++) used.add(`${cx + obj.baseWidth - 1 + e},${cy + i}`);
+      for (let e = 1; e <= rightOff; e++) {
+        used.add(`${cx + obj.baseWidth - 1 + e},${cy + i}`);
+        const negOff = obj.rightExtSides?.[i]?.neg?.[e - 1] || 0;
+        for (let s = 1; s <= negOff; s++) used.add(`${cx + obj.baseWidth - 1 + e},${cy + i - s}`);
+        const posOff = obj.rightExtSides?.[i]?.pos?.[e - 1] || 0;
+        for (let s = 1; s <= posOff; s++) used.add(`${cx + obj.baseWidth - 1 + e},${cy + i + 1 + s - 1}`);
+      }
     }
   }
 

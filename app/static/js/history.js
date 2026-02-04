@@ -83,6 +83,10 @@ function applySerialized(qs) {
       obj.rightEdge = it.rightEdge;
       obj.bottomEdge = it.bottomEdge;
       obj.leftEdge = it.leftEdge;
+      obj.topExtSides = it.topExtSides || {};
+      obj.rightExtSides = it.rightExtSides || {};
+      obj.bottomExtSides = it.bottomExtSides || {};
+      obj.leftExtSides = it.leftExtSides || {};
       if (it.label) obj.label = it.label;
     }
   }

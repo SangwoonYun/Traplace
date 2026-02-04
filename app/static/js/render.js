@@ -362,14 +362,173 @@ export function computePolygonPath(obj, cpx) {
   // Helper to get offset safely
   const get = (arr, i) => arr[i] || 0;
 
+  // Helper to get extension side offset
+  const getExt = (edgeName, cellIdx, extIdx, side) =>
+    obj[`${edgeName}ExtSides`]?.[cellIdx]?.[side]?.[extIdx] || 0;
+
+  /**
+   * Draw a vertical wall segment for top/bottom edge transitions,
+   * accounting for side extensions. Walks from yFrom toward yTo (upward, yTo < yFrom).
+   * wallX is the base X position of the wall.
+   * leftExtCell/rightExtCell: cell indices whose side extensions affect this wall.
+   * @param {number} wallX - Base X of the wall
+   * @param {number} yBase - Y at the base edge (top or bottomY)
+   * @param {number} fromOff - Previous column's offset (lower height)
+   * @param {number} toOff - Current column's offset (higher height)
+   * @param {number} prevCellIdx - The cell on the "from" side (may have pos side ext)
+   * @param {number} currCellIdx - The cell on the "to" side (may have neg side ext)
+   * @param {string} edgeName - 'top' or 'bottom'
+   * @param {number} dir - -1 for top (upward), +1 for bottom (downward)
+   */
+  /**
+   * @param {number} wallX - X coordinate of the wall boundary
+   * @param {number} yBase - Y at the base edge
+   * @param {number} leftOff - Offset of the cell to the LEFT of the wall
+   * @param {number} rightOff - Offset of the cell to the RIGHT of the wall
+   * @param {number} leftCellIdx - Cell index to the LEFT of the wall
+   * @param {number} rightCellIdx - Cell index to the RIGHT of the wall
+   * @param {string} edgeName - 'top' or 'bottom'
+   * @param {number} dir - -1 for top (upward), +1 for bottom (downward)
+   * @param {boolean} leftToRight - true if path traverses left to right at this wall
+   */
+  function drawVerticalWall(wallX, yBase, leftOff, rightOff, leftCellIdx, rightCellIdx, edgeName, dir, leftToRight) {
+    const minOff = Math.min(leftOff, rightOff);
+    const maxOff = Math.max(leftOff, rightOff);
+    // The taller cell owns the exposed wall
+    const tallerIsRight = rightOff > leftOff;
+    const tallerIdx = tallerIsRight ? rightCellIdx : leftCellIdx;
+    // Right cell's LEFT side (neg) faces the wall; left cell's RIGHT side (pos) faces it
+    const side = tallerIsRight ? 'neg' : 'pos';
+    const sideSign = side === 'neg' ? -1 : 1;
+    // Determine if we're going from short to tall or tall to short
+    const ascending = leftToRight ? rightOff > leftOff : leftOff > rightOff;
+
+    if (ascending) {
+      // Path arrives at fromOff height, needs to go to toOff (taller).
+      // Draw from inner (minOff) to outer (maxOff).
+      pathParts.push(`L ${wallX} ${yBase + dir * minOff * cpx}`);
+
+      let prevSideOff = 0;
+      for (let r = minOff; r < maxOff; r++) {
+        const sideOff = getExt(edgeName, tallerIdx, r, side);
+        const yInner = yBase + dir * r * cpx;
+        const yOuter = yBase + dir * (r + 1) * cpx;
+
+        if (sideOff !== prevSideOff) {
+          pathParts.push(`L ${wallX + sideSign * prevSideOff * cpx} ${yInner}`);
+          pathParts.push(`L ${wallX + sideSign * sideOff * cpx} ${yInner}`);
+        }
+        pathParts.push(`L ${wallX + sideSign * sideOff * cpx} ${yOuter}`);
+        prevSideOff = sideOff;
+      }
+
+      // Jog back to wallX at the tall height
+      if (prevSideOff !== 0) {
+        pathParts.push(`L ${wallX} ${yBase + dir * maxOff * cpx}`);
+      }
+    } else {
+      // Path arrives at fromOff height (taller), needs to go to toOff (shorter).
+      // Draw from outer (maxOff) to inner (minOff).
+      // First jog out if the outermost row has a side offset
+      const lastRowSideOff = getExt(edgeName, tallerIdx, maxOff - 1, side);
+      if (lastRowSideOff !== 0) {
+        pathParts.push(`L ${wallX} ${yBase + dir * maxOff * cpx}`);
+        pathParts.push(`L ${wallX + sideSign * lastRowSideOff * cpx} ${yBase + dir * maxOff * cpx}`);
+      }
+
+      for (let r = maxOff - 1; r >= minOff; r--) {
+        const sideOff = getExt(edgeName, tallerIdx, r, side);
+        const yInner = yBase + dir * r * cpx;
+
+        // Vertical segment from outer to inner of this row
+        pathParts.push(`L ${wallX + sideSign * sideOff * cpx} ${yInner}`);
+
+        // Check if next row (r-1) has a different side offset
+        const nextSideOff = r > minOff ? getExt(edgeName, tallerIdx, r - 1, side) : 0;
+        if (sideOff !== nextSideOff) {
+          pathParts.push(`L ${wallX + sideSign * nextSideOff * cpx} ${yInner}`);
+        }
+      }
+
+      // Ensure we end at wallX at the short height
+      pathParts.push(`L ${wallX} ${yBase + dir * minOff * cpx}`);
+    }
+  }
+
+  /**
+   * Draw a horizontal wall segment for left/right edge transitions,
+   * accounting for side extensions. Similar logic but rotated 90 degrees.
+   */
+  /**
+   * @param {number} wallY - Y coordinate of the wall boundary
+   * @param {number} xBase - X at the base edge
+   * @param {number} topOff - Offset of the cell ABOVE the wall
+   * @param {number} bottomOff - Offset of the cell BELOW the wall
+   * @param {number} topCellIdx - Cell index ABOVE the wall
+   * @param {number} bottomCellIdx - Cell index BELOW the wall
+   * @param {string} edgeName - 'right' or 'left'
+   * @param {number} dir - 1 for right (rightward), -1 for left (leftward)
+   * @param {boolean} topToBottom - true if path traverses top to bottom at this wall
+   */
+  function drawHorizontalWall(wallY, xBase, topOff, bottomOff, topCellIdx, bottomCellIdx, edgeName, dir, topToBottom) {
+    const minOff = Math.min(topOff, bottomOff);
+    const maxOff = Math.max(topOff, bottomOff);
+    const tallerIsBottom = bottomOff > topOff;
+    const tallerIdx = tallerIsBottom ? bottomCellIdx : topCellIdx;
+    // Bottom cell's TOP side (neg) faces the wall; top cell's BOTTOM side (pos) faces it
+    const side = tallerIsBottom ? 'neg' : 'pos';
+    const sideSign = side === 'neg' ? -1 : 1;
+    const ascending = topToBottom ? bottomOff > topOff : topOff > bottomOff;
+
+    if (ascending) {
+      pathParts.push(`L ${xBase + dir * minOff * cpx} ${wallY}`);
+
+      let prevSideOff = 0;
+      for (let r = minOff; r < maxOff; r++) {
+        const sideOff = getExt(edgeName, tallerIdx, r, side);
+        const xInner = xBase + dir * r * cpx;
+        const xOuter = xBase + dir * (r + 1) * cpx;
+
+        if (sideOff !== prevSideOff) {
+          pathParts.push(`L ${xInner} ${wallY + sideSign * prevSideOff * cpx}`);
+          pathParts.push(`L ${xInner} ${wallY + sideSign * sideOff * cpx}`);
+        }
+        pathParts.push(`L ${xOuter} ${wallY + sideSign * sideOff * cpx}`);
+        prevSideOff = sideOff;
+      }
+
+      if (prevSideOff !== 0) {
+        pathParts.push(`L ${xBase + dir * maxOff * cpx} ${wallY}`);
+      }
+    } else {
+      const lastRowSideOff = getExt(edgeName, tallerIdx, maxOff - 1, side);
+      if (lastRowSideOff !== 0) {
+        pathParts.push(`L ${xBase + dir * maxOff * cpx} ${wallY}`);
+        pathParts.push(`L ${xBase + dir * maxOff * cpx} ${wallY + sideSign * lastRowSideOff * cpx}`);
+      }
+
+      for (let r = maxOff - 1; r >= minOff; r--) {
+        const sideOff = getExt(edgeName, tallerIdx, r, side);
+        const xInner = xBase + dir * r * cpx;
+
+        pathParts.push(`L ${xInner} ${wallY + sideSign * sideOff * cpx}`);
+
+        const nextSideOff = r > minOff ? getExt(edgeName, tallerIdx, r - 1, side) : 0;
+        if (sideOff !== nextSideOff) {
+          pathParts.push(`L ${xInner} ${wallY + sideSign * nextSideOff * cpx}`);
+        }
+      }
+
+      pathParts.push(`L ${xBase + dir * minOff * cpx} ${wallY}`);
+    }
+  }
+
   // Start at top-left corner, considering first top offset and last left offset
   const firstTopOff = get(topEdge, 0);
   const firstLeftOff = get(leftEdge, 0);
 
   // Start from the top-left of the shape
-  // We need to handle the corner where left edge meets top edge
   if (firstLeftOff > 0 && firstTopOff > 0) {
-    // Both protrude - start at outer corner
     pathParts.push(`M ${left - firstLeftOff * cpx} ${top}`);
     pathParts.push(`L ${left - firstLeftOff * cpx} ${top - firstTopOff * cpx}`);
     pathParts.push(`L ${left} ${top - firstTopOff * cpx}`);
@@ -382,19 +541,17 @@ export function computePolygonPath(obj, cpx) {
     pathParts.push(`M ${left} ${top}`);
   }
 
-  // Top edge: left to right - only draw outer boundary
+  // Top edge: left to right
   for (let i = 0; i < baseWidth; i++) {
     const offset = get(topEdge, i);
     const prevOffset = i > 0 ? get(topEdge, i - 1) : firstLeftOff > 0 ? 0 : offset;
     const cellLeft = left + i * cpx;
     const cellRight = left + (i + 1) * cpx;
 
-    // If offset changed from previous, draw vertical transition
     if (i > 0 && offset !== prevOffset) {
-      const y1 = top - prevOffset * cpx;
-      const y2 = top - offset * cpx;
-      pathParts.push(`L ${cellLeft} ${y1}`);
-      pathParts.push(`L ${cellLeft} ${y2}`);
+      // Draw vertical wall with side extensions
+      // Left of wall: column i-1 (prevOffset), right of wall: column i (offset)
+      drawVerticalWall(cellLeft, top, prevOffset, offset, i - 1, i, 'top', -1, true);
     }
 
     // Draw horizontal at this offset level
@@ -423,16 +580,13 @@ export function computePolygonPath(obj, cpx) {
     const offset = get(rightEdge, i);
     const prevOffset = i > 0 ? get(rightEdge, i - 1) : offset;
     const cellTop = top + i * cpx;
-    const cellBottom = top + (i + 1) * cpx;
 
     if (i > 0 && offset !== prevOffset) {
-      const x1 = rightX + prevOffset * cpx;
-      const x2 = rightX + offset * cpx;
-      pathParts.push(`L ${x1} ${cellTop}`);
-      pathParts.push(`L ${x2} ${cellTop}`);
+      // Above wall: row i-1 (prevOffset), below wall: row i (offset)
+      drawHorizontalWall(cellTop, rightX, prevOffset, offset, i - 1, i, 'right', 1, true);
     }
 
-    pathParts.push(`L ${rightX + offset * cpx} ${cellBottom}`);
+    pathParts.push(`L ${rightX + offset * cpx} ${top + (i + 1) * cpx}`);
   }
 
   // Corner: bottom-right
@@ -456,17 +610,15 @@ export function computePolygonPath(obj, cpx) {
   for (let i = baseWidth - 1; i >= 0; i--) {
     const offset = get(bottomEdge, i);
     const prevOffset = i < baseWidth - 1 ? get(bottomEdge, i + 1) : offset;
-    const cellLeft = left + i * cpx;
     const cellRight = left + (i + 1) * cpx;
 
     if (i < baseWidth - 1 && offset !== prevOffset) {
-      const y1 = bottomY + prevOffset * cpx;
-      const y2 = bottomY + offset * cpx;
-      pathParts.push(`L ${cellRight} ${y1}`);
-      pathParts.push(`L ${cellRight} ${y2}`);
+      // Left of wall: column i (offset), right of wall: column i+1 (prevOffset)
+      // Path goes right to left
+      drawVerticalWall(cellRight, bottomY, offset, prevOffset, i, i + 1, 'bottom', 1, false);
     }
 
-    pathParts.push(`L ${cellLeft} ${bottomY + offset * cpx}`);
+    pathParts.push(`L ${left + i * cpx} ${bottomY + offset * cpx}`);
   }
 
   // Corner: bottom-left
@@ -489,17 +641,15 @@ export function computePolygonPath(obj, cpx) {
   for (let i = baseHeight - 1; i >= 0; i--) {
     const offset = get(leftEdge, i);
     const prevOffset = i < baseHeight - 1 ? get(leftEdge, i + 1) : offset;
-    const cellTop = top + i * cpx;
     const cellBottom = top + (i + 1) * cpx;
 
     if (i < baseHeight - 1 && offset !== prevOffset) {
-      const x1 = left - prevOffset * cpx;
-      const x2 = left - offset * cpx;
-      pathParts.push(`L ${x1} ${cellBottom}`);
-      pathParts.push(`L ${x2} ${cellBottom}`);
+      // Above wall: row i (offset), below wall: row i+1 (prevOffset)
+      // Path goes bottom to top
+      drawHorizontalWall(cellBottom, left, offset, prevOffset, i, i + 1, 'left', -1, false);
     }
 
-    pathParts.push(`L ${left - offset * cpx} ${cellTop}`);
+    pathParts.push(`L ${left - offset * cpx} ${top + i * cpx}`);
   }
 
   // Close: back to start (top-left corner)
