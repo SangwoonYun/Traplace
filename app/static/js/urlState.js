@@ -261,9 +261,10 @@ export function deserializeState(qs) {
       const starContent = tail.slice(starIdx + 1);
       const nextSpecialIdx = starContent.search(/[~!]/); // should not happen if we parse ! first
       const sizeValStr = nextSpecialIdx >= 0 ? starContent.slice(0, nextSpecialIdx) : starContent;
-      
+
       fontSize = isV2 ? parseInt(sizeValStr, 36) : parseInt(sizeValStr, 10);
-      tail = tail.slice(0, starIdx) + (nextSpecialIdx >= 0 ? starContent.slice(nextSpecialIdx) : '');
+      tail =
+        tail.slice(0, starIdx) + (nextSpecialIdx >= 0 ? starContent.slice(nextSpecialIdx) : '');
     }
 
     // Optional label part split by "~"
@@ -293,7 +294,17 @@ export function deserializeState(qs) {
       const [wStr, hStr] = sizeRaw.split('x');
       const width = isV2 ? parseInt(wStr, 36) : parseInt(wStr, 10) || 1;
       const height = isV2 ? parseInt(hStr, 36) : parseInt(hStr, 10) || 1;
-      blocks.push({ kind, width, height, size: Math.max(width, height), cx, cy, label, fontSize, wordWrap });
+      blocks.push({
+        kind,
+        width,
+        height,
+        size: Math.max(width, height),
+        cx,
+        cy,
+        label,
+        fontSize,
+        wordWrap,
+      });
     } else {
       const size = isV2 ? parseInt(sizeRaw, 36) : parseInt(sizeRaw || '1', 10) || 1;
       // For legacy 'block' (now 'custom'), convert to width x height format

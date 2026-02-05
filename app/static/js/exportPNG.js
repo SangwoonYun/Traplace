@@ -486,11 +486,11 @@ function projectWithShift(W, H, shiftX, shiftY, X, Y) {
  */
 function drawLabel(ctx, text, x, y, maxWidth, fontSize = 14, wordWrap = false, dpr = 1) {
   if (!text) return;
-  
+
   ctx.save();
   // Ensure we are working in logical pixels for coordinates and content
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  
+
   // Use a slightly larger line height and explicit font stack
   const fSize = Number(fontSize) || 14;
   ctx.font = `bold ${fSize}px system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif`;
@@ -509,9 +509,9 @@ function drawLabel(ctx, text, x, y, maxWidth, fontSize = 14, wordWrap = false, d
     const maxW = Math.max(20, maxWidth - 4); // some padding
 
     for (let i = 0; i < words.length; i++) {
-      let word = words[i];
-      let testLine = currentLine ? currentLine + ' ' + word : word;
-      
+      const word = words[i];
+      const testLine = currentLine ? currentLine + ' ' + word : word;
+
       if (ctx.measureText(testLine).width <= maxW) {
         currentLine = testLine;
       } else {
@@ -521,7 +521,7 @@ function drawLabel(ctx, text, x, y, maxWidth, fontSize = 14, wordWrap = false, d
         } else {
           // Word itself is too wide, must break it character by character
           let fragment = '';
-          for (let char of word) {
+          for (const char of word) {
             if (ctx.measureText(fragment + char).width <= maxW) {
               fragment += char;
             } else {
@@ -531,12 +531,12 @@ function drawLabel(ctx, text, x, y, maxWidth, fontSize = 14, wordWrap = false, d
           }
           currentLine = fragment;
         }
-        
+
         // Final check for the new currentLine
         if (ctx.measureText(currentLine).width > maxW) {
-             // should not happen with character breaking, but for safety:
-             lines.push(currentLine);
-             currentLine = '';
+          // should not happen with character breaking, but for safety:
+          lines.push(currentLine);
+          currentLine = '';
         }
       }
     }

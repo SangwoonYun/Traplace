@@ -6,7 +6,6 @@
 
 import { state } from '../state.js';
 import { updateBlockFont } from '../blocks.js';
-import { viewport } from '../dom.js';
 
 const menu = document.getElementById('contextMenu');
 const sizeBtns = menu.querySelectorAll('.cm-size-btn');
@@ -74,7 +73,7 @@ function showContextMenu(x, y, blockEl) {
   wordWrapInput.checked = !!b.wordWrap;
 
   menu.style.display = 'flex';
-  
+
   // Position the menu
   const menuRect = menu.getBoundingClientRect();
   const viewportW = window.innerWidth;

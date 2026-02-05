@@ -403,7 +403,18 @@ window.addEventListener('load', async () => {
       const c = cellPx();
       const left = it.cx * c;
       const top = it.cy * c;
-      const el = createBlock(it.kind, it.size, left, top, it.width, it.height, false, null, it.fontSize, it.wordWrap);
+      const el = createBlock(
+        it.kind,
+        it.size,
+        left,
+        top,
+        it.width,
+        it.height,
+        false,
+        null,
+        it.fontSize,
+        it.wordWrap,
+      );
 
       // Restore city and custom block labels if present
       if ((it.kind === 'city' || it.kind === 'custom') && it.label) {
