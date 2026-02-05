@@ -317,7 +317,6 @@ export function createBlock(
   if (wordWrap) {
     label.style.whiteSpace = 'normal';
     label.style.wordBreak = 'break-word';
-    label.style.width = '100%';
     label.style.padding = '4px';
   } else {
     label.style.whiteSpace = 'nowrap';
@@ -471,11 +470,9 @@ export function updateBlockFont(el, settings) {
     if (b.wordWrap) {
       label.style.whiteSpace = 'normal';
       label.style.wordBreak = 'break-word';
-      label.style.width = '100%';
       label.style.padding = '4px';
     } else {
       label.style.whiteSpace = 'nowrap';
-      label.style.width = '';
       label.style.padding = '';
     }
   }

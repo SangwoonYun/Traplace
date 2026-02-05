@@ -91,6 +91,12 @@ html[dir='rtl'] .block {
   text-align: center;
   user-select: none;
   pointer-events: none;
+  /* Centering */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 
 /* RTL: keep label text in RTL flow if present (user-edited city names, etc.) */
