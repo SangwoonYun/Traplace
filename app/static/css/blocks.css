@@ -117,6 +117,8 @@ html[dir='rtl'] .block .label {
   padding: 4px 6px;
   border-radius: 4px;
   min-width: 3ch;
+  width: auto;
+  height: auto;
 }
 
 /* ---------------------------------------------
