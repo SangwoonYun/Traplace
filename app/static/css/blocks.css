@@ -97,6 +97,7 @@ html[dir='rtl'] .block {
   justify-content: center;
   width: 100%;
   height: 100%;
+  min-width: 0;
 }
 
 /* RTL: keep label text in RTL flow if present (user-edited city names, etc.) */
