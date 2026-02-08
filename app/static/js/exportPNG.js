@@ -481,6 +481,79 @@ function projectWithShift(W, H, shiftX, shiftY, X, Y) {
   return { x: a * X + c * Y + e, y: b * X + d * Y + f };
 }
 
+/**
+ * Draw label text with support for font size and word wrap.
+ */
+function drawLabel(ctx, text, x, y, maxWidth, fontSize = 14, wordWrap = false, dpr = 1) {
+  if (!text) return;
+
+  ctx.save();
+  // Ensure we are working in logical pixels for coordinates and content
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  // Use a slightly larger line height and explicit font stack
+  const fSize = Number(fontSize) || 14;
+  ctx.font = `bold ${fSize}px system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#333';
+
+  if (!wordWrap) {
+    ctx.fillText(text, x, y);
+  } else {
+    // Robust multi-line wrapping with word breaking
+    const words = text.split(/\s+/);
+    const lines = [];
+    let currentLine = '';
+
+    const maxW = Math.max(20, maxWidth - 4); // some padding
+
+    for (let i = 0; i < words.length; i++) {
+      const word = words[i];
+      const testLine = currentLine ? currentLine + ' ' + word : word;
+
+      if (ctx.measureText(testLine).width <= maxW) {
+        currentLine = testLine;
+      } else {
+        if (currentLine) {
+          lines.push(currentLine);
+          currentLine = word;
+        } else {
+          // Word itself is too wide, must break it character by character
+          let fragment = '';
+          for (const char of word) {
+            if (ctx.measureText(fragment + char).width <= maxW) {
+              fragment += char;
+            } else {
+              if (fragment) lines.push(fragment);
+              fragment = char;
+            }
+          }
+          currentLine = fragment;
+        }
+
+        // Final check for the new currentLine
+        if (ctx.measureText(currentLine).width > maxW) {
+          // should not happen with character breaking, but for safety:
+          lines.push(currentLine);
+          currentLine = '';
+        }
+      }
+    }
+    if (currentLine) lines.push(currentLine);
+
+    const lineHeight = fSize * 1.3;
+    const totalHeight = lines.length * lineHeight;
+    let startY = y - totalHeight / 2 + lineHeight / 2;
+
+    for (const line of lines) {
+      ctx.fillText(line, x, startY);
+      startY += lineHeight;
+    }
+  }
+  ctx.restore();
+}
+
 /* ---------------------------------------------
  * Main: PNG export
  * ------------------------------------------- */
@@ -537,11 +610,11 @@ export async function exportPNG() {
   ctx.fillStyle = bgColor;
   ctx.fillRect(0, 0, boxW, boxH);
 
-  // Apply same transform as screen + shift
+  // Apply same transform as screen + shift, multiplied by dpr
   const { a, b, c, d } = linearForWorld();
   const e = W * k + shiftX;
   const f = (W + H) * k + shiftY;
-  ctx.setTransform(a, b, c, d, e, f);
+  ctx.setTransform(a * dpr, b * dpr, c * dpr, d * dpr, e * dpr, f * dpr);
 
   /* 1) Grid major lines */
   ctx.save();
@@ -692,15 +765,7 @@ export async function exportPNG() {
       }
 
       const p = projectWithShift(W, H, shiftX, shiftY, centerX, centerY);
-
-      ctx.save();
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.font = 'bold 14px system-ui, -apple-system, Segoe UI, Roboto, Arial';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#333';
-      ctx.fillText(text, p.x, p.y);
-      ctx.restore();
+      drawLabel(ctx, text, p.x, p.y, w, b.fontSize || 14, !!b.wordWrap, dpr);
     }
   }
 
@@ -772,15 +837,7 @@ export async function exportPNG() {
     const Xc = x + w / 2;
     const Yc = y + h / 2;
     const p = projectWithShift(W, H, shiftX, shiftY, Xc, Yc);
-
-    ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.font = 'bold 14px system-ui, -apple-system, Segoe UI, Roboto, Arial';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#333';
-    ctx.fillText(text, p.x, p.y);
-    ctx.restore();
+    drawLabel(ctx, text, p.x, p.y, w, b.fontSize || 14, !!b.wordWrap, dpr);
   }
 
   // Tight-trim: remove right/bottom (and any) extra background margins

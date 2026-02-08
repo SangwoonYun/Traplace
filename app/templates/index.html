@@ -404,6 +404,28 @@
       </div>
     </div>
 
+    <!-- Context Menu -->
+    <div id="contextMenu" class="context-menu" style="display: none;">
+      <div class="cm-group">
+        <div class="cm-label" data-i18n="ui.contextMenu.fontSize">Font Size</div>
+        <div class="cm-font-sizes">
+          <button class="cm-size-btn" data-size="10">10</button>
+          <button class="cm-size-btn" data-size="12">12</button>
+          <button class="cm-size-btn" data-size="14">14</button>
+          <button class="cm-size-btn" data-size="16">16</button>
+          <button class="cm-size-btn" data-size="18">18</button>
+          <button class="cm-size-btn" data-size="20">20</button>
+        </div>
+      </div>
+      <div class="cm-sep"></div>
+      <div class="cm-item cm-checkbox" id="cmWordWrap">
+        <label>
+          <input type="checkbox" id="cmWordWrapInput" />
+          <span data-i18n="ui.contextMenu.wordWrap">Word Wrap</span>
+        </label>
+      </div>
+    </div>
+
     <noscript>Please enable JavaScript to use this app.</noscript>
     <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
   </body>

@@ -249,6 +249,8 @@ export function createBlock(
   height,
   immutable = false,
   customName = null,
+  fontSize = 14,
+  wordWrap = false,
 ) {
   const cell =
     parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cell')) || 48;
@@ -308,6 +310,18 @@ export function createBlock(
   const label = document.createElement('div');
   label.className = 'label';
   label.textContent = displayText;
+
+  if (fontSize) {
+    label.style.fontSize = `${fontSize}px`;
+  }
+  if (wordWrap) {
+    label.style.whiteSpace = 'normal';
+    label.style.wordBreak = 'break-word';
+    label.style.padding = '4px';
+  } else {
+    label.style.whiteSpace = 'nowrap';
+  }
+
   el.appendChild(label);
 
   if (kind === 'city' || kind === 'custom') {
@@ -327,6 +341,8 @@ export function createBlock(
     left,
     top,
     customLabel: false,
+    fontSize: fontSize || 14,
+    wordWrap: !!wordWrap,
   };
   if (kind === 'custom') {
     b.width = blockWidth;
@@ -427,6 +443,41 @@ export function deleteBlock(el) {
   if (!state._restoring) {
     recomputePaint();
     validateAllObjects();
+    queueSaveToURL();
+    saveCheckpoint();
+  }
+}
+
+/**
+ * Update block font settings.
+ * @param {HTMLElement} el
+ * @param {{fontSize?: number, wordWrap?: boolean}} settings
+ */
+export function updateBlockFont(el, settings) {
+  const b = state.blocks.find((x) => x.el === el);
+  if (!b) return;
+
+  const label = el.querySelector('.label');
+  if (!label) return;
+
+  if (settings.fontSize !== undefined) {
+    b.fontSize = settings.fontSize;
+    label.style.fontSize = `${b.fontSize}px`;
+  }
+
+  if (settings.wordWrap !== undefined) {
+    b.wordWrap = settings.wordWrap;
+    if (b.wordWrap) {
+      label.style.whiteSpace = 'normal';
+      label.style.wordBreak = 'break-word';
+      label.style.padding = '4px';
+    } else {
+      label.style.whiteSpace = 'nowrap';
+      label.style.padding = '';
+    }
+  }
+
+  if (!state._restoring) {
     queueSaveToURL();
     saveCheckpoint();
   }

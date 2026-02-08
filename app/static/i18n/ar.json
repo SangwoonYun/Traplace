@@ -24,6 +24,10 @@
       "toss": "Toss",
       "privacy": "سياسة الخصوصية",
       "terms": "شروط الخدمة"
+    },
+    "contextMenu": {
+      "fontSize": "حجم الخط",
+      "wordWrap": "ملتف النص"
     }
   },
   "palette": {

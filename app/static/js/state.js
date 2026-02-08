@@ -34,6 +34,8 @@ export function cellPx() {
  * @property {number} top
  * @property {boolean} [customLabel]
  * @property {boolean} [immutable]
+ * @property {number} [fontSize]
+ * @property {boolean} [wordWrap]
  */
 
 export const state = {

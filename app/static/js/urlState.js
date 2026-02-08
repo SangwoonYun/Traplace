@@ -199,6 +199,15 @@ export function serializeState() {
           token += `~${encodeURIComponent(label)}`;
         }
       }
+
+      // Persist font settings
+      if (b.fontSize && b.fontSize !== 14) {
+        token += `*${toB36(b.fontSize)}`;
+      }
+      if (b.wordWrap) {
+        token += '!';
+      }
+
       return token;
     });
 
@@ -234,6 +243,30 @@ export function deserializeState(qs) {
     const head = token.slice(0, atIdx);
     let tail = token.slice(atIdx + 1);
 
+    // Optional word wrap part marked by "!"
+    let wordWrap = false;
+    const bangIdx = tail.indexOf('!');
+    if (bangIdx >= 0) {
+      wordWrap = true;
+      tail = tail.slice(0, bangIdx) + tail.slice(bangIdx + 1);
+    }
+
+    // Optional font size part split by "*"
+    let fontSize;
+    const starIdx = tail.indexOf('*');
+    if (starIdx >= 0) {
+      // Find where the size value ends (it's base36, but followed by ~ if label exists, or end of string)
+      // Actually, suffixes are always at the end in serializeState.
+      // But they can be after labels.
+      const starContent = tail.slice(starIdx + 1);
+      const nextSpecialIdx = starContent.search(/[~!]/); // should not happen if we parse ! first
+      const sizeValStr = nextSpecialIdx >= 0 ? starContent.slice(0, nextSpecialIdx) : starContent;
+
+      fontSize = isV2 ? parseInt(sizeValStr, 36) : parseInt(sizeValStr, 10);
+      tail =
+        tail.slice(0, starIdx) + (nextSpecialIdx >= 0 ? starContent.slice(nextSpecialIdx) : '');
+    }
+
     // Optional label part split by "~"
     let label;
     const tildeIdx = tail.indexOf('~');
@@ -261,14 +294,24 @@ export function deserializeState(qs) {
       const [wStr, hStr] = sizeRaw.split('x');
       const width = isV2 ? parseInt(wStr, 36) : parseInt(wStr, 10) || 1;
       const height = isV2 ? parseInt(hStr, 36) : parseInt(hStr, 10) || 1;
-      blocks.push({ kind, width, height, size: Math.max(width, height), cx, cy, label });
+      blocks.push({
+        kind,
+        width,
+        height,
+        size: Math.max(width, height),
+        cx,
+        cy,
+        label,
+        fontSize,
+        wordWrap,
+      });
     } else {
       const size = isV2 ? parseInt(sizeRaw, 36) : parseInt(sizeRaw || '1', 10) || 1;
       // For legacy 'block' (now 'custom'), convert to width x height format
       if (kind === 'custom') {
-        blocks.push({ kind, width: size, height: size, size, cx, cy, label });
+        blocks.push({ kind, width: size, height: size, size, cx, cy, label, fontSize, wordWrap });
       } else {
-        blocks.push({ kind, size, cx, cy, label });
+        blocks.push({ kind, size, cx, cy, label, fontSize, wordWrap });
       }
     }
   }
