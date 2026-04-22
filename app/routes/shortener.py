@@ -25,6 +25,9 @@ def api_shorten():
     if not raw:
         return jsonify(error='url is required'), 400
 
+    if len(raw) > 8190:
+        return jsonify(error='url too long'), 400
+
     if not same_origin(request, raw):
         return jsonify(error='only same-origin URLs are allowed'), 400
 
@@ -34,6 +37,9 @@ def api_shorten():
     code_len = cfg['SHORT_CODE_LEN']
 
     path = extract_path_preserving_query(raw)
+
+    if not path.startswith('/') or '://' in path:
+        return jsonify(error='invalid url path'), 400
 
     # Check if we already have a short code for this URL
     reverse_key = prefix + 'path:' + path
@@ -75,6 +81,10 @@ def redirect_short(code: str):
     path = r.get(key)
     if not path:
         abort(404)
+
+    # Reject anything that isn't a plain relative path (defense-in-depth)
+    if not path.startswith('/') or '://' in path:
+        abort(400)
 
     # Touch TTL to extend the life of popular links
     r.expire(key, ttl)

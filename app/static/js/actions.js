@@ -142,6 +142,8 @@ async function shortenCurrentUrl() {
   const u = new URL(location.href);
   const rel = u.pathname + u.search + u.hash;
 
+  if (rel.length > 8190) throw new Error('shorten-too-long');
+
   const res = await fetch('/api/shorten', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -149,6 +151,9 @@ async function shortenCurrentUrl() {
   });
 
   const data = await res.json().catch(() => null);
+  if (res.status === 400) {
+    throw new Error(data?.error === 'url too long' ? 'shorten-too-long' : 'shorten-failed');
+  }
   if (!res.ok || !data) throw new Error('shorten-failed');
 
   const candidate = data.short_url;
@@ -347,6 +352,11 @@ export function setupActions() {
       urlToCopy = await shortenCurrentUrl();
       isShortened = true;
     } catch (err) {
+      if (err.message === 'shorten-too-long') {
+        btnCopyURL.textContent = t('msg.urlTooLong');
+        restoreIcon();
+        return;
+      }
       console.warn('Shortening failed, using full URL:', err);
     }
 

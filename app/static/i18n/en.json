@@ -65,7 +65,8 @@
     "copied": "Copied!",
     "shortenError": "Failed to create short URL.",
     "copyError": "Failed to copy.",
-    "copyManual": "Please copy with Ctrl+C or Cmd+C"
+    "copyManual": "Please copy with Ctrl+C or Cmd+C",
+    "urlTooLong": "URL is too long to shorten."
   },
   "modal": {
     "urlCopy": {

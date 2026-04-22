@@ -8,15 +8,18 @@ a simple health check endpoint.
 
 from flask import Blueprint, jsonify, render_template, request
 
+from .policies import SUPPORTED_LANGS
+
 bp = Blueprint('core', __name__)
 
 
 @bp.get('/')
 def index():
     """Render the main index page."""
-    # Get current language from query parameter
-    current_lang = request.args.get('lang', 'en')  # Default to English
-    return render_template('index.html', current_lang=current_lang)
+    lang = request.args.get('lang', 'en')
+    if lang not in SUPPORTED_LANGS:
+        lang = 'en'
+    return render_template('index.html', current_lang=lang)
 
 
 @bp.get('/healthz')

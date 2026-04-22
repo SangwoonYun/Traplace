@@ -63,7 +63,8 @@
     "copied": "تم النسخ!",
     "shortenError": "فشل إنشاء الرابط المختصر.",
     "copyError": "فشل النسخ.",
-    "copyManual": "يرجى النسخ باستخدام Ctrl+C أو Cmd+C"
+    "copyManual": "يرجى النسخ باستخدام Ctrl+C أو Cmd+C",
+    "urlTooLong": "عنوان URL طويل جدًا للاختصار."
   },
   "modal": {
     "urlCopy": {

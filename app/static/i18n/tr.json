@@ -65,7 +65,8 @@
     "copied": "Kopyalandı!",
     "shortenError": "Kısa URL oluşturulamadı.",
     "copyError": "Kopyalama başarısız oldu.",
-    "copyManual": "Lütfen Ctrl+C veya Cmd+C ile kopyalayın"
+    "copyManual": "Lütfen Ctrl+C veya Cmd+C ile kopyalayın",
+    "urlTooLong": "URL kısaltmak için çok uzun."
   },
   "modal": {
     "urlCopy": {

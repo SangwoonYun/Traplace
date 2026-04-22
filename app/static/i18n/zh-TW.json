@@ -65,7 +65,8 @@
     "copied": "已複製！",
     "shortenError": "建立短網址失敗。",
     "copyError": "複製失敗。",
-    "copyManual": "請使用 Ctrl+C 或 Cmd+C 複製"
+    "copyManual": "請使用 Ctrl+C 或 Cmd+C 複製",
+    "urlTooLong": "URL過長，無法縮短。"
   },
   "modal": {
     "urlCopy": {

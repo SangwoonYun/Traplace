@@ -65,7 +65,8 @@
     "copied": "Disalin!",
     "shortenError": "Gagal membuat URL pendek.",
     "copyError": "Gagal menyalin.",
-    "copyManual": "Silakan salin dengan Ctrl+C atau Cmd+C"
+    "copyManual": "Silakan salin dengan Ctrl+C atau Cmd+C",
+    "urlTooLong": "URL terlalu panjang untuk dipersingkat."
   },
   "modal": {
     "urlCopy": {

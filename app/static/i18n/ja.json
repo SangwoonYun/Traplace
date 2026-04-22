@@ -65,7 +65,8 @@
     "copied": "コピーしました！",
     "shortenError": "短縮URLの作成に失敗しました。",
     "copyError": "コピーに失敗しました。",
-    "copyManual": "Ctrl+C または Cmd+C でコピーしてください"
+    "copyManual": "Ctrl+C または Cmd+C でコピーしてください",
+    "urlTooLong": "URLが長すぎて短縮できません。"
   },
   "modal": {
     "urlCopy": {

@@ -65,7 +65,8 @@
     "copied": "복사됨!",
     "shortenError": "단축 URL 생성에 실패했습니다.",
     "copyError": "복사에 실패했습니다.",
-    "copyManual": "Ctrl+C 또는 Cmd+C로 복사해주세요"
+    "copyManual": "Ctrl+C 또는 Cmd+C로 복사해주세요",
+    "urlTooLong": "URL이 너무 길어 단축할 수 없습니다."
   },
   "modal": {
     "urlCopy": {
