@@ -7,7 +7,7 @@
  */
 
 import { state, cellPx, blockByEl } from '../state.js';
-import { previewLayer, outlinesPreviewLayer, snapEl, palette, trash, viewport } from '../dom.js';
+import { outlinesPreviewLayer, snapEl, palette, trash, viewport } from '../dom.js';
 import { clientToLocalRot, snapLocal } from '../transform.js';
 import { setDragScrollLock } from './hscroll.js';
 import { PAINTER_KINDS } from '../painter.js';
@@ -177,7 +177,7 @@ function updateDragAt(clientX, clientY) {
     showPreview(kind, snapped.left, snapped.top, size, true);
   } else {
     outlinesPreviewLayer.innerHTML = '';
-    previewLayer.innerHTML = '';
+    clearPreview();
   }
 
   if (state.drag.ghost) {

@@ -25,7 +25,7 @@ import {
   btnTrap,
   btnCityTrapDist,
 } from './dom.js';
-import { recomputePaint, renderUserTiles, centerToWorldCenter, centerToCell } from './render.js';
+import { recomputePaint, renderUserTiles, centerToWorldCenter, centerToCell, invalidateLayerCache } from './render.js';
 import { validateAllObjects, createBlock } from './blocks.js';
 import { updateAllCounts } from './counters.js';
 import { saveToURLImmediate, deserializeState, updateURLWithSerialized } from './urlState.js';
@@ -321,6 +321,8 @@ export function setupActions() {
     state.paintedSet.clear();
     state.userPaint.clear();
 
+    invalidateLayerCache(tilesLayer);
+    invalidateLayerCache(previewLayer);
     tilesLayer.innerHTML = '';
     userLayer.innerHTML = '';
     outlinesLayer.innerHTML = '';
