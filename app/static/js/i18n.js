@@ -172,7 +172,7 @@ async function fetchJsonFromBases(lang) {
   for (const base of bases) {
     const u = `${base}/${lang}.json`;
     try {
-      const r = await fetch(u, { cache: 'no-cache', mode: 'cors' });
+      const r = await fetch(u, { cache: 'default', mode: 'cors' });
       if (r.ok) return await r.json();
     } catch {
       // try next base
