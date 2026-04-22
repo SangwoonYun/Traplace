@@ -6,7 +6,7 @@
  * - Reset / Copy URL / Export PNG / Undo / Redo behaviors
  */
 
-import { state, cellPx } from './state.js';
+import { state, cellPx, blockByEl } from './state.js';
 import {
   tilesLayer,
   outlinesLayer,
@@ -25,7 +25,13 @@ import {
   btnTrap,
   btnCityTrapDist,
 } from './dom.js';
-import { recomputePaint, renderUserTiles, centerToWorldCenter, centerToCell } from './render.js';
+import {
+  recomputePaint,
+  renderUserTiles,
+  centerToWorldCenter,
+  centerToCell,
+  invalidateLayerCache,
+} from './render.js';
 import { validateAllObjects, createBlock } from './blocks.js';
 import { updateAllCounts } from './counters.js';
 import { saveToURLImmediate, deserializeState, updateURLWithSerialized } from './urlState.js';
@@ -310,7 +316,7 @@ export function setupActions() {
 
     // Remove only non-immutable blocks
     rot.querySelectorAll('.block').forEach((el) => {
-      const block = state.blocks.find((b) => b.el === el);
+      const block = blockByEl.get(el);
       if (!block || !block.immutable) {
         el.remove();
       }
@@ -321,6 +327,8 @@ export function setupActions() {
     state.paintedSet.clear();
     state.userPaint.clear();
 
+    invalidateLayerCache(tilesLayer);
+    invalidateLayerCache(previewLayer);
     tilesLayer.innerHTML = '';
     userLayer.innerHTML = '';
     outlinesLayer.innerHTML = '';

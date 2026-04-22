@@ -589,9 +589,15 @@ export async function exportPNG() {
 
   const dpr = window.devicePixelRatio || 1;
 
-  // Calculate canvas dimensions with DPR
-  const canvasWidth = Math.max(1, Math.floor(boxW * dpr));
-  const canvasHeight = Math.max(1, Math.floor(boxH * dpr));
+  // Calculate canvas dimensions with DPR, capped to avoid memory spikes on
+  // retina displays with large layouts (e.g. DPR=2 + huge map → 10k+ px).
+  const MAX_CANVAS_PX = 4096;
+  const rawWidth = Math.max(1, Math.floor(boxW * dpr));
+  const rawHeight = Math.max(1, Math.floor(boxH * dpr));
+  const scaleFactor = Math.min(1, MAX_CANVAS_PX / Math.max(rawWidth, rawHeight));
+  const canvasWidth = Math.max(1, Math.floor(rawWidth * scaleFactor));
+  const canvasHeight = Math.max(1, Math.floor(rawHeight * scaleFactor));
+  const effectiveDpr = dpr * scaleFactor;
 
   // Draw on a work canvas first (we may trim it later)
   const work = document.createElement('canvas');
@@ -604,17 +610,24 @@ export async function exportPNG() {
     throw new Error('Failed to create canvas context. Export area may be too large.');
   }
 
-  ctx.scale(dpr, dpr);
+  ctx.scale(effectiveDpr, effectiveDpr);
 
   // Background
   ctx.fillStyle = bgColor;
   ctx.fillRect(0, 0, boxW, boxH);
 
-  // Apply same transform as screen + shift, multiplied by dpr
+  // Apply same transform as screen + shift, multiplied by effective DPR
   const { a, b, c, d } = linearForWorld();
   const e = W * k + shiftX;
   const f = (W + H) * k + shiftY;
-  ctx.setTransform(a * dpr, b * dpr, c * dpr, d * dpr, e * dpr, f * dpr);
+  ctx.setTransform(
+    a * effectiveDpr,
+    b * effectiveDpr,
+    c * effectiveDpr,
+    d * effectiveDpr,
+    e * effectiveDpr,
+    f * effectiveDpr,
+  );
 
   /* 1) Grid major lines */
   ctx.save();
@@ -765,7 +778,7 @@ export async function exportPNG() {
       }
 
       const p = projectWithShift(W, H, shiftX, shiftY, centerX, centerY);
-      drawLabel(ctx, text, p.x, p.y, w, b.fontSize || 14, !!b.wordWrap, dpr);
+      drawLabel(ctx, text, p.x, p.y, w, b.fontSize || 14, !!b.wordWrap, effectiveDpr);
     }
   }
 
@@ -837,7 +850,7 @@ export async function exportPNG() {
     const Xc = x + w / 2;
     const Yc = y + h / 2;
     const p = projectWithShift(W, H, shiftX, shiftY, Xc, Yc);
-    drawLabel(ctx, text, p.x, p.y, w, b.fontSize || 14, !!b.wordWrap, dpr);
+    drawLabel(ctx, text, p.x, p.y, w, b.fontSize || 14, !!b.wordWrap, effectiveDpr);
   }
 
   // Tight-trim: remove right/bottom (and any) extra background margins

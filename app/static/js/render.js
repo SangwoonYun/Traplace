@@ -114,42 +114,127 @@ export function centerToInitialPosition() {
 /* ---------------------------------------------
  * Core painters
  * ------------------------------------------- */
+
+/**
+ * Per-layer state for renderCells diff: tracks the previous cell set and the
+ * DOM element for each cell key so we can add/remove only what changed.
+ * @type {WeakMap<HTMLElement, {keys: Set<string>, els: Map<string, HTMLElement>}>}
+ */
+const _layerState = new WeakMap();
+
 /**
  * Render a set of cells onto a layer as blue tiles with perimeter borders.
+ * Diffs against the previous call for the same layer — only adds/removes
+ * tiles that changed, and re-styles neighbours whose border edges may have
+ * flipped.
  * @param {HTMLElement} layer
  * @param {{x:number,y:number}[]} cellList
  * @param {{dashed?: boolean}} [opts]
  */
 export function renderCells(layer, cellList, opts) {
-  layer.innerHTML = '';
-
   const cpx = cellPx();
-  const set = new Set(cellList.map((c) => keyOf(c.x, c.y)));
+  const dashed = opts?.dashed ? 'dashed' : 'solid';
   const style = getComputedStyle(document.documentElement);
   const col = style.getPropertyValue('--paint-blue-border').trim() || 'rgba(66,133,244,0.9)';
   const thickness = '2px';
-  const dashed = opts?.dashed ? 'dashed' : 'solid';
 
-  for (const c of cellList) {
+  const newKeys = new Set(cellList.map((c) => keyOf(c.x, c.y)));
+
+  /** Build / update one tile element for position (x, y). */
+  function makeTile(x, y) {
     const t = document.createElement('div');
     t.className = 'tile';
-    t.style.left = `${c.x * cpx}px`;
-    t.style.top = `${c.y * cpx}px`;
+    t.style.left = `${x * cpx}px`;
+    t.style.top = `${y * cpx}px`;
     t.style.width = `${cpx}px`;
     t.style.height = `${cpx}px`;
-
-    const topMissing = !set.has(keyOf(c.x, c.y - 1));
-    const rightMissing = !set.has(keyOf(c.x + 1, c.y));
-    const bottomMissing = !set.has(keyOf(c.x, c.y + 1));
-    const leftMissing = !set.has(keyOf(c.x - 1, c.y));
-
-    t.style.borderTop = topMissing ? `${thickness} ${dashed} ${col}` : '0';
-    t.style.borderRight = rightMissing ? `${thickness} ${dashed} ${col}` : '0';
-    t.style.borderBottom = bottomMissing ? `${thickness} ${dashed} ${col}` : '0';
-    t.style.borderLeft = leftMissing ? `${thickness} ${dashed} ${col}` : '0';
-
-    layer.appendChild(t);
+    return t;
   }
+
+  /** Apply border style to an existing tile element. */
+  function styleTile(t, x, y) {
+    const top = !newKeys.has(keyOf(x, y - 1));
+    const right = !newKeys.has(keyOf(x + 1, y));
+    const bottom = !newKeys.has(keyOf(x, y + 1));
+    const left = !newKeys.has(keyOf(x - 1, y));
+    t.style.borderTop = top ? `${thickness} ${dashed} ${col}` : '0';
+    t.style.borderRight = right ? `${thickness} ${dashed} ${col}` : '0';
+    t.style.borderBottom = bottom ? `${thickness} ${dashed} ${col}` : '0';
+    t.style.borderLeft = left ? `${thickness} ${dashed} ${col}` : '0';
+  }
+
+  const prev = _layerState.get(layer);
+
+  // First render for this layer — build everything from scratch.
+  if (!prev) {
+    const els = new Map();
+    for (const c of cellList) {
+      const k = keyOf(c.x, c.y);
+      const t = makeTile(c.x, c.y);
+      styleTile(t, c.x, c.y);
+      layer.appendChild(t);
+      els.set(k, t);
+    }
+    _layerState.set(layer, { keys: newKeys, els });
+    return;
+  }
+
+  const { keys: oldKeys, els } = prev;
+
+  // Collect keys whose border appearance may have changed (neighbours of
+  // added/removed cells).
+  const toRestyle = new Set();
+
+  // Remove tiles that are no longer in the set.
+  for (const k of oldKeys) {
+    if (!newKeys.has(k)) {
+      const t = els.get(k);
+      if (t) layer.removeChild(t);
+      els.delete(k);
+
+      // Neighbours may now have an exposed edge.
+      const [x, y] = k.split(',').map(Number);
+      for (const nk of [keyOf(x, y - 1), keyOf(x + 1, y), keyOf(x, y + 1), keyOf(x - 1, y)]) {
+        if (newKeys.has(nk)) toRestyle.add(nk);
+      }
+    }
+  }
+
+  // Add tiles that are newly in the set.
+  for (const k of newKeys) {
+    if (!oldKeys.has(k)) {
+      const [x, y] = k.split(',').map(Number);
+      const t = makeTile(x, y);
+      layer.appendChild(t);
+      els.set(k, t);
+      toRestyle.add(k);
+
+      // Neighbours may now have a covered edge.
+      for (const nk of [keyOf(x, y - 1), keyOf(x + 1, y), keyOf(x, y + 1), keyOf(x - 1, y)]) {
+        if (newKeys.has(nk)) toRestyle.add(nk);
+      }
+    }
+  }
+
+  // Re-style only the affected tiles.
+  for (const k of toRestyle) {
+    const t = els.get(k);
+    if (!t) continue;
+    const [x, y] = k.split(',').map(Number);
+    styleTile(t, x, y);
+  }
+
+  prev.keys = newKeys;
+}
+
+/**
+ * Invalidate the renderCells diff cache for a layer.
+ * Call this before clearing a layer's innerHTML outside of renderCells so the
+ * next renderCells call treats it as a fresh render.
+ * @param {HTMLElement} layer
+ */
+export function invalidateLayerCache(layer) {
+  _layerState.delete(layer);
 }
 
 /**
@@ -270,10 +355,6 @@ export function recomputeRedZone() {
       state.redZone.add(keyOf(c.x, c.y));
     }
   }
-
-  console.log(
-    `[RedZone] Recomputed ${state.redZone.size} cells from ${state.blocks.filter((b) => REDZONE_KINDS.has(b.kind)).length} blocks`,
-  );
 }
 
 /* ---------------------------------------------
@@ -289,8 +370,10 @@ export function recomputeRedZone() {
  */
 export function showPreview(kind, snappedLeft, snappedTop, size, show = true) {
   outlinesPreviewLayer.innerHTML = '';
-  previewLayer.innerHTML = '';
-  if (!show) return;
+  if (!show) {
+    renderCells(previewLayer, []);
+    return;
+  }
 
   const { cx, cy } = posToCell(snappedLeft, snappedTop);
   const centerCx = cx + Math.floor(size / 2);
@@ -313,7 +396,7 @@ export function showPreview(kind, snappedLeft, snappedTop, size, show = true) {
 /** Clear any active preview overlays. */
 export function clearPreview() {
   outlinesPreviewLayer.innerHTML = '';
-  previewLayer.innerHTML = '';
+  renderCells(previewLayer, []);
 }
 
 /* ---------------------------------------------

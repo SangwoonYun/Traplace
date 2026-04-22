@@ -6,8 +6,8 @@
  * - Edge auto-scroll while dragging near viewport edges
  */
 
-import { state, cellPx } from '../state.js';
-import { previewLayer, outlinesPreviewLayer, snapEl, palette, trash, viewport } from '../dom.js';
+import { state, cellPx, blockByEl } from '../state.js';
+import { outlinesPreviewLayer, snapEl, palette, trash, viewport } from '../dom.js';
 import { clientToLocalRot, snapLocal } from '../transform.js';
 import { setDragScrollLock } from './hscroll.js';
 import { PAINTER_KINDS } from '../painter.js';
@@ -177,7 +177,7 @@ function updateDragAt(clientX, clientY) {
     showPreview(kind, snapped.left, snapped.top, size, true);
   } else {
     outlinesPreviewLayer.innerHTML = '';
-    previewLayer.innerHTML = '';
+    clearPreview();
   }
 
   if (state.drag.ghost) {
@@ -379,6 +379,8 @@ function onPointerUp(e) {
   // Move existing node or delete it
   if (state.drag.mode === 'move' && state.drag.node) {
     if (droppingInTrash) {
+      // deleteBlock handles its own cascade
+      state.isDragging = false;
       deleteBlock(state.drag.node);
     } else {
       const { x, y } = clientToLocalRot(e.clientX, e.clientY);
@@ -390,6 +392,8 @@ function onPointerUp(e) {
       const top = y - (h * cpx) / 2;
       const snapped = snapLocal(left, top, Math.max(w, h));
 
+      // Lower the flag so updateBlockPosition runs its cascade normally
+      state.isDragging = false;
       updateBlockPosition(state.drag.node, snapped.left, snapped.top);
     }
   }
@@ -421,6 +425,7 @@ function cleanupDrag() {
   lockPaletteScroll(false);
 
   window.removeEventListener('pointermove', onPointerMove);
+  state.isDragging = false;
   state.drag = null;
 }
 
@@ -595,7 +600,7 @@ function getResizeEdge(el, e) {
   const threshold = 15; // pixels from edge in local coords
 
   // Get block state to know its actual width/height in cells
-  const block = state.blocks.find((b) => b.el === el);
+  const block = blockByEl.get(el);
   if (!block) return null;
 
   const cpx = cellPx();
@@ -668,7 +673,7 @@ function startResize(el, e, edge) {
   e.preventDefault();
   e.stopPropagation();
 
-  const block = state.blocks.find((b) => b.el === el);
+  const block = blockByEl.get(el);
   if (!block || block.kind !== 'custom') return;
 
   const cpx = cellPx();
@@ -823,7 +828,7 @@ function getCursorForEdge(edge) {
  */
 export function makeMovable(el) {
   // Don't make immutable blocks movable
-  const block = state.blocks.find((b) => b.el === el);
+  const block = blockByEl.get(el);
   if (block?.immutable) {
     return;
   }
@@ -851,7 +856,7 @@ export function makeMovable(el) {
     if (state._isResizing) return; // Don't start anything if already resizing
 
     // Check if clicking on edge for custom blocks
-    const block = state.blocks.find((b) => b.el === el);
+    const block = blockByEl.get(el);
     if (block && block.kind === 'custom') {
       const resizeEdge = getResizeEdge(el, e);
       if (resizeEdge) {
@@ -876,13 +881,14 @@ export function makeMovable(el) {
       window.__suppressContextMenu = true;
       e.preventDefault();
 
+      state.isDragging = true;
       safeSetPointerCapture(el, e.pointerId);
 
       const size = parseInt(el.dataset.size, 10);
       const kind = el.dataset.kind;
 
       // Get width and height from state for custom blocks
-      const block = state.blocks.find((b) => b.el === el);
+      const block = blockByEl.get(el);
       const width = block?.width;
       const height = block?.height;
       const w = width || size;

@@ -38,6 +38,9 @@ export function cellPx() {
  * @property {boolean} [wordWrap]
  */
 
+/** O(1) element → block index. Registered by createBlock, cleared by deleteBlock. */
+export const blockByEl = new WeakMap();
+
 export const state = {
   zoom: 1,
 

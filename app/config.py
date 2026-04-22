@@ -30,6 +30,14 @@ class ProdConfig(BaseConfig):
     DEBUG: bool = False
 
 
+class TestConfig(BaseConfig):
+    """Testing environment configuration."""
+
+    TESTING: bool = True
+    DEBUG: bool = False
+    REDIS_URL: str = 'redis://localhost:6379/15'  # overridden by fakeredis in tests
+
+
 def get_config(name: str | None = None) -> type[BaseConfig]:
     """Return a configuration class based on the provided or detected environment name.
 
@@ -44,4 +52,6 @@ def get_config(name: str | None = None) -> type[BaseConfig]:
 
     if env.startswith('prod'):
         return ProdConfig
+    if env.startswith('test'):
+        return TestConfig
     return DevConfig

@@ -4,7 +4,7 @@
  * Allows changing font size and word wrap for town and custom blocks.
  */
 
-import { state } from '../state.js';
+import { blockByEl } from '../state.js';
 import { updateBlockFont } from '../blocks.js';
 
 const menu = document.getElementById('contextMenu');
@@ -19,7 +19,7 @@ export function initContextMenu() {
   document.addEventListener('contextmenu', (e) => {
     const block = e.target.closest('.block');
     if (block) {
-      const b = state.blocks.find((x) => x.el === block);
+      const b = blockByEl.get(block);
       if (b && (b.kind === 'city' || b.kind === 'custom')) {
         e.preventDefault();
         showContextMenu(e.clientX, e.clientY, block);
@@ -65,7 +65,7 @@ export function initContextMenu() {
  */
 function showContextMenu(x, y, blockEl) {
   targetBlockEl = blockEl;
-  const b = state.blocks.find((x) => x.el === blockEl);
+  const b = blockByEl.get(blockEl);
   if (!b) return;
 
   // Initialize menu state from block
