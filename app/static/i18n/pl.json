@@ -48,7 +48,13 @@
     "castle": "Zamek",
     "turret": "Wieżyczka",
     "fortress": "Forteca",
-    "sanctuary": "Sanktuarium"
+    "sanctuary": "Sanktuarium",
+    "turret_directions": [
+      "Południe",
+      "Zachód",
+      "Wschód",
+      "Północ"
+    ]
   },
   "alert": {
     "noCities": "Brak miast.",

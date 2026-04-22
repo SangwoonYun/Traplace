@@ -48,7 +48,13 @@
     "castle": "Kale",
     "turret": "Taret",
     "fortress": "Kale",
-    "sanctuary": "Mabet"
+    "sanctuary": "Mabet",
+    "turret_directions": [
+      "Güney",
+      "Batı",
+      "Doğu",
+      "Kuzey"
+    ]
   },
   "alert": {
     "noCities": "Hiç şehir yok.",

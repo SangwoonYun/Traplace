@@ -48,7 +48,13 @@
     "castle": "Burg",
     "turret": "Turm",
     "fortress": "Festung",
-    "sanctuary": "Heiligtum"
+    "sanctuary": "Heiligtum",
+    "turret_directions": [
+      "Süd",
+      "West",
+      "Ost",
+      "Nord"
+    ]
   },
   "alert": {
     "noCities": "Keine Städte.",

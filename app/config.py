@@ -14,7 +14,7 @@ class BaseConfig:
 
     REDIS_URL: str = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
     SHORT_CODE_LEN: int = 8
-    SHORT_TTL_SECONDS: int = 7 * 24 * 60 * 60  # 7 days
+    SHORT_TTL_SECONDS: int = 30 * 24 * 60 * 60  # 30 days
     SHORT_KEY_PREFIX: str = 'su:'
 
 

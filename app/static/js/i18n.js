@@ -76,6 +76,7 @@ const BUILTIN_EN = {
     block1: '1×1',
     block2: '2×2',
     block3: '3×3',
+    turret_directions: ['South', 'West', 'East', 'North'],
   },
   alert: {
     noCities: 'No cities.',
@@ -247,6 +248,24 @@ function extractRomanNumeral(label) {
   return match ? match[1] : null;
 }
 
+const ROMAN_TO_INDEX = { I: 0, II: 1, III: 2, IV: 3 };
+
+// Extract turret index (0-based) from a label that may contain any language's direction suffix or Roman numeral
+function extractTurretIndex(label) {
+  if (!label) return null;
+  const roman = extractRomanNumeral(label);
+  if (roman && ROMAN_TO_INDEX[roman] != null) return ROMAN_TO_INDEX[roman];
+  // Try all loaded dictionaries to find a matching direction suffix
+  for (const dict of [DICT, BUILTIN_EN]) {
+    const suffixes = dict?.palette?.turret_directions;
+    if (!Array.isArray(suffixes)) continue;
+    for (let i = 0; i < suffixes.length; i++) {
+      if (label.includes(suffixes[i])) return i;
+    }
+  }
+  return null;
+}
+
 export function t(path, label = null) {
   const segs = path.split('.');
   let cur = DICT || BUILTIN_EN;
@@ -255,9 +274,21 @@ export function t(path, label = null) {
     if (cur == null) return path; // fall back to key path
   }
 
-  // For turret, fortress, and sanctuary, append Roman numeral if label contains one
+  // For turret, use directional suffix instead of Roman numeral
+  if (path === 'palette.turret' && label) {
+    const idx = extractTurretIndex(label);
+    if (idx != null) {
+      const suffixes =
+        (DICT || BUILTIN_EN)?.palette?.turret_directions;
+      if (Array.isArray(suffixes) && suffixes[idx] != null) {
+        return `${suffixes[idx]} ${cur}`;
+      }
+    }
+  }
+
+  // For fortress and sanctuary, append Roman numeral if label contains one
   if (
-    (path === 'palette.turret' || path === 'palette.fortress' || path === 'palette.sanctuary') &&
+    (path === 'palette.fortress' || path === 'palette.sanctuary') &&
     label
   ) {
     const roman = extractRomanNumeral(label);
