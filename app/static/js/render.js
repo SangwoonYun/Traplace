@@ -356,9 +356,6 @@ export function recomputeRedZone() {
     }
   }
 
-  console.log(
-    `[RedZone] Recomputed ${state.redZone.size} cells from ${state.blocks.filter((b) => REDZONE_KINDS.has(b.kind)).length} blocks`,
-  );
 }
 
 /* ---------------------------------------------
