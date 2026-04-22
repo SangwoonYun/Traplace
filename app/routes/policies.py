@@ -8,7 +8,7 @@ Provides:
 """
 
 import json
-from datetime import datetime
+from datetime import date
 from pathlib import Path
 
 from flask import Blueprint, abort, current_app, render_template, request
@@ -80,9 +80,9 @@ def load_legal_content(lang, page_type):
     try:
         with open(json_path, encoding='utf-8') as f:
             data = json.load(f)
-            return data.get(page_type), data.get('footer'), lang
+            return data.get(page_type), data.get('footer'), lang, data.get('last_updated')
     except (FileNotFoundError, json.JSONDecodeError):
-        return None, None, lang
+        return None, None, lang, None
 
 
 @bp.get('/privacy')
@@ -90,7 +90,7 @@ def privacy():
     """Render the Privacy Policy page with i18n support."""
     lang = request.args.get('lang', 'en')
 
-    content, footer, actual_lang = load_legal_content(lang, 'privacy')
+    content, footer, actual_lang, raw_date = load_legal_content(lang, 'privacy')
 
     if not content:
         abort(500, 'Legal content not available')
@@ -98,9 +98,13 @@ def privacy():
     # Check if this is a machine translation
     is_machine_translated = actual_lang not in ['en', 'ko']
 
-    # Format date according to language
+    # Format the stored revision date (falls back to today if missing)
     date_format = DATE_FORMATS.get(actual_lang, '%B %d, %Y')
-    last_updated = datetime.now().strftime(date_format)
+    try:
+        revision_date = date.fromisoformat(raw_date) if raw_date else date.today()
+    except ValueError:
+        revision_date = date.today()
+    last_updated = revision_date.strftime(date_format)
 
     return render_template(
         'legal.html',
@@ -118,7 +122,7 @@ def terms():
     """Render the Terms of Service page with i18n support."""
     lang = request.args.get('lang', 'en')
 
-    content, footer, actual_lang = load_legal_content(lang, 'terms')
+    content, footer, actual_lang, raw_date = load_legal_content(lang, 'terms')
 
     if not content:
         abort(500, 'Legal content not available')
@@ -126,9 +130,13 @@ def terms():
     # Check if this is a machine translation
     is_machine_translated = actual_lang not in ['en', 'ko']
 
-    # Format date according to language
+    # Format the stored revision date (falls back to today if missing)
     date_format = DATE_FORMATS.get(actual_lang, '%B %d, %Y')
-    last_updated = datetime.now().strftime(date_format)
+    try:
+        revision_date = date.fromisoformat(raw_date) if raw_date else date.today()
+    except ValueError:
+        revision_date = date.today()
+    last_updated = revision_date.strftime(date_format)
 
     return render_template(
         'legal.html',

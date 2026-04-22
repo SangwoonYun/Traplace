@@ -41,6 +41,7 @@ instance/
 .idea/
 .DS_Store
 Thumbs.db
+.claude
 
 # ────────────── Node / Frontend (혹시 NPM 사용시) ──────────────
 node_modules/
