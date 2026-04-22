@@ -355,7 +355,6 @@ export function recomputeRedZone() {
       state.redZone.add(keyOf(c.x, c.y));
     }
   }
-
 }
 
 /* ---------------------------------------------

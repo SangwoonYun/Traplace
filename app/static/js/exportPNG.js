@@ -620,7 +620,14 @@ export async function exportPNG() {
   const { a, b, c, d } = linearForWorld();
   const e = W * k + shiftX;
   const f = (W + H) * k + shiftY;
-  ctx.setTransform(a * effectiveDpr, b * effectiveDpr, c * effectiveDpr, d * effectiveDpr, e * effectiveDpr, f * effectiveDpr);
+  ctx.setTransform(
+    a * effectiveDpr,
+    b * effectiveDpr,
+    c * effectiveDpr,
+    d * effectiveDpr,
+    e * effectiveDpr,
+    f * effectiveDpr,
+  );
 
   /* 1) Grid major lines */
   ctx.save();

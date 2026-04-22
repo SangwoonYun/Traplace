@@ -25,7 +25,13 @@ import {
   btnTrap,
   btnCityTrapDist,
 } from './dom.js';
-import { recomputePaint, renderUserTiles, centerToWorldCenter, centerToCell, invalidateLayerCache } from './render.js';
+import {
+  recomputePaint,
+  renderUserTiles,
+  centerToWorldCenter,
+  centerToCell,
+  invalidateLayerCache,
+} from './render.js';
 import { validateAllObjects, createBlock } from './blocks.js';
 import { updateAllCounts } from './counters.js';
 import { saveToURLImmediate, deserializeState, updateURLWithSerialized } from './urlState.js';
