@@ -49,7 +49,12 @@
     "turret": "Turret",
     "fortress": "Fortress",
     "sanctuary": "Sanctuary",
-    "turret_directions": ["South", "West", "East", "North"]
+    "turret_directions": [
+      "South",
+      "West",
+      "East",
+      "North"
+    ]
   },
   "alert": {
     "noCities": "No cities.",
@@ -65,7 +70,8 @@
     "copied": "Copied!",
     "shortenError": "Failed to create short URL.",
     "copyError": "Failed to copy.",
-    "copyManual": "Please copy with Ctrl+C or Cmd+C"
+    "copyManual": "Please copy with Ctrl+C or Cmd+C",
+    "urlTooLong": "URL is too long to shorten."
   },
   "modal": {
     "urlCopy": {

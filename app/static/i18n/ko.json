@@ -49,7 +49,12 @@
     "turret": "포탑",
     "fortress": "성채",
     "sanctuary": "유적",
-    "turret_directions": ["남부", "서부", "동부", "북부"]
+    "turret_directions": [
+      "남부",
+      "서부",
+      "동부",
+      "북부"
+    ]
   },
   "alert": {
     "noCities": "도시가 없습니다.",
@@ -65,7 +70,8 @@
     "copied": "복사됨!",
     "shortenError": "단축 URL 생성에 실패했습니다.",
     "copyError": "복사에 실패했습니다.",
-    "copyManual": "Ctrl+C 또는 Cmd+C로 복사해주세요"
+    "copyManual": "Ctrl+C 또는 Cmd+C로 복사해주세요",
+    "urlTooLong": "URL이 너무 길어 단축할 수 없습니다."
   },
   "modal": {
     "urlCopy": {

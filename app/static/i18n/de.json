@@ -49,7 +49,12 @@
     "turret": "Turm",
     "fortress": "Festung",
     "sanctuary": "Heiligtum",
-    "turret_directions": ["Süd", "West", "Ost", "Nord"]
+    "turret_directions": [
+      "Süd",
+      "West",
+      "Ost",
+      "Nord"
+    ]
   },
   "alert": {
     "noCities": "Keine Städte.",
@@ -65,7 +70,8 @@
     "copied": "Kopiert!",
     "shortenError": "Kurz-URL konnte nicht erstellt werden.",
     "copyError": "Kopieren fehlgeschlagen.",
-    "copyManual": "Bitte mit Strg+C oder Cmd+C kopieren"
+    "copyManual": "Bitte mit Strg+C oder Cmd+C kopieren",
+    "urlTooLong": "URL ist zu lang zum Kürzen."
   },
   "modal": {
     "urlCopy": {

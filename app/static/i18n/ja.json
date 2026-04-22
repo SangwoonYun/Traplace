@@ -49,7 +49,12 @@
     "turret": "タレット",
     "fortress": "要塞",
     "sanctuary": "聖域",
-    "turret_directions": ["南部", "西部", "東部", "北部"]
+    "turret_directions": [
+      "南部",
+      "西部",
+      "東部",
+      "北部"
+    ]
   },
   "alert": {
     "noCities": "都市がありません。",
@@ -65,7 +70,8 @@
     "copied": "コピーしました！",
     "shortenError": "短縮URLの作成に失敗しました。",
     "copyError": "コピーに失敗しました。",
-    "copyManual": "Ctrl+C または Cmd+C でコピーしてください"
+    "copyManual": "Ctrl+C または Cmd+C でコピーしてください",
+    "urlTooLong": "URLが長すぎて短縮できません。"
   },
   "modal": {
     "urlCopy": {

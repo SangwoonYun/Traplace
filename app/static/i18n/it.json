@@ -49,7 +49,12 @@
     "turret": "Torretta",
     "fortress": "Fortezza",
     "sanctuary": "Santuario",
-    "turret_directions": ["Sud", "Ovest", "Est", "Nord"]
+    "turret_directions": [
+      "Sud",
+      "Ovest",
+      "Est",
+      "Nord"
+    ]
   },
   "alert": {
     "noCities": "Nessuna città.",
@@ -65,7 +70,8 @@
     "copied": "Copiato!",
     "shortenError": "Creazione dell'URL breve non riuscita.",
     "copyError": "Copia non riuscita.",
-    "copyManual": "Per favore copia con Ctrl+C o Cmd+C"
+    "copyManual": "Per favore copia con Ctrl+C o Cmd+C",
+    "urlTooLong": "URL troppo lunga per essere abbreviata."
   },
   "modal": {
     "urlCopy": {

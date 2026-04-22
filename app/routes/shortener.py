@@ -25,6 +25,9 @@ def api_shorten():
     if not raw:
         return jsonify(error='url is required'), 400
 
+    if len(raw) > 8190:
+        return jsonify(error='url too long'), 400
+
     if not same_origin(request, raw):
         return jsonify(error='only same-origin URLs are allowed'), 400
 
