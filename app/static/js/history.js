@@ -58,7 +58,18 @@ function applySerialized(qs) {
     const left = it.cx * c;
     const top = it.cy * c;
 
-    const el = createBlock(it.kind, it.size, left, top);
+    const el = createBlock(
+      it.kind,
+      it.size,
+      left,
+      top,
+      it.width,
+      it.height,
+      false,
+      null,
+      it.fontSize,
+      it.wordWrap,
+    );
 
     // Restore city label if any
     if (it.kind === 'city' && it.label) {
