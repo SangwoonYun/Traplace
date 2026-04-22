@@ -49,12 +49,7 @@
     "turret": "Menara",
     "fortress": "Benteng",
     "sanctuary": "Tempat Suci",
-    "turret_directions": [
-      "Selatan",
-      "Barat",
-      "Timur",
-      "Utara"
-    ]
+    "turret_directions": ["Selatan", "Barat", "Timur", "Utara"]
   },
   "alert": {
     "noCities": "Tidak ada kota.",

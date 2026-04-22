@@ -49,12 +49,7 @@
     "turret": "Turret",
     "fortress": "Fortress",
     "sanctuary": "Sanctuary",
-    "turret_directions": [
-      "South",
-      "West",
-      "East",
-      "North"
-    ]
+    "turret_directions": ["South", "West", "East", "North"]
   },
   "alert": {
     "noCities": "No cities.",

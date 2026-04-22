@@ -49,12 +49,7 @@
     "turret": "포탑",
     "fortress": "성채",
     "sanctuary": "유적",
-    "turret_directions": [
-      "남부",
-      "서부",
-      "동부",
-      "북부"
-    ]
+    "turret_directions": ["남부", "서부", "동부", "북부"]
   },
   "alert": {
     "noCities": "도시가 없습니다.",

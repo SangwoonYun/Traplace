@@ -49,12 +49,7 @@
     "turret": "Turm",
     "fortress": "Festung",
     "sanctuary": "Heiligtum",
-    "turret_directions": [
-      "Süd",
-      "West",
-      "Ost",
-      "Nord"
-    ]
+    "turret_directions": ["Süd", "West", "Ost", "Nord"]
   },
   "alert": {
     "noCities": "Keine Städte.",

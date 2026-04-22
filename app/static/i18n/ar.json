@@ -48,12 +48,7 @@
     "turret": "البرج",
     "fortress": "الحصن",
     "sanctuary": "المعبد",
-    "turret_directions": [
-      "الجنوب",
-      "الغرب",
-      "الشرق",
-      "الشمال"
-    ]
+    "turret_directions": ["الجنوب", "الغرب", "الشرق", "الشمال"]
   },
   "alert": {
     "noCities": "لا توجد مدن.",

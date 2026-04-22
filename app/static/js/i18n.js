@@ -278,8 +278,7 @@ export function t(path, label = null) {
   if (path === 'palette.turret' && label) {
     const idx = extractTurretIndex(label);
     if (idx != null) {
-      const suffixes =
-        (DICT || BUILTIN_EN)?.palette?.turret_directions;
+      const suffixes = (DICT || BUILTIN_EN)?.palette?.turret_directions;
       if (Array.isArray(suffixes) && suffixes[idx] != null) {
         return `${suffixes[idx]} ${cur}`;
       }
@@ -287,10 +286,7 @@ export function t(path, label = null) {
   }
 
   // For fortress and sanctuary, append Roman numeral if label contains one
-  if (
-    (path === 'palette.fortress' || path === 'palette.sanctuary') &&
-    label
-  ) {
+  if ((path === 'palette.fortress' || path === 'palette.sanctuary') && label) {
     const roman = extractRomanNumeral(label);
     if (roman) {
       return `${cur} ${roman}`;
