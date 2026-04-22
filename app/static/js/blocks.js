@@ -3,7 +3,7 @@
  * Block management: style, validation, label editing, and CRUD.
  */
 
-import { state } from './state.js';
+import { state, blockByEl } from './state.js';
 import { rot } from './dom.js';
 import { recomputePaint } from './render.js';
 import { posToCell } from './transform.js';
@@ -130,7 +130,7 @@ export function validateAllObjects() {
  * @param {HTMLElement} blockEl
  */
 function startEditLabel(blockEl) {
-  const b = state.blocks.find((x) => x.el === blockEl);
+  const b = blockByEl.get(blockEl);
   if (!b || (b.kind !== 'city' && b.kind !== 'custom')) return;
 
   const label = blockEl.querySelector('.label');
@@ -179,7 +179,7 @@ function startEditLabel(blockEl) {
  * @param {boolean} cancel
  */
 function finishEditLabel(blockEl, cancel) {
-  const b = state.blocks.find((x) => x.el === blockEl);
+  const b = blockByEl.get(blockEl);
   const label = blockEl.querySelector('.label');
   if (!b || !label) return;
 
@@ -352,6 +352,7 @@ export function createBlock(
     b.immutable = true;
   }
   state.blocks.push(b);
+  blockByEl.set(el, b);
   applyBlockStyle(b, false);
 
   if (!state._restoring) {
@@ -375,7 +376,7 @@ export function updateBlockPosition(el, snappedLeft, snappedTop) {
   el.style.left = `${snappedLeft}px`;
   el.style.top = `${snappedTop}px`;
 
-  const b = state.blocks.find((x) => x.el === el);
+  const b = blockByEl.get(el);
   if (b) {
     b.left = snappedLeft;
     b.top = snappedTop;
@@ -402,7 +403,7 @@ export function updateBlockSize(el, newWidth, newHeight) {
   el.style.width = `${newWidth * cell}px`;
   el.style.height = `${newHeight * cell}px`;
 
-  const b = state.blocks.find((x) => x.el === el);
+  const b = blockByEl.get(el);
   if (b && b.kind === 'custom') {
     b.width = newWidth;
     b.height = newHeight;
@@ -430,9 +431,11 @@ export function updateBlockSize(el, newWidth, newHeight) {
 export function deleteBlock(el) {
   el.remove();
 
-  const idx = state.blocks.findIndex((b) => b.el === el);
-  if (idx >= 0) {
-    const [removed] = state.blocks.splice(idx, 1);
+  const removed = blockByEl.get(el);
+  blockByEl.delete(el);
+  if (removed) {
+    const idx = state.blocks.indexOf(removed);
+    if (idx >= 0) state.blocks.splice(idx, 1);
     try {
       onDeleteBlock?.(removed);
     } catch {
@@ -454,7 +457,7 @@ export function deleteBlock(el) {
  * @param {{fontSize?: number, wordWrap?: boolean}} settings
  */
 export function updateBlockFont(el, settings) {
-  const b = state.blocks.find((x) => x.el === el);
+  const b = blockByEl.get(el);
   if (!b) return;
 
   const label = el.querySelector('.label');

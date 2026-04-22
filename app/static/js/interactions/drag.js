@@ -6,7 +6,7 @@
  * - Edge auto-scroll while dragging near viewport edges
  */
 
-import { state, cellPx } from '../state.js';
+import { state, cellPx, blockByEl } from '../state.js';
 import { previewLayer, outlinesPreviewLayer, snapEl, palette, trash, viewport } from '../dom.js';
 import { clientToLocalRot, snapLocal } from '../transform.js';
 import { setDragScrollLock } from './hscroll.js';
@@ -595,7 +595,7 @@ function getResizeEdge(el, e) {
   const threshold = 15; // pixels from edge in local coords
 
   // Get block state to know its actual width/height in cells
-  const block = state.blocks.find((b) => b.el === el);
+  const block = blockByEl.get(el);
   if (!block) return null;
 
   const cpx = cellPx();
@@ -668,7 +668,7 @@ function startResize(el, e, edge) {
   e.preventDefault();
   e.stopPropagation();
 
-  const block = state.blocks.find((b) => b.el === el);
+  const block = blockByEl.get(el);
   if (!block || block.kind !== 'custom') return;
 
   const cpx = cellPx();
@@ -823,7 +823,7 @@ function getCursorForEdge(edge) {
  */
 export function makeMovable(el) {
   // Don't make immutable blocks movable
-  const block = state.blocks.find((b) => b.el === el);
+  const block = blockByEl.get(el);
   if (block?.immutable) {
     return;
   }
@@ -851,7 +851,7 @@ export function makeMovable(el) {
     if (state._isResizing) return; // Don't start anything if already resizing
 
     // Check if clicking on edge for custom blocks
-    const block = state.blocks.find((b) => b.el === el);
+    const block = blockByEl.get(el);
     if (block && block.kind === 'custom') {
       const resizeEdge = getResizeEdge(el, e);
       if (resizeEdge) {
@@ -882,7 +882,7 @@ export function makeMovable(el) {
       const kind = el.dataset.kind;
 
       // Get width and height from state for custom blocks
-      const block = state.blocks.find((b) => b.el === el);
+      const block = blockByEl.get(el);
       const width = block?.width;
       const height = block?.height;
       const w = width || size;

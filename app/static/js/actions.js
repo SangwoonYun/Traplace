@@ -6,7 +6,7 @@
  * - Reset / Copy URL / Export PNG / Undo / Redo behaviors
  */
 
-import { state, cellPx } from './state.js';
+import { state, cellPx, blockByEl } from './state.js';
 import {
   tilesLayer,
   outlinesLayer,
@@ -310,7 +310,7 @@ export function setupActions() {
 
     // Remove only non-immutable blocks
     rot.querySelectorAll('.block').forEach((el) => {
-      const block = state.blocks.find((b) => b.el === el);
+      const block = blockByEl.get(el);
       if (!block || !block.immutable) {
         el.remove();
       }
