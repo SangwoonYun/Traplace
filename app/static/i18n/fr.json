@@ -48,7 +48,8 @@
     "castle": "Château",
     "turret": "Tourelle",
     "fortress": "Forteresse",
-    "sanctuary": "Sanctuaire"
+    "sanctuary": "Sanctuaire",
+    "turret_directions": ["Sud", "Ouest", "Est", "Nord"]
   },
   "alert": {
     "noCities": "Aucune ville.",

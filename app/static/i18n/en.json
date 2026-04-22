@@ -1,5 +1,7 @@
 {
-  "app": { "title": "Alliance Placement Simulator" },
+  "app": {
+    "title": "Alliance Placement Simulator"
+  },
   "ui": {
     "usageTitle": "How to use",
     "usage": "• <b>Drag & drop</b>: place items from the left palette (grid snap).<br>• <b>Middle mouse drag</b>: pan the view.<br>• <b>Ctrl/⌘ + Wheel</b>: zoom in/out.<br>• <b>Trackpad pinch</b>: .<br>• <b>Click a cell</b>: toggle red paint.<br>• <b>Town</b> label: double-click → edit (Enter save / Esc cancel).<br>• Bottom <b>🗑 area</b>: drag an item here to delete.<br>※ Blue paint is created by <b>Banner (7×7)</b> and <b>HQ (15×15)</b>.",
@@ -46,7 +48,8 @@
     "castle": "Castle",
     "turret": "Turret",
     "fortress": "Fortress",
-    "sanctuary": "Sanctuary"
+    "sanctuary": "Sanctuary",
+    "turret_directions": ["South", "West", "East", "North"]
   },
   "alert": {
     "noCities": "No cities.",

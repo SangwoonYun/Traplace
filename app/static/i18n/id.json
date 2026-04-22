@@ -48,7 +48,8 @@
     "castle": "Kastil",
     "turret": "Menara",
     "fortress": "Benteng",
-    "sanctuary": "Tempat Suci"
+    "sanctuary": "Tempat Suci",
+    "turret_directions": ["Selatan", "Barat", "Timur", "Utara"]
   },
   "alert": {
     "noCities": "Tidak ada kota.",

@@ -48,7 +48,8 @@
     "castle": "Castelo",
     "turret": "Torre",
     "fortress": "Fortaleza",
-    "sanctuary": "Santuário"
+    "sanctuary": "Santuário",
+    "turret_directions": ["Sul", "Oeste", "Leste", "Norte"]
   },
   "alert": {
     "noCities": "Nenhuma cidade.",
