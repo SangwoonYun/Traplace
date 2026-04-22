@@ -38,6 +38,9 @@ def api_shorten():
 
     path = extract_path_preserving_query(raw)
 
+    if not path.startswith('/') or '://' in path:
+        return jsonify(error='invalid url path'), 400
+
     # Check if we already have a short code for this URL
     reverse_key = prefix + 'path:' + path
     existing_code = r.get(reverse_key)
@@ -78,6 +81,10 @@ def redirect_short(code: str):
     path = r.get(key)
     if not path:
         abort(404)
+
+    # Reject anything that isn't a plain relative path (defense-in-depth)
+    if not path.startswith('/') or '://' in path:
+        abort(400)
 
     # Touch TTL to extend the life of popular links
     r.expire(key, ttl)
