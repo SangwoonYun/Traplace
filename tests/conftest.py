@@ -1,7 +1,6 @@
 # File: tests/conftest.py
 import fakeredis
 import pytest
-
 from app import create_app
 
 

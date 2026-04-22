@@ -27,12 +27,7 @@ class TestPrivacy:
 
     def test_last_updated_not_today(self, client):
         """last_updated must come from stored JSON, not datetime.now()."""
-        from datetime import date
-
         r = client.get('/privacy')
-        today_en = date.today().strftime('%B %d, %Y')
-        # The stored date in legal_en.json should differ from today's date
-        # unless someone updated it today — check it is a static value at all
         assert r.status_code == 200
 
 

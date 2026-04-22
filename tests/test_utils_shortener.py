@@ -1,7 +1,6 @@
 # File: tests/test_utils_shortener.py
 """Unit tests for app/utils/shortener.py (no Flask context needed)."""
 
-import pytest
 
 from app.utils.shortener import extract_path_preserving_query, new_code, same_origin, to_base62
 
