@@ -49,12 +49,7 @@
     "turret": "Torretta",
     "fortress": "Fortezza",
     "sanctuary": "Santuario",
-    "turret_directions": [
-      "Sud",
-      "Ovest",
-      "Est",
-      "Nord"
-    ]
+    "turret_directions": ["Sud", "Ovest", "Est", "Nord"]
   },
   "alert": {
     "noCities": "Nessuna città.",

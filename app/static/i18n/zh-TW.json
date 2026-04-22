@@ -49,12 +49,7 @@
     "turret": "炮塔",
     "fortress": "要塞",
     "sanctuary": "聖所",
-    "turret_directions": [
-      "南部",
-      "西部",
-      "東部",
-      "北部"
-    ]
+    "turret_directions": ["南部", "西部", "東部", "北部"]
   },
   "alert": {
     "noCities": "沒有城市。",
