@@ -381,7 +381,7 @@ export function updateBlockPosition(el, snappedLeft, snappedTop) {
     b.left = snappedLeft;
     b.top = snappedTop;
 
-    if (!state._restoring) {
+    if (!state._restoring && !state.isDragging) {
       recomputePaint();
       validateAllObjects();
       queueSaveToURL();

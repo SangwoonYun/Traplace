@@ -379,6 +379,8 @@ function onPointerUp(e) {
   // Move existing node or delete it
   if (state.drag.mode === 'move' && state.drag.node) {
     if (droppingInTrash) {
+      // deleteBlock handles its own cascade
+      state.isDragging = false;
       deleteBlock(state.drag.node);
     } else {
       const { x, y } = clientToLocalRot(e.clientX, e.clientY);
@@ -390,6 +392,8 @@ function onPointerUp(e) {
       const top = y - (h * cpx) / 2;
       const snapped = snapLocal(left, top, Math.max(w, h));
 
+      // Lower the flag so updateBlockPosition runs its cascade normally
+      state.isDragging = false;
       updateBlockPosition(state.drag.node, snapped.left, snapped.top);
     }
   }
@@ -421,6 +425,7 @@ function cleanupDrag() {
   lockPaletteScroll(false);
 
   window.removeEventListener('pointermove', onPointerMove);
+  state.isDragging = false;
   state.drag = null;
 }
 
@@ -876,6 +881,7 @@ export function makeMovable(el) {
       window.__suppressContextMenu = true;
       e.preventDefault();
 
+      state.isDragging = true;
       safeSetPointerCapture(el, e.pointerId);
 
       const size = parseInt(el.dataset.size, 10);
